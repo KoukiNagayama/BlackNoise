@@ -225,6 +225,8 @@
     <ClCompile Include="graphics\FrameBuffer.cpp">
       <Filter>graphics</Filter>
     </ClCompile>
+    <ClCompile Include="ModelRender.cpp" />
+    <ClCompile Include="DirectionLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -499,6 +501,8 @@
     <ClInclude Include="graphics\FrameBuffer.h">
       <Filter>graphics</Filter>
     </ClInclude>
+    <ClInclude Include="ModelRender.h" />
+    <ClInclude Include="DirectionLight.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
@@ -557,6 +561,9 @@
     </Filter>
     <Filter Include="AI\PathFinding">
       <UniqueIdentifier>{72d94fe6-e599-4523-8e54-81df808c96fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="light">
+      <UniqueIdentifier>{17acc50a-817e-4dc9-bb98-bf6889cd1ebd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -45,9 +45,9 @@ namespace DirectX
         virtual ~GamePad();
 
     #if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/ ) || defined(_XBOX_ONE)
-        static const int MAX_PLAYER_COUNT = 8;
+        static const int MAX_Player_COUNT = 8;
     #else
-        static const int MAX_PLAYER_COUNT = 4;
+        static const int MAX_Player_COUNT = 4;
     #endif
 
         enum DeadZone
@@ -243,14 +243,14 @@ namespace DirectX
             State lastState;
         };
 
-        // Retrieve the current state of the gamepad of the associated player index
-        State __cdecl GetState(int player, DeadZone deadZoneMode = DEAD_ZONE_INDEPENDENT_AXES);
+        // Retrieve the current state of the gamepad of the associated Player index
+        State __cdecl GetState(int Player, DeadZone deadZoneMode = DEAD_ZONE_INDEPENDENT_AXES);
 
-        // Retrieve the current capabilities of the gamepad of the associated player index
-        Capabilities __cdecl GetCapabilities(int player);
+        // Retrieve the current capabilities of the gamepad of the associated Player index
+        Capabilities __cdecl GetCapabilities(int Player);
 
         // Set the vibration motor speeds of the gamepad
-        bool __cdecl SetVibration(int player, float leftMotor, float rightMotor, float leftTrigger = 0.f, float rightTrigger = 0.f);
+        bool __cdecl SetVibration(int Player, float leftMotor, float rightMotor, float leftTrigger = 0.f, float rightTrigger = 0.f);
 
         // Handle suspending/resuming
         void __cdecl Suspend();

@@ -630,9 +630,9 @@ void btKinematicCharacterController::preStep (  btCollisionWorld* collisionWorld
 
 #include <stdio.h>
 
-void btKinematicCharacterController::playerStep (  btCollisionWorld* collisionWorld, btScalar dt)
+void btKinematicCharacterController::PlayerStep (  btCollisionWorld* collisionWorld, btScalar dt)
 {
-//	printf("playerStep(): ");
+//	printf("PlayerStep(): ");
 //	printf("  dt = %f", dt);
 
 	// quick check...

@@ -35,7 +35,7 @@ public:
 	virtual void	warp (const btVector3& origin) = 0;
 
 	virtual void	preStep ( btCollisionWorld* collisionWorld) = 0;
-	virtual void	playerStep (btCollisionWorld* collisionWorld, btScalar dt) = 0;
+	virtual void	PlayerStep (btCollisionWorld* collisionWorld, btScalar dt) = 0;
 	virtual bool	canJump () const = 0;
 	virtual void	jump () = 0;
 

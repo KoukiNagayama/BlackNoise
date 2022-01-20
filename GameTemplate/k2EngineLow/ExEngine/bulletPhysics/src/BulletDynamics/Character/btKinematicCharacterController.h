@@ -106,7 +106,7 @@ public:
 	virtual void updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime)
 	{
 		preStep ( collisionWorld);
-		playerStep (collisionWorld, deltaTime);
+		PlayerStep (collisionWorld, deltaTime);
 	}
 	
 	///btActionInterface interface
@@ -140,7 +140,7 @@ public:
 	void warp (const btVector3& origin);
 
 	void preStep (  btCollisionWorld* collisionWorld);
-	void playerStep ( btCollisionWorld* collisionWorld, btScalar dt);
+	void PlayerStep ( btCollisionWorld* collisionWorld, btScalar dt);
 
 	void setFallSpeed (btScalar fallSpeed);
 	void setJumpSpeed (btScalar jumpSpeed);

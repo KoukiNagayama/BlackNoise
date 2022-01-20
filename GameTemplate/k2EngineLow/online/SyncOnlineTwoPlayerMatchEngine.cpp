@@ -5,7 +5,7 @@
 
 namespace nsK2EngineLow {
 	namespace {
-		const ExitGames::Common::JString PLAYER_NAME = L"user";
+		const ExitGames::Common::JString Player_NAME = L"user";
 		const float MAX_FPS = 30.0f;	// オンライン対戦時の最大FPS
 	}
 
@@ -135,7 +135,7 @@ namespace nsK2EngineLow {
 	{
 		ONLINE_LOG("Update_Initialized()\n");
 		ExitGames::LoadBalancing::ConnectOptions connectOption;
-		connectOption.setAuthenticationValues(ExitGames::LoadBalancing::AuthenticationValues().setUserID(ExitGames::Common::JString() + GETTIMEMS())).setUsername(PLAYER_NAME + GETTIMEMS());
+		connectOption.setAuthenticationValues(ExitGames::LoadBalancing::AuthenticationValues().setUserID(ExitGames::Common::JString() + GETTIMEMS())).setUsername(Player_NAME + GETTIMEMS());
 		connectOption.setTryUseDatagramEncryption(true);
 		m_loadBalancingClient->connect(connectOption);
 		m_state = State::CONNECTING;
@@ -177,7 +177,7 @@ namespace nsK2EngineLow {
 			std::random_device rnd;
 			m_waitLimitTime = 10.0f + rnd() % 30;
 			// 他プレイヤーの初期化情報受け取り待ちへ遷移する。
-			m_state = State::WAIT_RECV_INIT_DATA_OTHER_PLAYER;
+			m_state = State::WAIT_RECV_INIT_DATA_OTHER_Player;
 		}
 	}
 	void SyncOnlineTwoPlayerMatchEngine::Update_WaitStartGame()
@@ -296,17 +296,17 @@ namespace nsK2EngineLow {
 
 		m_loadBalancingClient->service();
 	}
-	void SyncOnlineTwoPlayerMatchEngine::leaveRoomEventAction(int playerNr, bool isInactive)
+	void SyncOnlineTwoPlayerMatchEngine::leaveRoomEventAction(int PlayerNr, bool isInactive)
 	{
 		// 部屋からプレイヤーが抜けたので、ゲーム終了。
 		m_otherPlayerState = enOtherPlayerState_LeftRoom;
 	}
-	void SyncOnlineTwoPlayerMatchEngine::customEventAction(int playerNr, nByte eventCode, const ExitGames::Common::Object& eventContentObj)
+	void SyncOnlineTwoPlayerMatchEngine::customEventAction(int PlayerNr, nByte eventCode, const ExitGames::Common::Object& eventContentObj)
 	{
 		auto eventContent = ExitGames::Common::ValueObject<ExitGames::Common::Hashtable>(eventContentObj).getDataCopy();
 		switch (eventCode) {
 		case enEvent_SendInitDataForOtherPlayer:
-			if (m_state == WAIT_RECV_INIT_DATA_OTHER_PLAYER) {
+			if (m_state == WAIT_RECV_INIT_DATA_OTHER_Player) {
 				K2_ASSERT(!m_isHoge, "二回呼ばれている");
 				m_isHoge = true;
 				ONLINE_LOG("enEvent_SendInitDataForOtherPlayer\n");
@@ -403,7 +403,7 @@ namespace nsK2EngineLow {
 		// 接続に失敗したので、切断済みにする。
 		m_state = State::DISCONNECTED;
 	}
-	void SyncOnlineTwoPlayerMatchEngine::joinRandomOrCreateRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString)
+	void SyncOnlineTwoPlayerMatchEngine::joinRandomOrCreateRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& PlayerProperties, int errorCode, const ExitGames::Common::JString& errorString)
 	{
 		if (errorCode) {
 			// 部屋を作れなかった。
@@ -413,21 +413,21 @@ namespace nsK2EngineLow {
 		}
 		if (localPlayerNr == 1) {
 			// 部屋を作ったホスト。
-			m_playerType = enPlayerType_Host;
+			m_PlayerType = enPlayerType_Host;
 		}
 		else {
 			// クライアントなので、すでにホストはいるはずなので、
 			// 他プレイヤーは部屋にジョイン済みにする。
 			m_otherPlayerState = enOtherPlayerState_JoinedRoom;
-			m_playerType = enPlayerType_Client;
+			m_PlayerType = enPlayerType_Client;
 		}
 		// ルームに入った。
 		m_state = State::JOINED;
 	}
-	void SyncOnlineTwoPlayerMatchEngine::joinRoomEventAction(int playerNr, const ExitGames::Common::JVector<int>& playernrs, const ExitGames::LoadBalancing::Player& player)
+	void SyncOnlineTwoPlayerMatchEngine::joinRoomEventAction(int PlayerNr, const ExitGames::Common::JVector<int>& Playernrs, const ExitGames::LoadBalancing::Player& Player)
 	{
-		if (m_playerType == enPlayerType_Host
-			&& playerNr == 2
+		if (m_PlayerType == enPlayerType_Host
+			&& PlayerNr == 2
 		) {
 			// クライアントがジョインしてきたので、他プレイヤーをジョイン済みにする。
 			m_otherPlayerState = enOtherPlayerState_JoinedRoom;
@@ -438,7 +438,7 @@ namespace nsK2EngineLow {
 	void SyncOnlineTwoPlayerMatchEngine::OutputPlayPadDataLog()
 	{
 		char text[256];
-		if (m_playerType == PlayerType_Host) {
+		if (m_PlayerType == PlayerType_Host) {
 			if (m_padData[0][m_playFrameNo].xInputState.Gamepad.sThumbLX == 0) {
 				printf("hoge");
 			}

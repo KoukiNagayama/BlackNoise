@@ -104,7 +104,7 @@ namespace nsK2EngineLow {
 		/// <returns></returns>
 		int GetPlayerNo() const
 		{
-			if (m_playerType == enPlayerType_Host) {
+			if (m_PlayerType == enPlayerType_Host) {
 				return 0;
 			}
 			// クライアント。
@@ -172,9 +172,9 @@ namespace nsK2EngineLow {
 		/// <summary>
 		/// ユーザーが部屋から抜けたときに呼ばれる処理。
 		/// </summary>
-		/// <param name="playerNr"></param>
+		/// <param name="PlayerNr"></param>
 		/// <param name="isInactive"></param>
-		void leaveRoomEventAction(int playerNr, bool isInactive) override;
+		void leaveRoomEventAction(int PlayerNr, bool isInactive) override;
 		
 		/// <summary>
 		/// photonサーバーへの接続リクエストを実行した場合に呼び出されるコールバック関数。
@@ -189,10 +189,10 @@ namespace nsK2EngineLow {
 		/// onRaiseEvent()関数はゲームサーバー経由でメッセージが送られます。
 		/// メッセージの通信プロトコルはTCPです。
 		/// </summary>
-		/// <param name="playerNr"></param>
+		/// <param name="PlayerNr"></param>
 		/// <param name="eventCode"></param>
 		/// <param name="eventContent"></param>
-		void customEventAction(int playerNr, nByte eventCode, const ExitGames::Common::Object& eventContent) override;
+		void customEventAction(int PlayerNr, nByte eventCode, const ExitGames::Common::Object& eventContent) override;
 		/// <summary>
 		/// sendDirect()関数(P2P通信)で送られたメッセージを受信した場合に、呼び出されるコールバック関数。
 		/// メッセージの通信プロトコルはUDPです。
@@ -208,16 +208,16 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="localPlayerNr"></param>
 		/// <param name="gameProperties"></param>
-		/// <param name="playerProperties"></param>
+		/// <param name="PlayerProperties"></param>
 		/// <param name="errorCode"></param>
 		/// <param name="errorString"></param>
-		void joinRandomOrCreateRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& playerProperties, int errorCode, const ExitGames::Common::JString& errorString) override;
+		void joinRandomOrCreateRoomReturn(int localPlayerNr, const ExitGames::Common::Hashtable& gameProperties, const ExitGames::Common::Hashtable& PlayerProperties, int errorCode, const ExitGames::Common::JString& errorString) override;
 		void connectionErrorReturn(int errorCode) override;
 		void clientErrorReturn(int errorCode) override {}
 		void warningReturn(int warningCode) override {}
 		void serverErrorReturn(int errorCode) override {}
 		void debugReturn(int debugLevel, const ExitGames::Common::JString& string) override {}
-		void joinRoomEventAction(int playerNr, const ExitGames::Common::JVector<int>& playernrs, const ExitGames::LoadBalancing::Player& player) override;
+		void joinRoomEventAction(int PlayerNr, const ExitGames::Common::JVector<int>& Playernrs, const ExitGames::LoadBalancing::Player& Player) override;
 		void leaveRoomReturn(int errorCode, const ExitGames::Common::JString& errorString) override {}
 		void disconnectReturn(void) override;
 	private:
@@ -260,7 +260,7 @@ namespace nsK2EngineLow {
 			CONNECTED,							// サーバーに接続済み
 			JOINING,							// ルームにジョイン中
 			JOINED,								// ルームにジョイン済み。
-			WAIT_RECV_INIT_DATA_OTHER_PLAYER,	// 開始データの受け取り待ち。
+			WAIT_RECV_INIT_DATA_OTHER_Player,	// 開始データの受け取り待ち。
 			WAIT_START_GAME,					// ゲームの開始待ち
 			IN_GAME_BUFFERING_PAD_DATA,			// パッドデータのバッファリング中
 			IN_GAME,							// ゲームプレイ中。
@@ -335,7 +335,7 @@ namespace nsK2EngineLow {
 		bool m_isInited = false;											// 初期化済み？
 		float m_timer = 0.0f;												// タイマー
 		float m_waitLimitTime = 0.0f;										// 待ちの最大秒数。
-		EnPlayerType m_playerType = enPlayerType_Undef;						// プレイヤーのタイプ。
+		EnPlayerType m_PlayerType = enPlayerType_Undef;						// プレイヤーのタイプ。
 		EnOtherPlayerState m_otherPlayerState = enOtherPlayerState_Undef;	// 他プレイヤーの状態。
 		K2EngineLow::FrameRateInfo m_frameRateInfoBackup;								// フレームレートに関する情報のバックアップ。
 		
