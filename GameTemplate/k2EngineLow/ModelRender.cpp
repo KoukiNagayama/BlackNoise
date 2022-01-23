@@ -1,6 +1,8 @@
 #include "k2EngineLowPreCompile.h"
 #include "ModelRender.h"
 #include "DirectionLight.h"
+#include "PointLight.h"
+#include "Light.h"
 
 namespace nsK2EngineLow {
 	ModelRender::ModelRender()
@@ -32,7 +34,7 @@ namespace nsK2EngineLow {
 		// シェーダーファイルのファイルパスを指定する。
 		m_initData.m_fxFilePath = "Assets/shader/model.fx";
 		//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
-		m_initData.m_vsEntryPointFunc = "VSMain";
+	//	m_initData.m_vsEntryPointFunc = "VSMain";
 		//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
 		m_initData.m_vsSkinEntryPointFunc = "VSSkinMain";
 		//スケルトンを指定する。
@@ -41,14 +43,12 @@ namespace nsK2EngineLow {
 		m_initData.m_modelUpAxis = enModelUpAxisY;
 		//ディレクションライトの情報を呈すバッファとしてディスクリプタヒープに登録するために
 		//モデルの初期化情報として渡す。
-		//あほ
+		m_initData.m_expandConstantBuffer = g_light.GetLightData();
+		m_initData.m_expandConstantBufferSize = sizeof(*g_light.GetLightData());
 
+		/*m_initData.m_expandConstantBuffer = g_pointLight.GetPointLigData();
+		m_initData.m_expandConstantBufferSize = sizeof(*g_pointLight.GetPointLigData());*/
 
-		//嬉しそうにエラーの原因を伝えてくる武智
-		//げんなりする長山。
-		//見守る山口
-		m_initData.m_expandConstantBuffer = g_directionLight.GetDirecitionLigData();
-		m_initData.m_expandConstantBufferSize = sizeof(*g_directionLight.GetDirecitionLigData());
 		//作成した初期化データをもとにモデルを初期化する。
 		m_model.Init(m_initData);
 	}

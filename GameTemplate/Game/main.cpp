@@ -2,11 +2,13 @@
 #include "system/system.h"
 #include "Game.h"
 #include "DirectionLight.h"
+#include "Light.h"
 
 
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
 
+void InitModel(Model& bgModel);
 /// <summary>
 /// メイン関数
 /// </summary>
@@ -18,18 +20,27 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// k2EngineLowの初期化。
 	g_k2EngineLow = new K2EngineLow();
 	g_k2EngineLow->Init(g_hWnd, FRAME_BUFFER_W, FRAME_BUFFER_H);
-	g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
+	g_camera3D->SetPosition({ 0.0f, 50.0f, 200.0f });
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
+	
+	g_light.Init();
 
-	g_directionLight.Init();
 	auto game = NewGO<Game>(0,"game");
+
+	Model bgModel;
+	InitModel(bgModel);
+	
+
+	auto& renderContext = g_graphicsEngine->GetRenderContext();
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
+		
 		// フレームの開始時に呼び出す必要がある処理を実行
 		g_k2EngineLow->BeginFrame();
-
+		g_light.Update();
+		bgModel.Draw(renderContext);
 		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
 
@@ -43,8 +54,21 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_k2EngineLow->EndFrame();
 	}
 
+	
+
 	delete g_k2EngineLow;
 
 	return 0;
+}
+
+void InitModel(Model& bgModel)
+{
+	ModelInitData bgModelInitData;
+	bgModelInitData.m_tkmFilePath = "Assets/modelData/bg.tkm";
+	bgModelInitData.m_fxFilePath = "Assets/shader/model.fx";
+	bgModelInitData.m_vsEntryPointFunc = "VSMain";
+	bgModelInitData.m_expandConstantBuffer = g_light.GetLightData();
+	bgModelInitData.m_expandConstantBufferSize = sizeof(*g_light.GetLightData());
+	bgModel.Init(bgModelInitData);
 }
 

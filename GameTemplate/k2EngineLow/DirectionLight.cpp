@@ -14,9 +14,11 @@ namespace nsK2EngineLow {
 
 		//Ctrl+H
 		//ライトのカラー
-		m_directionLig.ligColor.x =2.2f;
-		m_directionLig.ligColor.y = 2.2f;
-		m_directionLig.ligColor.z = 2.2f;
+		m_directionLig.ligColor.x = 1.0f;
+		m_directionLig.ligColor.y = 1.0f;
+		m_directionLig.ligColor.z = 1.0f;
+
+		m_directionLig.eyePos = g_camera3D->GetPosition();
 
 	}
 	DirectionLight g_directionLight;

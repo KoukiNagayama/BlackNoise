@@ -2,21 +2,22 @@
 namespace nsK2EngineLow {
 	class DirectionLight
 	{
-		struct DirectionalLight {
+		struct SDirectionLight {
 			Vector3 ligDirection;	// ライトの方向
 			float   pad;
 			Vector3 ligColor;		// ライトのカラー
+			Vector3 eyePos;
 		};
 	public:
 		void Init();
-		DirectionalLight* GetDirecitionLigData()
+		SDirectionLight* GetDirecitionLigData()
 		{
 			return &m_directionLig;
 		}
 
 	private:
 		// ディレクションライトのデータを作成
-		DirectionalLight m_directionLig;
+		SDirectionLight m_directionLig;
 	};
 
 	extern DirectionLight g_directionLight;
