@@ -41,13 +41,10 @@ namespace nsK2EngineLow {
 		m_initData.m_skeleton = &m_skeleton;
 		//モデルの上方向を指定する。
 		m_initData.m_modelUpAxis = enModelUpAxisY;
-		//ディレクションライトの情報を呈すバッファとしてディスクリプタヒープに登録するために
+		//ライトの情報を呈すバッファとしてディスクリプタヒープに登録するために
 		//モデルの初期化情報として渡す。
 		m_initData.m_expandConstantBuffer = g_light.GetLightData();
 		m_initData.m_expandConstantBufferSize = sizeof(*g_light.GetLightData());
-
-		/*m_initData.m_expandConstantBuffer = g_pointLight.GetPointLigData();
-		m_initData.m_expandConstantBufferSize = sizeof(*g_pointLight.GetPointLigData());*/
 
 		//作成した初期化データをもとにモデルを初期化する。
 		m_model.Init(m_initData);

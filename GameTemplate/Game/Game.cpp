@@ -58,10 +58,11 @@ void Game::Update()
 		m_modelRender.PlayAnimation(enAnimClip_Run, 0.2f);
 	}
 
-	m_ptPosition.x += g_pad[0]->GetLStickXF();
-	m_ptPosition.z += g_pad[0]->GetLStickYF(); 
+	//ポイントライト移動
+	m_spPosition.x += g_pad[0]->GetLStickXF();
+	m_spPosition.z += g_pad[0]->GetLStickYF(); 
+	g_light.SetSpotLightPosition(m_spPosition);
 
-	g_light.SetPosition(m_ptPosition);
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.SetRotation(m_rotation);
 	m_modelRender.SetScale(m_scale);
