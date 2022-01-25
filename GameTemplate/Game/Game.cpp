@@ -19,8 +19,6 @@ bool Game::Start()
 	m_animationClipArray[enAnimClip_Run].Load("Assets/animData/walk.tka");
 	m_animationClipArray[enAnimClip_Run].SetLoopFlag(true);
 	
-	
-
 	//ƒ‚ƒfƒ‹‚Ì‰Šú‰»
 	m_modelRender.Init("Assets/modelData/unityChan.tkm", m_animationClipArray, enAnimClip_Num);
 	return true;

@@ -24,7 +24,7 @@ private:
 	Quaternion	m_rotation;					// 回転
 	Animation   m_animation;				// アニメーション
 	AnimationClip m_animationClipArray[enAnimClip_Num];	// アニメーションクリップ
-	Vector3		m_spPosition = {0.0f,0.0f,50.0f};
+	Vector3		m_spPosition = {0.0f,100.0f,-10.0f};
 	Quaternion	m_qRotY;
 	Quaternion  m_qRotX;
 };

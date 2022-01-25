@@ -24,6 +24,7 @@ namespace nsK2EngineLow {
 			Vector3 spDirection;	// 射出方向
 			float spAngle;			// 射出角度
 			Vector3 eyePos;			// 視点の位置
+			float pad4;
 			Vector3 ambientLight;   // アンビエントライト
 		};
 

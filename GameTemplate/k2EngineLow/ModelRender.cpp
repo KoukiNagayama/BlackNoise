@@ -34,7 +34,7 @@ namespace nsK2EngineLow {
 		// シェーダーファイルのファイルパスを指定する。
 		m_initData.m_fxFilePath = "Assets/shader/model.fx";
 		//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
-	//	m_initData.m_vsEntryPointFunc = "VSMain";
+		m_initData.m_vsEntryPointFunc = "VSMain";
 		//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
 		m_initData.m_vsSkinEntryPointFunc = "VSSkinMain";
 		//スケルトンを指定する。
