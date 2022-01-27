@@ -22,10 +22,16 @@ namespace nsK2EngineLow {
 			Vector3 spColor;		// カラー
 			float spRange;			// 影響範囲
 			Vector3 spDirection;	// 射出方向
-			float spAngle;			// 射出角度
+			float spAngle;			// 射出角度   */
 			Vector3 eyePos;			// 視点の位置
 			float pad4;
 			Vector3 ambientLight;   // アンビエントライト
+			float pad5;
+
+			// リムライト用のメンバ
+			Vector3 limDirection;
+			float pad6;
+			Vector3 limColor;
 		};
 
 	public:
@@ -66,6 +72,10 @@ namespace nsK2EngineLow {
 		/// スポットライト初期化
 		/// </summary>
 		void InitSpotLight();
+		/// <summary>
+		/// リムライト初期化
+		/// </summary>
+		void InitLimLight();
 		/// <summary>
 		/// 環境光初期化
 		/// </summary>

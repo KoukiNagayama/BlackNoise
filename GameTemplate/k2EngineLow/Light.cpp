@@ -13,6 +13,9 @@ namespace nsK2EngineLow {
 		// スポットライト
 		InitSpotLight();
 
+		// リムライト
+		InitLimLight();
+
 		// 視点の位置
 		m_light.eyePos = g_camera3D->GetPosition();
 
@@ -23,9 +26,9 @@ namespace nsK2EngineLow {
 	void Light::InitDirectionLight()
 	{
 		// ライトの方向
-		m_light.dirDirection.x = 1.0f;
-		m_light.dirDirection.y = -1.0f;
-		m_light.dirDirection.z = -1.0f;
+		m_light.dirDirection.x = 0.0f;
+		m_light.dirDirection.y = 0.0f;
+		m_light.dirDirection.z = 1.0f;
 		// 正規化
 		m_light.dirDirection.Normalize();
 		// カラー
@@ -69,6 +72,19 @@ namespace nsK2EngineLow {
 		m_light.spAngle = Math::DegToRad(20.0f);
 	}
 
+	void Light::InitLimLight()
+	{
+		// 射出方向
+		m_light.limDirection.x = 0.0f;
+		m_light.limDirection.y = 0.0f;
+		m_light.limDirection.z = 1.0f;
+		m_light.limDirection.Normalize();
+		// カラー
+		m_light.limColor.x = 0.5f;
+		m_light.limColor.y = 0.5f;
+		m_light.limColor.z = 0.5f;
+	}
+
 	void Light::InitAmbientLight()
 	{
 		m_light.ambientLight.x = 0.3f;
@@ -80,18 +96,18 @@ namespace nsK2EngineLow {
 	{
 		m_light.spPosition = m_spPosition;
 
-		Quaternion qRotY;
+		/*Quaternion qRotY;
 		qRotY.SetRotationY(g_pad[0]->GetRStickXF() * 0.01f);
 		//計算したクォータニオンでライトの方向を回す。
 		qRotY.Apply(m_light.spDirection);
 
 		//X軸周りの回転クォータニオンを計算する。
 		Vector3 rotAxis;
-		rotAxis.Cross(g_vec3AxisY, m_light.spDirection);
-		Quaternion qRotX;
-		qRotX.SetRotation(rotAxis, g_pad[0]->GetRStickYF() * 0.01f);
+		rotAxis.Cross(g_vec3AxisY, m_light.spDirection);*/
+		Quaternion qRotY;
+		qRotY.SetRotation(g_vec3AxisY, g_pad[0]->GetRStickXF() * 0.02f);
 		//計算したクォータニオンでライトの方向を回す。
-		qRotX.Apply(m_light.spDirection);
+		qRotY.Apply(m_light.limDirection);
 	}
 	Light g_light;
 }

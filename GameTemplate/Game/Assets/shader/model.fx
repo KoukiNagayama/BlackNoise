@@ -29,7 +29,11 @@ cbuffer LightCb : register(b1) {
     float spAngle;          // スポットライトの射出角度
     float3 eyePos;          // 視点の位置
     float3 ambientLight;    // アンビエントライト
+    // リムライト
+    float3 limDirection;    // リムライトの射出方向
+    float3 limColor;        // リムライトのカラー
 }
+
 
 
 ////////////////////////////////////////////////
@@ -53,6 +57,7 @@ struct SPSIn{
 	float2 uv 			: TEXCOORD0;	//uv座標。
 	float3 normal		: NORMAL;
     float3 worldPos		: TEXCOORD1;
+    float3 normalInView : TEXCOORD2;
 };
 
 ////////////////////////////////////////////////
@@ -70,6 +75,7 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
 float3 CalcLigFromPointLight(SPSIn psIn);
 float3 CalcLigFromDirectionLight(SPSIn psIn);
 float3 CalcLigFromSpotLight(SPSIn psIn);
+float3 CalcLigFromLimLight(SPSIn psIn);
 
 /// <summary>
 //スキン行列を計算する。
@@ -109,6 +115,8 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 
 	psIn.normal = mul(m, vsIn.normal);
 	psIn.uv = vsIn.uv;
+    
+    psIn.normalInView = mul(mView, psIn.normal);
 
 	return psIn;
 }
@@ -138,12 +146,15 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     float3 pointLig = CalcLigFromPointLight(psIn);
     // スポットライト
     float3 spotLig = CalcLigFromSpotLight(psIn);
+    // リムライト
+    float3 limLig = CalcLigFromLimLight(psIn);
     
-    // ディレクションライト+スポットライト+スポットライト+環境光で最終的な光を求める
-    float3 lig = directionLig + pointLig + spotLig + ambientLight;
+
+    // ライトの合算により最終的な光を求める
+    float3 lig = limLig + ambientLight;
     
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
-	albedoColor.xyz *= lig;
+    albedoColor.xyz *= lig;
 	return albedoColor;
 }
 
@@ -303,4 +314,43 @@ float3 CalcLigFromSpotLight(SPSIn psIn)
     specSpot *= affect;
    
     return diffSpot + specSpot;
+}
+
+/// <summary>
+/// リムライトによる反射光を計算(ディレクションライト)
+/// </summary
+/// <param name="psIn">ピクセルシェーダーからの入力。</param>
+float3 CalcLigFromLimLight(SPSIn psIn)
+{
+    // ディレクションライトによるLambert拡散反射光を計算する
+    float3 diffLim = CalcLambertDiffuse(
+        limDirection, 
+        limColor, 
+        psIn.normal
+    );
+
+    // ディレクションライトによるPhong鏡面反射光を計算する
+    float3 specLim = CalcPhongSpecular(
+        limDirection, 
+        limColor, 
+        psIn.worldPos, 
+        psIn.normal
+    );
+    
+    float3 limLig = diffLim + specLim;
+    
+    // リムライトの強さ
+    // サーフェイスの法線と光の入射方向に依存するリムの強さの計算
+    float power1 = 1.0f - max(0.0f, dot(limDirection, psIn.normal));
+    // サーフェイスの法線と視線の方向に依存するリムの強さの計算
+    float power2 = 1.0f - max(0.0f, psIn.normalInView.z * -1.0f);
+    // 最終的なリムの強さを求める
+    float limPower = power1 * power2;
+    // 強さの変化を指数関数的にする
+    limPower = pow(limPower, 1.3f);
+    // リムライトのカラー
+    float3 LimColor = limColor * limPower;
+    
+    return limLig + LimColor;
+    
 }
