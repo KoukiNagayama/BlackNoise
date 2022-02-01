@@ -77,3 +77,4 @@ void Game::Render(RenderContext& rc)
 
 /*RŒûQã*/
 /*kasdjfsghksghakhg*/
+/*daisuke*/
