@@ -78,3 +78,4 @@ void Game::Render(RenderContext& rc)
 /*山口参上*/
 /*kasdjfsghksghakhg*/
 /*daisuke*/
+/*武智チーム頑張ろう！*/
