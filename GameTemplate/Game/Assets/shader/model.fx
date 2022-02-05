@@ -64,6 +64,7 @@ struct SPSIn{
 // グローバル変数。
 ////////////////////////////////////////////////
 Texture2D<float4> g_albedo : register(t0);				//アルベドマップ
+Texture2D<float4> g_specularMap : register(t2);         //スペキュラマップ
 StructuredBuffer<float4x4> g_boneMatrix : register(t3);	//ボーン行列。
 sampler g_sampler : register(s0);	//サンプラステート。
 
@@ -71,7 +72,7 @@ sampler g_sampler : register(s0);	//サンプラステート。
 // 関数定義。
 ////////////////////////////////////////////////
 float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 normal);
-float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal);
+float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal, float2 uv);
 float3 CalcLigFromPointLight(SPSIn psIn);
 float3 CalcLigFromDirectionLight(SPSIn psIn);
 float3 CalcLigFromSpotLight(SPSIn psIn);
@@ -151,7 +152,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     
 
     // ライトの合算により最終的な光を求める
-    float3 lig = limLig + ambientLight;
+    float3 lig = directionLig + ambientLight;
     
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
     albedoColor.xyz *= lig;
@@ -176,7 +177,7 @@ float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 norma
 /// <summary>
 /// Phong鏡面反射光を計算する
 /// </summary>
-float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal)
+float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal, float2 uv)
 {
     // 反射ベクトルを求める
     float3 refVec = reflect(lightDirection, normal);
@@ -195,7 +196,15 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
     t = pow(t, 5.0f);
 
     // 鏡面反射光を求める
-    return lightColor * t;
+    float3 specularLig = lightColor * t;
+    
+    // スペキュラマップからスペキュラ反射の強さをサンプリング
+    float specPower = g_specularMap.Sample(g_sampler, uv).r;
+    
+    // 鏡面反射の強さを鏡面反射光に乗算する
+    specularLig *= specPower * 10.0f;
+    
+    return specularLig;
 }
 
 /// <summary>
@@ -212,7 +221,7 @@ float3 CalcLigFromPointLight(SPSIn psIn)
     float3 diffPoint = CalcLambertDiffuse(
         ligDir, 
         ptColor, 
-        psIn.normal 
+        psIn.normal
     );
 
     // 減衰なしのPhong鏡面反射光を計算する
@@ -220,7 +229,8 @@ float3 CalcLigFromPointLight(SPSIn psIn)
         ligDir, 
         ptColor, 
         psIn.worldPos, 
-        psIn.normal     
+        psIn.normal,
+        psIn.uv
     );
 
     // 距離による影響率を計算する
@@ -257,7 +267,7 @@ float3 CalcLigFromDirectionLight(SPSIn psIn)
 
     // ディレクションライトによるPhong鏡面反射光を計算する
     float3 specDirection = CalcPhongSpecular(
-            dirDirection, dirColor, psIn.worldPos, psIn.normal);
+            dirDirection, dirColor, psIn.worldPos, psIn.normal, psIn.uv);
     return diffDirection + specDirection;
 }
 
@@ -280,7 +290,8 @@ float3 CalcLigFromSpotLight(SPSIn psIn)
         ligDir, 
         spColor, 
         psIn.worldPos, 
-        psIn.normal			
+        psIn.normal,
+        psIn.uv
     );
     // スポットライトとの距離を計算する。
     float3 distance = length(psIn.worldPos - spPosition);
@@ -334,7 +345,8 @@ float3 CalcLigFromLimLight(SPSIn psIn)
         limDirection, 
         limColor, 
         psIn.worldPos, 
-        psIn.normal
+        psIn.normal,
+        psIn.uv
     );
     
     float3 limLig = diffLim + specLim;

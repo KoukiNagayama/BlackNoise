@@ -21,6 +21,7 @@ bool Game::Start()
 	
 	//ƒ‚ƒfƒ‹‚Ì‰Šú‰»
 	m_modelRender.Init("Assets/modelData/unityChan.tkm", m_animationClipArray, enAnimClip_Num);
+
 	return true;
 }
 

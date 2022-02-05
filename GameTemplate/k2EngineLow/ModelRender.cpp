@@ -19,12 +19,16 @@ namespace nsK2EngineLow {
 		AnimationClip* animationClips,
 		int numAnimationClips)
 	{
+		// アニメーションを代入(アニメーションの有無判定のため)
+		m_animationClips = animationClips;
 		// スケルトンの初期化
 		InitSkeleton(filePath);
 		// モデルの初期化
 		InitModel(filePath);
 		// アニメーションの初期化
 		InitAnimation(animationClips, numAnimationClips);
+
+
 	}
 
 	void ModelRender::InitModel(const char* filePath)
@@ -33,18 +37,25 @@ namespace nsK2EngineLow {
 		m_initData.m_tkmFilePath = filePath;
 		// シェーダーファイルのファイルパスを指定する。
 		m_initData.m_fxFilePath = "Assets/shader/model.fx";
-		//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
-		m_initData.m_vsEntryPointFunc = "VSMain";
-		//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
-		m_initData.m_vsSkinEntryPointFunc = "VSSkinMain";
-		//スケルトンを指定する。
-		m_initData.m_skeleton = &m_skeleton;
+
+		if (m_animationClips != nullptr) {
+			//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
+			m_initData.m_vsSkinEntryPointFunc = "VSSkinMain";
+			//スケルトンを指定する。
+			m_initData.m_skeleton = &m_skeleton;
+		}
+		else {
+			//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+			m_initData.m_vsEntryPointFunc = "VSMain";
+		}
+
 		//モデルの上方向を指定する。
 		m_initData.m_modelUpAxis = enModelUpAxisY;
 		//ライトの情報を呈すバッファとしてディスクリプタヒープに登録するために
 		//モデルの初期化情報として渡す。
 		m_initData.m_expandConstantBuffer = g_light.GetLightData();
 		m_initData.m_expandConstantBufferSize = sizeof(*g_light.GetLightData());
+	
 
 		//作成した初期化データをもとにモデルを初期化する。
 		m_model.Init(m_initData);
@@ -57,7 +68,6 @@ namespace nsK2EngineLow {
 
 	void ModelRender::InitAnimation(AnimationClip* animationClips, int numAnimationClips)
 	{
-		m_animationClips = animationClips;
 		m_numAnimationClips = numAnimationClips;
 		
 		// アニメーションを初期化

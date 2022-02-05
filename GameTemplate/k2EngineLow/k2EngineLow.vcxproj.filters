@@ -229,6 +229,7 @@
     <ClCompile Include="DirectionLight.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="Bloom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -507,6 +508,7 @@
     <ClInclude Include="DirectionLight.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Bloom.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

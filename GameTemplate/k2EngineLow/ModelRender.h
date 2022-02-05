@@ -12,8 +12,8 @@ namespace nsK2EngineLow {
 		/// <param name="animationClips">アニメーションクリップ</param>
 		/// <param name="numAnimationClips">アニメーションクリップの数</param>
 		void Init(const char* filePath,
-			AnimationClip* animationClips,
-			int numAnimationClips);
+			AnimationClip* animationClips = nullptr,
+			int numAnimationClips = 0);
 		/// <summary>
 		/// 更新処理
 		/// </summary>
