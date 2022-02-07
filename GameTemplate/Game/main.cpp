@@ -120,3 +120,9 @@ void InitModel(Model& bgModel)
 	bgModel.Init(bgModelInitData);
 }
 
+
+/*山口参上*/
+/*kasdjfsghksghakhg*/
+/*daisuke*/
+/*武智チーム頑張ろう！*/
+
