@@ -81,7 +81,9 @@ namespace nsK2EngineLow {
 		m_copyToFrameBufferSprite.Init(spriteInitData);
 	}
 
-	void Bloom::Render1(RenderContext& rc, RenderTarget& mainRenderTarget)
+	
+	// レンダリングターゲットをメインレンダリングターゲットに変更
+	void Bloom::ChangeRenderTarget(RenderContext& rc, RenderTarget& mainRenderTarget)
 	{
 		//レンダリングターゲットとして利用できるまで待つ。
 		rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
@@ -91,12 +93,13 @@ namespace nsK2EngineLow {
 		rc.ClearRenderTargetView(mainRenderTarget);
 	}
 
-	void Bloom::Render2(RenderContext& rc, RenderTarget& mainRenderTarget)
+	// 輝度抽出
+	void Bloom::LuminanceExtraction(RenderContext& rc, RenderTarget& mainRenderTarget)
 	{
 		//レンダリングターゲットへの書き込み終了待ち。
 		rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 		// 輝度抽出
-	   // 輝度抽出用のレンダリングターゲットに変更
+		// 輝度抽出用のレンダリングターゲットに変更
 		rc.WaitUntilToPossibleSetRenderTarget(m_luminanceRenderTarget);
 		// レンダリングターゲットを設定
 		rc.SetRenderTargetAndViewport(m_luminanceRenderTarget);
@@ -106,13 +109,21 @@ namespace nsK2EngineLow {
 		m_luminanceSprite.Draw(rc);
 		// レンダリングターゲットへの書き込み終了待ち
 		rc.WaitUntilFinishDrawingToRenderTarget(m_luminanceRenderTarget);
+	}
 
+	// ブラー
+	void Bloom::RunBlur(RenderContext& rc)
+	{
 		// ガウシアンブラーを4回実行する
 		m_gaussianBlur[0].ExecuteOnGPU(rc, 10);
 		m_gaussianBlur[1].ExecuteOnGPU(rc, 10);
 		m_gaussianBlur[2].ExecuteOnGPU(rc, 10);
 		m_gaussianBlur[3].ExecuteOnGPU(rc, 10);
+	}
 
+	// ボケ画像を合成
+	void Bloom::CompositeImageToMainRenderTarget(RenderContext& rc, RenderTarget& mainRenderTarget)
+	{
 		// 4枚のボケ画像を合成してメインレンダリングターゲットに加算合成
 		// レンダリングターゲットとして利用できるまで待つ
 		rc.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);

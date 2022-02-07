@@ -87,11 +87,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//レンダリングターゲットをクリア。
 		renderContext.ClearRenderTargetViews(1, rtArray);*/
 
-		g_bloom.Render1(renderContext,mainRenderTarget);
+		g_bloom.ChangeRenderTarget(renderContext,mainRenderTarget);
 
 		game->Render(renderContext);
 
-		g_bloom.Render2(renderContext, mainRenderTarget);
+		g_bloom.LuminanceExtraction(renderContext, mainRenderTarget);
+		g_bloom.RunBlur(renderContext);
+		g_bloom.CompositeImageToMainRenderTarget(renderContext, mainRenderTarget);
 
 		g_k2EngineLow->ExecuteRender();
 
