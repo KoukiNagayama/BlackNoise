@@ -4,6 +4,7 @@
 #include "DirectionLight.h"
 #include "Light.h"
 #include "Bloom.h"
+#include "Shadow.h"
 
 
 // K2EngineLowのグローバルアクセスポイント。
@@ -22,46 +23,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_k2EngineLow = new K2EngineLow();
 	g_k2EngineLow->Init(g_hWnd, FRAME_BUFFER_W, FRAME_BUFFER_H);
 	g_camera3D->SetPosition({ 0.0f, 50.0f, 200.0f });
-	g_camera3D->SetTarget({ 0.0f, 100.0f, 0.0f });
+	g_camera3D->SetTarget({ 0.0f, 70.0f, 0.0f });
 	
 	g_light.Init();
+	
+	g_shadow.Init("Assets/modelData/unityChan.tkm");
 
 	auto game = NewGO<Game>(0,"game");
 
 	Model bgModel;
 	InitModel(bgModel);
-	
-	//RenderTarget offscreenRenderTarget;
 
 
-	/*float a[4] = {1.0f,0.0f,0.0f,0.0f};
-
-	bool b = offscreenRenderTarget.Create(
-		500.0f,
-		500.0f,
-		1,
-		1,
-		DXGI_FORMAT_R8G8B8A8_UNORM, //カラーバッファのフォーマット。
-		DXGI_FORMAT_D32_FLOAT,		//デプスステンシルバッファのフォーマット。
-		a
-	);*/
-
-	RenderTarget mainRenderTarget;
-	mainRenderTarget.Create(
-		1280,
-		720,
-		1,
-		1,
-		DXGI_FORMAT_R32G32B32A32_FLOAT,
-		DXGI_FORMAT_D32_FLOAT
-	);
-
-	g_bloom.InitLuminanceRenderTarget(mainRenderTarget);
-	g_bloom.InitSprite(mainRenderTarget);
-	g_bloom.InitFinalSprite(mainRenderTarget);
-
-
-	
+//	g_bloom.InitBloom(mainRenderTarget);
 
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
 
@@ -72,28 +46,22 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// フレームの開始時に呼び出す必要がある処理を実行
 		g_k2EngineLow->BeginFrame();
 		
-	//	bgModel.Draw(renderContext);
+		bgModel.Draw(renderContext);
 		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
 		g_light.Update();
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 
-	/*	RenderTarget* rtArray[] = {&offscreenRenderTarget};
-		//レンダリングターゲットとして利用できるまで待つ。
-		renderContext.WaitUntilToPossibleSetRenderTargets(1, rtArray);
-		//レンダリングターゲットを設定。
-		renderContext.SetRenderTargets(1, rtArray);
-		//レンダリングターゲットをクリア。
-		renderContext.ClearRenderTargetViews(1, rtArray);*/
+		g_shadow.Render(renderContext);
 
-		g_bloom.ChangeRenderTarget(renderContext,mainRenderTarget);
+	/*	g_bloom.ChangeRenderTarget(renderContext, mainRenderTarget);
 
 		game->Render(renderContext);
 
-		g_bloom.LuminanceExtraction(renderContext, mainRenderTarget);
-		g_bloom.RunBlur(renderContext);
-		g_bloom.CompositeImageToMainRenderTarget(renderContext, mainRenderTarget);
+		g_bloom.Render(renderContext, mainRenderTarget);*/
+
+
 
 		g_k2EngineLow->ExecuteRender();
 
@@ -121,10 +89,3 @@ void InitModel(Model& bgModel)
 	bgModelInitData.m_expandConstantBufferSize = sizeof(*g_light.GetLightData());
 	bgModel.Init(bgModelInitData);
 }
-
-
-/*山口参上*/
-/*kasdjfsghksghakhg*/
-/*daisuke*/
-/*武智チーム頑張ろう！*/
-

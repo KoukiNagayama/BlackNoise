@@ -13,6 +13,7 @@ cbuffer ModelCb : register(b0){
 	float4x4 mProj;
 };
 
+//各種ライト用の定数バッファ
 cbuffer LightCb : register(b1) {
     // ディレクションライト
 	float3 dirDirection;    // ディレクションライトの方向
@@ -71,11 +72,17 @@ sampler g_sampler : register(s0);	//サンプラステート。
 ////////////////////////////////////////////////
 // 関数定義。
 ////////////////////////////////////////////////
+// Lambert拡散反射光の計算
 float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 normal);
+// Phong鏡面反射光の計算
 float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal, float2 uv);
+// ポイントライトの計算
 float3 CalcLigFromPointLight(SPSIn psIn);
+// ディレクションライトの計算
 float3 CalcLigFromDirectionLight(SPSIn psIn);
+// スポットライトの計算
 float3 CalcLigFromSpotLight(SPSIn psIn);
+// リムライトの計算
 float3 CalcLigFromLimLight(SPSIn psIn);
 
 /// <summary>

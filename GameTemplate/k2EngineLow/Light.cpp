@@ -32,9 +32,9 @@ namespace nsK2EngineLow {
 		// 正規化
 		m_light.dirDirection.Normalize();
 		// カラー
-		m_light.dirColor.x = 5.8f;
-		m_light.dirColor.y = 5.8f;
-		m_light.dirColor.z = 5.8f;
+		m_light.dirColor.x = 0.8f;
+		m_light.dirColor.y = 0.8f;
+		m_light.dirColor.z = 0.8f;
 	}
 
 	void Light::InitPointLight()
@@ -109,9 +109,9 @@ namespace nsK2EngineLow {
 		//計算したクォータニオンでライトの方向を回す。
 		qRotY.Apply(m_light.limDirection);*/
 
-		m_light.dirColor.x += g_pad[0]->GetLStickXF() * 0.5f;
-		m_light.dirColor.y += g_pad[0]->GetLStickXF() * 0.5f;
-		m_light.dirColor.z += g_pad[0]->GetLStickXF() * 0.5f;
+		//m_light.dirColor.x += g_pad[0]->GetLStickXF() * 0.5f;
+		//m_light.dirColor.y += g_pad[0]->GetLStickXF() * 0.5f;
+		//m_light.dirColor.z += g_pad[0]->GetLStickXF() * 0.5f;
 
 	}
 	Light g_light;

@@ -28,6 +28,8 @@ namespace nsK2EngineLow {
 		// アニメーションの初期化
 		InitAnimation(animationClips, numAnimationClips);
 
+		InitModelOnShadowMap(filePath);
+
 
 	}
 
@@ -63,7 +65,10 @@ namespace nsK2EngineLow {
 
 	void ModelRender::InitSkeleton(const char* filePath)
 	{
-		m_skeleton.Init("Assets/modelData/unityChan.tks");
+		std::string skeletonFilePath = filePath;
+		int pos = (int)skeletonFilePath.find(".tkm");
+		skeletonFilePath.replace(pos, 4, ".tks");
+		m_skeleton.Init(skeletonFilePath.c_str());
 	}
 
 	void ModelRender::InitAnimation(AnimationClip* animationClips, int numAnimationClips)
@@ -76,6 +81,11 @@ namespace nsK2EngineLow {
 			m_animationClips,			// アニメーションクリップ
 			m_numAnimationClips			// アニメーションの数
 		);
+	}
+
+	void ModelRender::InitModelOnShadowMap(const char* filePath)
+	{
+
 	}
 	void ModelRender::Update()
 	{

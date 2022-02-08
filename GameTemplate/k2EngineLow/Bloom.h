@@ -6,6 +6,11 @@ namespace nsK2EngineLow {
 		Bloom() {};
 		~Bloom() {};
 		/// <summary>
+		/// ブルーム実行に必要な全て要素の初期化
+		/// </summary>
+		/// <param name="mainRenderTarget">メインレンダリングターゲット</param>
+		void InitBloom(RenderTarget& mainRenderTarget);
+		/// <summary>
 		/// 輝度抽出用のレンダリングターゲットの初期化
 		/// </summary>
 		/// <param name="mainRenderTarget">メインレンダーターゲット</param>
@@ -47,6 +52,12 @@ namespace nsK2EngineLow {
 		/// <param name="rc">レンダリングコンテキスト</param>
 		/// <param name="mainRenderTarget">メインレンダリングターゲット</param>
 		void CompositeImageToMainRenderTarget(RenderContext& rc, RenderTarget& mainRenderTarget);
+		/// <summary>
+		/// 描画
+		/// </summary>
+		/// <param name="rc">レンダリングコンテキスト</param>
+		/// <param name="mainRenderTarget">メインレンダリングターゲット</param>
+		void Render(RenderContext& rc, RenderTarget& mainRenderTarget);
 
 
 	private:

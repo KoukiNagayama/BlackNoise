@@ -2,6 +2,17 @@
 #include "Bloom.h"
 
 namespace nsK2EngineLow {
+	void Bloom::InitBloom(RenderTarget& mainRenderTarget)
+	{
+		InitLuminanceRenderTarget(mainRenderTarget);
+
+		InitSprite(mainRenderTarget);
+
+		InitBlur();
+
+		InitFinalSprite(mainRenderTarget);
+	}
+
 	void Bloom::InitLuminanceRenderTarget(RenderTarget& mainRenderTarget)
 	{
 		m_luminanceRenderTarget.Create(
@@ -31,8 +42,6 @@ namespace nsK2EngineLow {
 		luminanceSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 		m_luminanceSprite.Init(luminanceSpriteInitData);
-
-		InitBlur();
 
 	}
 
@@ -133,12 +142,22 @@ namespace nsK2EngineLow {
 		m_finalSprite.Draw(rc);
 		// レンダリングターゲットへの書き込み終了待ち
 		rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
-
+		// レンダリングターゲットの絵をフレームバッファにコピー
 		rc.SetRenderTarget(
 			g_graphicsEngine->GetCurrentFrameBuffuerRTV(),
 			g_graphicsEngine->GetCurrentFrameBuffuerDSV()
 		);
 		m_copyToFrameBufferSprite.Draw(rc);
+	}
+
+	void Bloom::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
+	{
+		// 輝度抽出
+		LuminanceExtraction(rc, mainRenderTarget);
+		// ブラー
+		RunBlur(rc);
+		// メインレンダリングターゲットに合成
+		CompositeImageToMainRenderTarget(rc, mainRenderTarget);
 	}
 	Bloom g_bloom;
 }
