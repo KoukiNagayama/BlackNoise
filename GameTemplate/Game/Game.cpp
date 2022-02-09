@@ -74,3 +74,5 @@ void Game::Render(RenderContext& rc)
 	m_modelRender.Draw(rc);
 
 }
+
+/*test_Takechi*/
