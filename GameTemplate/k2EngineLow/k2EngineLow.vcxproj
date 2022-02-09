@@ -56,20 +56,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -254,6 +254,7 @@
     <ClCompile Include="AI\PathFinding\NaviMesh.cpp" />
     <ClCompile Include="AI\PathFinding\Path.cpp" />
     <ClCompile Include="AI\PathFinding\PathFinding.cpp" />
+    <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="DirectionLight.cpp" />
     <ClCompile Include="gameObject\Gameobjectmanager.cpp" />
     <ClCompile Include="gameObject\IGameObject.cpp" />
@@ -326,6 +327,7 @@
     <ClCompile Include="physics\RigidBody.cpp" />
     <ClCompile Include="physics\SphereCollider.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="sound\SoundEngine.cpp" />
     <ClCompile Include="sound\SoundSource.cpp" />
     <ClCompile Include="sound\WaveFile.cpp" />
@@ -340,6 +342,7 @@
     <ClInclude Include="AI\PathFinding\NaviMesh.h" />
     <ClInclude Include="AI\PathFinding\Path.h" />
     <ClInclude Include="AI\PathFinding\PathFinding.h" />
+    <ClInclude Include="Bloom.h" />
     <ClInclude Include="dbg\MyAssert.h" />
     <ClInclude Include="dbg\MyLog.h" />
     <ClInclude Include="DirectionLight.h" />
@@ -420,6 +423,7 @@
     <ClInclude Include="physics\RigidBody.h" />
     <ClInclude Include="physics\SphereCollider.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="Shadow.h" />
     <ClInclude Include="sound\SoundEngine.h" />
     <ClInclude Include="sound\SoundSource.h" />
     <ClInclude Include="sound\WaveFile.h" />

@@ -3,6 +3,8 @@
 #include "Game.h"
 #include "DirectionLight.h"
 #include "Light.h"
+#include "Bloom.h"
+#include "Shadow.h"
 
 
 // K2EngineLowのグローバルアクセスポイント。
@@ -20,16 +22,20 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// k2EngineLowの初期化。
 	g_k2EngineLow = new K2EngineLow();
 	g_k2EngineLow->Init(g_hWnd, FRAME_BUFFER_W, FRAME_BUFFER_H);
-	g_camera3D->SetPosition({ 0.0f, 50.0f, 300.0f });
-	g_camera3D->SetTarget({ 0.0f, 100.0f, 0.0f });
+	g_camera3D->SetPosition({ 0.0f, 50.0f, 200.0f });
+	g_camera3D->SetTarget({ 0.0f, 70.0f, 0.0f });
 	
 	g_light.Init();
+	
+	g_shadow.Init("Assets/modelData/unityChan.tkm");
 
 	auto game = NewGO<Game>(0,"game");
 
 	Model bgModel;
 	InitModel(bgModel);
-	
+
+
+//	g_bloom.InitBloom(mainRenderTarget);
 
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
 
@@ -45,6 +51,18 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_k2EngineLow->ExecuteUpdate();
 		g_light.Update();
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
+		g_k2EngineLow->ExecuteRender();
+
+		g_shadow.Render(renderContext);
+
+	/*	g_bloom.ChangeRenderTarget(renderContext, mainRenderTarget);
+
+		game->Render(renderContext);
+
+		g_bloom.Render(renderContext, mainRenderTarget);*/
+
+
+
 		g_k2EngineLow->ExecuteRender();
 
 		// デバッグ描画処理を実行する。
@@ -71,4 +89,3 @@ void InitModel(Model& bgModel)
 	bgModelInitData.m_expandConstantBufferSize = sizeof(*g_light.GetLightData());
 	bgModel.Init(bgModelInitData);
 }
-

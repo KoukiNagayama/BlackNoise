@@ -12,8 +12,8 @@ namespace nsK2EngineLow {
 		/// <param name="animationClips">アニメーションクリップ</param>
 		/// <param name="numAnimationClips">アニメーションクリップの数</param>
 		void Init(const char* filePath,
-			AnimationClip* animationClips,
-			int numAnimationClips);
+			AnimationClip* animationClips = nullptr,
+			int numAnimationClips = 0);
 		/// <summary>
 		/// 更新処理
 		/// </summary>
@@ -69,12 +69,17 @@ namespace nsK2EngineLow {
 		/// <param name="filePath">ファイルパス</param>
 		void InitSkeleton(const char* filePath);
 		/// <summary>
-		/// アニメーションの初期化。
+		/// アニメーションの初期化
 		/// </summary>
 		/// <param name="animationClips">アニメーションクリップ。</param>
 		/// <param name="numAnimationClips">アニメーションクリップの数。</param>
 		void InitAnimation(AnimationClip* animationClips,
 			int numAnimationClips);
+		/// <summary>
+		/// シャドウマップ描画用のモデルを初期化
+		/// </summary>
+		/// <param name="filePath"></param>
+		void InitModelOnShadowMap(const char* filePath);
 
 
 		Model				m_model;							// モデル

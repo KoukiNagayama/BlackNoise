@@ -21,14 +21,15 @@ bool Game::Start()
 	
 	//モデルの初期化
 	m_modelRender.Init("Assets/modelData/unityChan.tkm", m_animationClipArray, enAnimClip_Num);
+
 	return true;
 }
 
 void Game::Update()
 {
 	// 平行移動
-//	m_position.x += g_pad[0]->GetLStickXF();
-//	m_position.y += g_pad[0]->GetLStickYF();
+	m_position.x += g_pad[0]->GetLStickXF();
+	m_position.y += g_pad[0]->GetLStickYF();
 
 	// 回転
 /*	m_rotation.AddRotationY(g_pad[0]->GetRStickXF() * 0.05f);
@@ -57,9 +58,9 @@ void Game::Update()
 	}
 
 	//ポイントライト移動
-	m_spPosition.x += g_pad[0]->GetLStickXF();
-	m_spPosition.z += g_pad[0]->GetLStickYF(); 
-	g_light.SetSpotLightPosition(m_spPosition);
+	//m_spPosition.x += g_pad[0]->GetLStickXF();
+	//m_spPosition.z += g_pad[0]->GetLStickYF(); 
+	//g_light.SetSpotLightPosition(m_spPosition);
 
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.SetRotation(m_rotation);
@@ -74,5 +75,4 @@ void Game::Render(RenderContext& rc)
 
 }
 
-
-/*山口参上*/
+/*test_Takechi*/

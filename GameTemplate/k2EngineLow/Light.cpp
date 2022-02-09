@@ -28,13 +28,13 @@ namespace nsK2EngineLow {
 		// ライトの方向
 		m_light.dirDirection.x = 0.0f;
 		m_light.dirDirection.y = 0.0f;
-		m_light.dirDirection.z = 1.0f;
+		m_light.dirDirection.z = -1.0f;
 		// 正規化
 		m_light.dirDirection.Normalize();
 		// カラー
-		m_light.dirColor.x = 0.5f;
-		m_light.dirColor.y = 0.5f;
-		m_light.dirColor.z = 0.5f;
+		m_light.dirColor.x = 0.8f;
+		m_light.dirColor.y = 0.8f;
+		m_light.dirColor.z = 0.8f;
 	}
 
 	void Light::InitPointLight()
@@ -87,9 +87,9 @@ namespace nsK2EngineLow {
 
 	void Light::InitAmbientLight()
 	{
-		m_light.ambientLight.x = 0.3f;
-		m_light.ambientLight.y = 0.3f;
-		m_light.ambientLight.z = 0.3f;
+		m_light.ambientLight.x = 0.5f;
+		m_light.ambientLight.y = 0.5f;
+		m_light.ambientLight.z = 0.5f;
 	}
 
 	void Light::Update()
@@ -104,10 +104,15 @@ namespace nsK2EngineLow {
 		//X軸周りの回転クォータニオンを計算する。
 		Vector3 rotAxis;
 		rotAxis.Cross(g_vec3AxisY, m_light.spDirection);*/
-		Quaternion qRotY;
+		/*Quaternion qRotY;
 		qRotY.SetRotation(g_vec3AxisY, g_pad[0]->GetRStickXF() * 0.02f);
 		//計算したクォータニオンでライトの方向を回す。
-		qRotY.Apply(m_light.limDirection);
+		qRotY.Apply(m_light.limDirection);*/
+
+		//m_light.dirColor.x += g_pad[0]->GetLStickXF() * 0.5f;
+		//m_light.dirColor.y += g_pad[0]->GetLStickXF() * 0.5f;
+		//m_light.dirColor.z += g_pad[0]->GetLStickXF() * 0.5f;
+
 	}
 	Light g_light;
 }
