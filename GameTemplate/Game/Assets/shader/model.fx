@@ -35,8 +35,6 @@ cbuffer LightCb : register(b1) {
     float3 limColor;        // リムライトのカラー
 }
 
-
-
 ////////////////////////////////////////////////
 // 構造体
 ////////////////////////////////////////////////
@@ -59,6 +57,8 @@ struct SPSIn{
 	float3 normal		: NORMAL;
     float3 worldPos		: TEXCOORD1;
     float3 normalInView : TEXCOORD2;
+    float4 posInLVP     : TEXCOORD3;    //ライトビュースクリーン空間でのピクセルの座標
+
 };
 
 ////////////////////////////////////////////////
@@ -67,6 +67,7 @@ struct SPSIn{
 Texture2D<float4> g_albedo : register(t0);				//アルベドマップ
 Texture2D<float4> g_specularMap : register(t2);         //スペキュラマップ
 StructuredBuffer<float4x4> g_boneMatrix : register(t3);	//ボーン行列。
+Texture2D<float4> g_shadowMap : register(t10);          // シャドウマップ
 sampler g_sampler : register(s0);	//サンプラステート。
 
 ////////////////////////////////////////////////
@@ -125,7 +126,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	psIn.uv = vsIn.uv;
     
     psIn.normalInView = mul(mView, psIn.normal);
-
+    //psIn.posInLVP = mul(mLVP, psIn.worldPos);
 	return psIn;
 }
 
@@ -157,12 +158,25 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     // リムライト
     float3 limLig = CalcLigFromLimLight(psIn);
     
-
     // ライトの合算により最終的な光を求める
     float3 lig = directionLig + ambientLight;
     
-	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
+    
+  /*  float2 shadowMapUV = psIn.posInLVP.xy / psIn.posInLVP.w;
+    shadowMapUV *= float2(0.5f, -0.5f);
+    shadowMapUV += 0.5f;
+    
+    float3 shadowMap = 1.0f;
+    if (shadowMapUV.x > 0.0f && shadowMapUV.x < 1.0f
+	&& shadowMapUV.y > 0.0f && shadowMapUV.y < 1.0f
+)
+    {
+        shadowMap = g_shadowMap.Sample(g_sampler, shadowMapUV);
+    }*/
+	
+    float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
     albedoColor.xyz *= lig;
+    //albedoColor.xyz *= lig * shadowMap;
 	return albedoColor;
 }
 
