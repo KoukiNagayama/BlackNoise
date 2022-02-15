@@ -18,9 +18,13 @@ bool Game::Start()
 	m_animationClipArray[enAnimClip_Idle].SetLoopFlag(true);
 	m_animationClipArray[enAnimClip_Run].Load("Assets/animData/walk.tka");
 	m_animationClipArray[enAnimClip_Run].SetLoopFlag(true);
+
 	
 	//モデルの初期化
-	m_modelRender.Init("Assets/modelData/unityChan.tkm", m_animationClipArray, enAnimClip_Num);
+
+	m_bgModelRender.Init("Assets/modelData/bg.tkm");
+
+	m_modelRender.Init("Assets/modelData/unityChan.tkm", m_animationClipArray, enAnimClip_Num, true, enModelUpAxisY);
 
 	return true;
 }
@@ -28,8 +32,8 @@ bool Game::Start()
 void Game::Update()
 {
 	// 平行移動
-	m_position.x += g_pad[0]->GetLStickXF();
-	m_position.y += g_pad[0]->GetLStickYF();
+	//m_position.x += g_pad[0]->GetLStickXF();
+	//m_position.y += g_pad[0]->GetLStickYF();
 
 	// 回転
 /*	m_rotation.AddRotationY(g_pad[0]->GetRStickXF() * 0.05f);
@@ -66,11 +70,13 @@ void Game::Update()
 	m_modelRender.SetRotation(m_rotation);
 	m_modelRender.SetScale(m_scale);
 	m_modelRender.Update();
+	m_bgModelRender.Update();
 }
 
 void Game::Render(RenderContext& rc)
 {
 	// ドロー
-	m_modelRender.Draw(rc);
+	m_bgModelRender.Draw(rc);
 
+	m_modelRender.Draw(rc);
 }

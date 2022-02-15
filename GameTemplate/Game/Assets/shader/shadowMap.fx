@@ -43,5 +43,5 @@ SPSIn VSMain(SVSIn vsIn)
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
-    
+    return float4( 0.5f , 0.5f , 0.5f , 1.0f );
 }

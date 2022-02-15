@@ -2,13 +2,17 @@
 #include "Shadow.h"
 
 namespace nsK2EngineLow {
+	Shadow::Shadow()
+	{
+
+	}
 	void Shadow::Init(const char* filePath)
 	{
 		InitRenderTargetForShadowMap();
 
 		InitLightCamera();
 
-		InitModelForShadowMap(filePath);
+	//	InitModelForShadowMap(filePath);
 	}
 
 	void Shadow::InitRenderTargetForShadowMap()
@@ -41,30 +45,37 @@ namespace nsK2EngineLow {
 
 	void Shadow::InitModelForShadowMap(const char* filePath)
 	{
-		ModelInitData shadowModelInitData;
+		/*ModelInitData shadowModelInitData;
+
 		// シェーダーファイルのファイルパスを指定する。
 		shadowModelInitData.m_fxFilePath = "Assets/shader/shadowMap.fx";
 		// tkmファイルのファイルパスを指定する。
 		shadowModelInitData.m_tkmFilePath = filePath;
 
 		// シャドウマップ描画用のモデルを初期化
-		m_shadowModel.Init(shadowModelInitData);
-		m_shadowModel.UpdateWorldMatrix(
+		/*Model shadowModel;
+		shadowModel.Init(shadowModelInitData);
+		shadowModel.UpdateWorldMatrix(
 			{ 0,50,0 },
 			g_quatIdentity,
 			g_vec3One
 		);
+
+		m_shadowModelArray.push_back(shadowModel);*/
 	}
 
 	void Shadow::Render(RenderContext& rc)
 	{
+		
 		//レンダリングターゲットをシャドウマップに変更する。
 		rc.WaitUntilToPossibleSetRenderTarget(m_shadowMap);
 		rc.SetRenderTargetAndViewport(m_shadowMap);
 		rc.ClearRenderTargetView(m_shadowMap);
 
-		//影モデルを描画。
-		m_shadowModel.Draw(rc, m_lightCamera);
+		for (auto& model : m_shadowModelArray) {
+			//影モデルを描画。
+			model->Draw(rc, m_lightCamera);
+		}
 
 		//書き込み完了待ち。
 		rc.WaitUntilFinishDrawingToRenderTarget(m_shadowMap);
@@ -75,6 +86,8 @@ namespace nsK2EngineLow {
 			g_graphicsEngine->GetCurrentFrameBuffuerDSV()
 		);
 		rc.SetViewportAndScissor(g_graphicsEngine->GetFrameBufferViewport());
+
+		//m_copyToFrameBufferSprite.Draw(rc);
 		
 	}
 	Shadow g_shadow;

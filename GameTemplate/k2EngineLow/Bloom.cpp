@@ -26,21 +26,22 @@ namespace nsK2EngineLow {
 	}
 	void Bloom::InitSprite(RenderTarget& mainRenderTarget)
 	{
+		// 輝度抽出用のスプライトの初期化データ
 		SpriteInitData luminanceSpriteInitData;
-		//輝度抽出用のシェーダーのファイルパスを指定する。
+		// 輝度抽出用のシェーダーのファイルパスを指定する。
 		luminanceSpriteInitData.m_fxFilePath = "Assets/shader/bloom.fx";
-		//頂点シェーダーのエントリーポイントを指定する。
+		// 頂点シェーダーのエントリーポイントを指定する。
 		luminanceSpriteInitData.m_vsEntryPointFunc = "VSMain";
-		//ピクセルシェーダーのエントリーポイントを指定する。
+		// ピクセルシェーダーのエントリーポイントを指定する。
 		luminanceSpriteInitData.m_psEntryPoinFunc = "PSSamplingLuminance";
-		//スプライトの幅と高さはluminnceRenderTargetと同じ。
+		// スプライトの幅と高さはluminnceRenderTargetと同じ。
 		luminanceSpriteInitData.m_width = mainRenderTarget.GetWidth();
 		luminanceSpriteInitData.m_height = mainRenderTarget.GetHeight();
-		//テクスチャはメインレンダリングターゲットのカラーバッファ。
+		// テクスチャはメインレンダリングターゲットのカラーバッファ。
 		luminanceSpriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-		//描き込むレンダリングターゲットのフォーマットを指定する。
+		// 描き込むレンダリングターゲットのフォーマットを指定する。
 		luminanceSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-
+		// 作成した初期化データをもとにスプライトを初期化
 		m_luminanceSprite.Init(luminanceSpriteInitData);
 
 	}

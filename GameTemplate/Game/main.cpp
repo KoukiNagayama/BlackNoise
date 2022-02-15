@@ -27,15 +27,24 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	
 	g_light.Init();
 	
-	g_shadow.Init("Assets/modelData/unityChan.tkm");
+	//g_shadow.Init("Assets/modelData/unityChan.tkm");
 
 	auto game = NewGO<Game>(0,"game");
 
 	Model bgModel;
 	InitModel(bgModel);
 
+	RenderTarget mainRenderTarget;
+	mainRenderTarget.Create(
+		1280,						//テクスチャの幅。
+		720,						//テクスチャの高さ。
+		1,							//Mipmapレベル。
+		1,							//テクスチャ配列のサイズ。
+		DXGI_FORMAT_R8G8B8A8_UNORM, //カラーバッファのフォーマット。
+		DXGI_FORMAT_D32_FLOAT		//デプスステンシルバッファのフォーマット。
+	);
 
-//	g_bloom.InitBloom(mainRenderTarget);
+	//g_bloom.InitBloom(mainRenderTarget);
 
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
 
@@ -46,20 +55,20 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// フレームの開始時に呼び出す必要がある処理を実行
 		g_k2EngineLow->BeginFrame();
 		
-		bgModel.Draw(renderContext);
+		//bgModel.Draw(renderContext);
 		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
 		g_light.Update();
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 
-		g_shadow.Render(renderContext);
+		//g_shadow.Render(renderContext);
 
-	/*	g_bloom.ChangeRenderTarget(renderContext, mainRenderTarget);
+		//g_bloom.ChangeRenderTarget(renderContext, mainRenderTarget);
 
-		game->Render(renderContext);
+		//game->Render(renderContext);
 
-		g_bloom.Render(renderContext, mainRenderTarget);*/
+		//g_bloom.Render(renderContext, mainRenderTarget);
 
 
 
