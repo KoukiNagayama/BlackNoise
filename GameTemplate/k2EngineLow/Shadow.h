@@ -54,7 +54,7 @@ namespace nsK2EngineLow {
 		RenderTarget		m_shadowMap;			// シャドウマップ描画用のレンダリングターゲット
 		Camera				m_lightCamera;			// ライトカメラ
 		std::vector<Model*>  m_shadowModelArray;		// 影モデル
-		Sprite				m_copyToFrameBufferSprite;           
+		//Sprite				m_copyToFrameBufferSprite;           
 	};
 	extern Shadow g_shadow;
 }
