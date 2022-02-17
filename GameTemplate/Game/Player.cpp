@@ -9,7 +9,7 @@ namespace
 bool Player::Start()
 {
 	m_modelRender.Init("Assets/modelData/human/jackie.tkm", animationClips, enAnimationClip_Num);
-	m_modelRender.Update();
+	//m_modelRender.Update();
 
 	//キャラコンを初期化する。
 	m_charaCon.Init(10.0f, 45.0f, m_position);
@@ -29,7 +29,9 @@ void Player::Update()
 	//回転処理。
 	Rotation();
 	//ステート遷移処理。
-	ManageState();	
+	//ManageState();	
+
+	m_modelRender.Update();
 }
 
 void Player::Move()
@@ -108,4 +110,9 @@ void Player::Rotation()
 	//プレイヤーの正面ベクトルを計算する。
 	m_forward = Vector3::AxisZ;
 	m_rotation.Apply(m_forward);
+}
+
+void Player::Render(RenderContext& rc)
+{
+	m_modelRender.Draw(rc);
 }

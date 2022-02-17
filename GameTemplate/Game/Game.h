@@ -1,4 +1,5 @@
 #pragma once
+class Player;
 
 class Game : public IGameObject
 {

@@ -71,7 +71,8 @@ namespace nsK2EngineLow {
 		/// <param name="filePath">ファイルパス</param>
 		/// <param name="enModelUpAxis">モデルの上方向</param>
 		void InitModel(const char* filePath, 
-			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
+			bool isShadowReceiver = true
 		);
 		/// <summary>
 		/// スケルトンの初期化
@@ -102,6 +103,8 @@ namespace nsK2EngineLow {
 		Vector3				m_scale = Vector3::One;				// 拡大率
 		Quaternion			m_rotation = Quaternion::Identity;	// 回転
 		std::vector<Model>  m_shadowModelArray;				// 影モデル
+		Model				m_shadowMapModel;
+		Model				m_shadowModel;
 
 	};
 }
