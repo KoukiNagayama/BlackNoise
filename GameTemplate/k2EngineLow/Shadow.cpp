@@ -45,13 +45,12 @@ namespace nsK2EngineLow {
 		rc.SetRenderTargetAndViewport(m_shadowMap);
 		rc.ClearRenderTargetView(m_shadowMap);
 
-		/*for (auto& model : m_shadowModelArray) {
+		for (auto& model : m_shadowModelArray) {
 			//影モデルを描画。
 			model->Draw(rc, m_lightCamera);
-		}*/
+		}
 
-		// とりあえず単体で表示
-		m_shadowModel->Draw(rc, m_lightCamera);
+		m_shadowModelArray.clear();
 
 		//書き込み完了待ち。
 		rc.WaitUntilFinishDrawingToRenderTarget(m_shadowMap);

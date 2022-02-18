@@ -19,8 +19,10 @@ private:
 
 	Light m_light;
 	ModelRender m_modelRender;				// モデルレンダー
+	ModelRender m_modelRender2;
 	ModelRender m_bgModelRender;		
 	Vector3		m_position;					// 座標
+	Vector3     m_position2;
 	Vector3		m_scale = g_vec3One;		// 拡大率
 	Quaternion	m_rotation;					// 回転
 	Animation   m_animation;				// アニメーション

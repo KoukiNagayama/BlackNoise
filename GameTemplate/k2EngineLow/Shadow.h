@@ -36,8 +36,7 @@ namespace nsK2EngineLow {
 		/// <param name="model">シャドウマップ描画用モデル</param>
 		void SetShadowModel(Model* model)
 		{
-			//m_shadowModelArray.push_back(model);
-			m_shadowModel = model;
+			m_shadowModelArray.push_back(model);
 		}
 	private:
 		/// <summary>

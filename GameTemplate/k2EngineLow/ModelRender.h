@@ -18,7 +18,8 @@ namespace nsK2EngineLow {
 			AnimationClip* animationClips = nullptr,
 			int numAnimationClips = 0,
 			bool isShadowReceiver = true,
-			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
+			bool isShadowCaster = true
 		);
 		/// <summary>
 		/// 更新処理
@@ -70,6 +71,7 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="filePath">ファイルパス</param>
 		/// <param name="enModelUpAxis">モデルの上方向</param>
+		/// <param name="isShadowReceiver">影を受けるか</param>
 		void InitModel(const char* filePath, 
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
 			bool isShadowReceiver = true
@@ -90,21 +92,23 @@ namespace nsK2EngineLow {
 		/// シャドウマップ描画用のモデルを初期化
 		/// </summary>
 		/// <param name="filePath">ファイルパス</param>
-		void InitModelOnShadowMap(const char* filePath);
+		void InitModelOnShadowMap(const char* filePath,
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+		);
 
 
 		Model				m_model;							// モデル
 		Skeleton			m_skeleton;							// スケルトン
-		//ModelInitData		m_initData;							// モデルを初期化するための情報を設定。
 		Animation			m_animation;						// アニメーション
 		AnimationClip*		m_animationClips;					// アニメーションクリップ
 		int					m_numAnimationClips;				// アニメーションクリップの数
 		Vector3				m_position = Vector3::Zero;			// 座標
 		Vector3				m_scale = Vector3::One;				// 拡大率
 		Quaternion			m_rotation = Quaternion::Identity;	// 回転
-		std::vector<Model>  m_shadowModelArray;				// 影モデル
+		std::vector<Model>  m_shadowModelArray;					// 影モデル
 		Model				m_shadowMapModel;
 		Model				m_shadowModel;
+		bool				m_isShadowCaster;
 
 	};
 }

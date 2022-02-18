@@ -53,16 +53,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
 
+		// シャドウマップへのモデルの描画
+		g_shadow.RenderToShadowMap(renderContext);
 		g_light.Update();
 
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
-
-		g_shadow.RenderToShadowMap(renderContext);
-
-		g_k2EngineLow->ExecuteRender();
-
-		game->Render(renderContext);
 
 		sprite.Update({ FRAME_BUFFER_W / -2.0f, FRAME_BUFFER_H / 2.0f,  0.0f }, g_quatIdentity, g_vec3One, { 0.0f, 1.0f });
 		sprite.Draw(renderContext);

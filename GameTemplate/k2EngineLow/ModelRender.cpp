@@ -20,7 +20,8 @@ namespace nsK2EngineLow {
 		AnimationClip* animationClips,
 		int numAnimationClips,
 		bool isShadowReceiver,
-		EnModelUpAxis enModelUpAxis
+		EnModelUpAxis enModelUpAxis,
+		bool isShadowCaster
 	)
 	{
 		// アニメーションを代入(アニメーションの有無判定のため)
@@ -29,10 +30,14 @@ namespace nsK2EngineLow {
 		InitSkeleton(filePath);
 		// アニメーションの初期化
 		InitAnimation(animationClips, numAnimationClips);
-		// シャドウマップ描画用モデルの初期化
-		InitModelOnShadowMap(filePath);
+		if (isShadowCaster == true) {
+			// シャドウマップ描画用モデルの初期化
+			InitModelOnShadowMap(filePath);
+		}
 		// モデルの初期化
 		InitModel(filePath, enModelUpAxis, isShadowReceiver);
+
+		m_isShadowCaster = isShadowCaster;
 	}
 
 	void ModelRender::InitSkeleton(const char* filePath)
@@ -96,7 +101,7 @@ namespace nsK2EngineLow {
 			modelInitData.m_expandShaderResoruceView[0] = &g_shadow.GetShadowMap().GetRenderTargetTexture();
 			// ライトビュープロジェクション行列を拡張定数バッファに設定する
 			modelInitData.m_expandConstantBuffer = (void*)&g_shadow.GetLightCamera().GetViewProjectionMatrix();
-			modelInitData.m_expandConstantBufferSize = sizeof(&g_shadow.GetLightCamera().GetViewProjectionMatrix());
+			modelInitData.m_expandConstantBufferSize = sizeof(g_shadow.GetLightCamera().GetViewProjectionMatrix());
 			m_model.Init(modelInitData);
 		}
 
@@ -104,11 +109,13 @@ namespace nsK2EngineLow {
 		
 	}
 
-	void ModelRender::InitModelOnShadowMap(const char* filePath)
+	void ModelRender::InitModelOnShadowMap(const char* filePath,
+		EnModelUpAxis enModelUpAxis
+	)
 	{
 		ModelInitData shadowModelInitData;
 		//モデルの上方向を指定する。
-		shadowModelInitData.m_modelUpAxis = enModelUpAxisY;
+		shadowModelInitData.m_modelUpAxis = enModelUpAxis;
 		// tkmファイルのファイルパスを指定する。
 		shadowModelInitData.m_tkmFilePath = filePath;
 		// シェーダーファイルのファイルパスを指定する。
@@ -116,15 +123,6 @@ namespace nsK2EngineLow {
 		// 初期化データをもとにモデルを初期化
 		m_shadowMapModel.Init(shadowModelInitData);
 
-		// ワールド行列の更新
-		m_shadowMapModel.UpdateWorldMatrix(
-			{ 0, 50, 0 },
-			g_quatIdentity,
-			g_vec3One
-		);
-
-		// モデルの情報の受け渡し
-		g_shadow.SetShadowModel(&m_shadowMapModel);
 
 
 	}
@@ -138,22 +136,25 @@ namespace nsK2EngineLow {
 		}
 		// アニメーションを進める
 		m_animation.Progress(g_gameTime->GetFrameDeltaTime());
-		// ワールド行列を更新
+		// 通常レンダリング用モデルのワールド行列を更新
 		m_model.UpdateWorldMatrix(
 			m_position, 
-			m_rotation, 
-			m_scale
+			g_quatIdentity,
+			g_vec3One
 		);
-
+		// シャドウマップ描画用モデルのワールド行列を更新
 		m_shadowMapModel.UpdateWorldMatrix(
 			m_position,
-			m_rotation,
-			m_scale
+			g_quatIdentity,
+			g_vec3One
 		);
 
-		// シャドウマップへのモデルの描画
-		auto& renderContext = g_graphicsEngine->GetRenderContext();
-		g_shadow.RenderToShadowMap(renderContext);
+		if (m_isShadowCaster == true) {
+			// モデルの情報の受け渡し
+			g_shadow.SetShadowModel(&m_shadowMapModel);
+		}
+
+
 	}
 
 	void ModelRender::Draw(RenderContext& rc)
