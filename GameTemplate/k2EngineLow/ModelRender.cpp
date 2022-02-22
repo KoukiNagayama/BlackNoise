@@ -123,8 +123,6 @@ namespace nsK2EngineLow {
 		// 初期化データをもとにモデルを初期化
 		m_shadowMapModel.Init(shadowModelInitData);
 
-
-
 	}
 
 	
