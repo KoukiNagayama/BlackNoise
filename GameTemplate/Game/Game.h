@@ -32,5 +32,8 @@ private:
 	Quaternion  m_qRotX;
 	SpriteRender m_spriteRender1;
 	SpriteRender m_spriteRender2;
+	Vector3		m_spritePos1;
+	Quaternion  m_spriteRot1;
+	Vector3		m_spriteSca1;
 };
 

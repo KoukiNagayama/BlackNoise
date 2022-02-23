@@ -63,7 +63,7 @@ namespace nsK2EngineLow {
 		}
 	}
 
-	void ModelRender::InitModel(const char* filePath,
+	/*void ModelRender::InitModel(const char* filePath,
 		EnModelUpAxis enModelUpAxis,
 		bool isShadowReceiver
 	)
@@ -107,9 +107,9 @@ namespace nsK2EngineLow {
 
 		
 		
-	}
+	}*/
 
-	/*void ModelRender::InitModel(const char* filePath,
+	void ModelRender::InitModel(const char* filePath,
 		EnModelUpAxis enModelUpAxis,
 		bool isShadowReceiver
 	)
@@ -137,7 +137,7 @@ namespace nsK2EngineLow {
 		//作成した初期化データをもとにモデルを初期化する。
 		m_model.Init(modelInitData);
 	}
-	*/
+	
 	void ModelRender::InitModelOnShadowMap(const char* filePath,
 		EnModelUpAxis enModelUpAxis
 	)
