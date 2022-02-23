@@ -30,5 +30,7 @@ private:
 	Vector3		m_spPosition = {0.0f,100.0f,-10.0f};
 	Quaternion	m_qRotY;
 	Quaternion  m_qRotX;
+	SpriteRender m_spriteRender1;
+	SpriteRender m_spriteRender2;
 };
 

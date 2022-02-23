@@ -109,6 +109,35 @@ namespace nsK2EngineLow {
 		
 	}
 
+	/*void ModelRender::InitModel(const char* filePath,
+		EnModelUpAxis enModelUpAxis,
+		bool isShadowReceiver
+	)
+	{
+		ModelInitData modelInitData;
+		// tkmファイルのファイルパスを指定する。
+		modelInitData.m_tkmFilePath = filePath;
+		modelInitData.m_fxFilePath = "Assets/shader/model.fx";
+		if (m_animationClips != nullptr) {
+			//スケルトンを指定する。
+			modelInitData.m_skeleton = &m_skeleton;
+			//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
+			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+		}
+		else {
+			//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+			modelInitData.m_vsEntryPointFunc = "VSMain";
+		}
+		//モデルの上方向を指定する。
+		modelInitData.m_modelUpAxis = enModelUpAxis;
+		//ライトの情報を呈すバッファとしてディスクリプタヒープに登録するために
+		//モデルの初期化情報として渡す。
+		modelInitData.m_expandConstantBuffer = g_light.GetLightData();
+		modelInitData.m_expandConstantBufferSize = sizeof(*g_light.GetLightData());
+		//作成した初期化データをもとにモデルを初期化する。
+		m_model.Init(modelInitData);
+	}
+	*/
 	void ModelRender::InitModelOnShadowMap(const char* filePath,
 		EnModelUpAxis enModelUpAxis
 	)
@@ -151,7 +180,6 @@ namespace nsK2EngineLow {
 			// モデルの情報の受け渡し
 			g_shadow.SetShadowModel(&m_shadowMapModel);
 		}
-
 
 	}
 

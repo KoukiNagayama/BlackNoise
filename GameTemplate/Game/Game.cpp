@@ -28,6 +28,9 @@ bool Game::Start()
 	m_modelRender2.Init("Assets/modelData/unityChan.tkm");
 
 	m_position2.x = 50.0f;
+
+	//m_spriteRender1.Init("Assets/sprite/Acceleration.dds", 256, 256);
+	//m_spriteRender2.Init("Assets/sprite/Deceleration.dds", 256, 256);
 	return true;
 }
 
@@ -53,6 +56,9 @@ void Game::Update()
 	m_modelRender2.SetPosition(m_position2);
 	m_modelRender2.Update();
 	m_bgModelRender.Update();
+
+	//m_spriteRender1.Update();
+	//m_spriteRender2.Update();
 }
 
 void Game::Render(RenderContext& rc)
@@ -63,4 +69,7 @@ void Game::Render(RenderContext& rc)
 	m_modelRender.Draw(rc);
 
 	m_modelRender2.Draw(rc);
+
+	//m_spriteRender1.Draw(rc);
+	//m_spriteRender2.Draw(rc);
 }

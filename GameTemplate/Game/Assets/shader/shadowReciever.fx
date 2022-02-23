@@ -74,16 +74,17 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     shadowMapUV *= float2(0.5f, -0.5f);
     shadowMapUV += 0.5f;
 
-    // step-4 ライトビュースクリーン空間でのZ値を計算する
+    //ライトビュースクリーン空間でのZ値を計算する
     float zInLVP = psIn.posInLVP.z / psIn.posInLVP.w;
 
     if (shadowMapUV.x > 0.0f && shadowMapUV.x < 1.0f
         && shadowMapUV.y > 0.0f && shadowMapUV.y < 1.0f)
     {
-        // step-3 シャドウマップに描き込まれているZ値と比較する
+        
         // 計算したUV座標を使って、シャドウマップから深度値をサンプリング
         float zInShadowMap = g_shadowMap.Sample(g_sampler, shadowMapUV).r;
-        if (zInLVP > zInShadowMap)
+        // +の後の値がバイアス　ゲームごとに調整する必要有
+        if (zInLVP > zInShadowMap + 0.00001f)
         {
             // 遮蔽されている
             color.xyz *= 0.5f;
