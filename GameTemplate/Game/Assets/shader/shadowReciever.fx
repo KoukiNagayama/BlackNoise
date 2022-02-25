@@ -10,7 +10,7 @@ cbuffer ModelCb : register(b0)
     float4x4 mProj;
 };
 
-// step-3 ライトビュープロジェクション行列の定数バッファーを定義
+// ライトビュープロジェクション行列にアクセスする定数バッファーを定義
 cbuffer ShadowCb : register(b1)
 {
     float4x4 mLVP;
@@ -21,7 +21,7 @@ struct SVSIn
 {
     float4 pos : POSITION; // スクリーン空間でのピクセルの座標
     float3 normal : NORMAL; // 法線
-    float2 uv : TEXCOORD0; // UV座標
+    float2 uv : TEXCOORD0; // uv座標
 };
 
 // ピクセルシェーダーへの入力
@@ -29,10 +29,10 @@ struct SPSIn
 {
     float4 pos : SV_POSITION; // スクリーン空間でのピクセルの座標
     float3 normal : NORMAL; // 法線
-    float2 uv : TEXCOORD0; // UV座標
+    float2 uv : TEXCOORD0; // uv座標
 
-    // step-4 ライトビュースクリーン空間での座標を追加
-    float4 posInLVP : TEXCOORD1; //ライトビュースクリーン空間でのピクセルの座標
+    // ライトビュースクリーン空間での座標を追加
+    float4 posInLVP : TEXCOORD1; // ライトビュースクリーン空間でのピクセルの座標
 };
 
 ///////////////////////////////////////////////////
@@ -41,7 +41,7 @@ struct SPSIn
 
 Texture2D<float4> g_albedo : register(t0); // アルベドマップ
 Texture2D<float4> g_shadowMap : register(t10); // シャドウマップ
-sampler g_sampler : register(s0); // サンプラーステート
+sampler g_sampler : register(s0); //  サンプラーステート
 
 /// <summary>
 /// 影が落とされる3Dモデル用の頂点シェーダー
@@ -56,8 +56,9 @@ SPSIn VSMain(SVSIn vsIn)
     psIn.uv = vsIn.uv;
     psIn.normal = mul(mWorld, vsIn.normal);
 
-    // step-5 ライトビュースクリーン空間の座標を計算する
+    // ライトビュースクリーン空間の座標を計算する
     psIn.posInLVP = mul(mLVP, worldPos);
+
     return psIn;
 }
 
@@ -68,19 +69,26 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 {
     float4 color = g_albedo.Sample(g_sampler, psIn.uv);
 
-    // step-6 ライトビュースクリーン空間からUV空間に座標変換
+    // ライトビュースクリーン空間からUV空間に座標変換
     float2 shadowMapUV = psIn.posInLVP.xy / psIn.posInLVP.w;
     shadowMapUV *= float2(0.5f, -0.5f);
     shadowMapUV += 0.5f;
-    // step-7 UV座標を使ってシャドウマップから影情報をサンプリング
-    float3 shadowMap = 1.0f;
+
+    //ライトビュースクリーン空間でのZ値を計算する
+    float zInLVP = psIn.posInLVP.z / psIn.posInLVP.w;
+
     if (shadowMapUV.x > 0.0f && shadowMapUV.x < 1.0f
-	&& shadowMapUV.y > 0.0f && shadowMapUV.y < 1.0f
-)
+        && shadowMapUV.y > 0.0f && shadowMapUV.y < 1.0f)
     {
-        shadowMap = g_shadowMap.Sample(g_sampler, shadowMapUV);
+        
+        // 計算したUV座標を使って、シャドウマップから深度値をサンプリング
+        float zInShadowMap = g_shadowMap.Sample(g_sampler, shadowMapUV).r;
+        // +の後の値がバイアス　ゲームごとに調整する必要有
+        if (zInLVP > zInShadowMap + 0.00001f)
+        {
+            // 遮蔽されている
+            color.xyz *= 0.5f;
+        }
     }
-    // step-8 サンプリングした影情報をテクスチャカラーに乗算する
-    color.xyz *= shadowMap;
     return color;
 }

@@ -1,7 +1,6 @@
 /*!
  * @brief ƒuƒ‹[ƒ€
  */
-
 cbuffer cb : register(b0)
 {
     float4x4 mvp; // MVPs—ñ

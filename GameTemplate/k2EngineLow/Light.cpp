@@ -32,9 +32,9 @@ namespace nsK2EngineLow {
 		// ê≥ãKâª
 		m_light.dirDirection.Normalize();
 		// ÉJÉâÅ[
-		m_light.dirColor.x = 0.5f;
-		m_light.dirColor.y = 0.5f;
-		m_light.dirColor.z = 0.5f;
+		m_light.dirColor.x = 1.0f;
+		m_light.dirColor.y = 1.0f;
+		m_light.dirColor.z = 1.0f;
 	}
 
 	void Light::InitPointLight()

@@ -20,7 +20,8 @@ namespace nsK2EngineLow {
 		AnimationClip* animationClips,
 		int numAnimationClips,
 		bool isShadowReceiver,
-		EnModelUpAxis enModelUpAxis
+		EnModelUpAxis enModelUpAxis,
+		bool isShadowCaster
 	)
 	{
 		// アニメーションを代入(アニメーションの有無判定のため)
@@ -29,12 +30,14 @@ namespace nsK2EngineLow {
 		InitSkeleton(filePath);
 		// アニメーションの初期化
 		InitAnimation(animationClips, numAnimationClips);
+		if (isShadowCaster == true) {
+			// シャドウマップ描画用モデルの初期化
+			InitModelOnShadowMap(filePath);
+		}
+		// モデルの初期化
+		InitModel(filePath, enModelUpAxis, isShadowReceiver);
 
-		g_shadow.Init(filePath);
-		InitModel(filePath,enModelUpAxis);
-		g_shadow.SetShadowModel(&m_model);
-		auto& renderContext = g_graphicsEngine->GetRenderContext();
-		g_shadow.Render(renderContext);
+		m_isShadowCaster = isShadowCaster;
 	}
 
 	void ModelRender::InitSkeleton(const char* filePath)
@@ -60,63 +63,95 @@ namespace nsK2EngineLow {
 		}
 	}
 
-	void ModelRender::InitModel(const char* filePath,
-		EnModelUpAxis enModelUpAxis
+	/*void ModelRender::InitModel(const char* filePath,
+		EnModelUpAxis enModelUpAxis,
+		bool isShadowReceiver
 	)
 	{
 		ModelInitData modelInitData;
 		// tkmファイルのファイルパスを指定する。
 		modelInitData.m_tkmFilePath = filePath;
+
 		// シェーダーファイルのファイルパスを指定する。
+		if (isShadowReceiver == false) {
+			modelInitData.m_fxFilePath = "Assets/shader/model.fx";
+			if (m_animationClips != nullptr) {
+				//スケルトンを指定する。
+				modelInitData.m_skeleton = &m_skeleton;
+				//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
+				modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+				//モデルの上方向を指定する。
+				modelInitData.m_modelUpAxis = enModelUpAxis;
+			}
+			else {
+				//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+				modelInitData.m_vsEntryPointFunc = "VSMain";
+			}
+			//ライトの情報を呈すバッファとしてディスクリプタヒープに登録するために
+			//モデルの初期化情報として渡す。
+			modelInitData.m_expandConstantBuffer = g_light.GetLightData();
+			modelInitData.m_expandConstantBufferSize = sizeof(*g_light.GetLightData());
+			//作成した初期化データをもとにモデルを初期化する。
+			m_model.Init(modelInitData);
+		}
+		else {
+			modelInitData.m_fxFilePath = "Assets/shader/shadowReciever.fx";
+			modelInitData.m_modelUpAxis = enModelUpAxis;
+			// シャドウマップを拡張SRVに設定する。
+			modelInitData.m_expandShaderResoruceView[0] = &g_shadow.GetShadowMap().GetRenderTargetTexture();
+			// ライトビュープロジェクション行列を拡張定数バッファに設定する
+			modelInitData.m_expandConstantBuffer = (void*)&g_shadow.GetLightCamera().GetViewProjectionMatrix();
+			modelInitData.m_expandConstantBufferSize = sizeof(g_shadow.GetLightCamera().GetViewProjectionMatrix());
+			m_model.Init(modelInitData);
+		}
+
+		
+		
+	}*/
+
+	void ModelRender::InitModel(const char* filePath,
+		EnModelUpAxis enModelUpAxis,
+		bool isShadowReceiver
+	)
+	{
+		ModelInitData modelInitData;
+		// tkmファイルのファイルパスを指定する。
+		modelInitData.m_tkmFilePath = filePath;
 		modelInitData.m_fxFilePath = "Assets/shader/model.fx";
-
-
 		if (m_animationClips != nullptr) {
 			//スケルトンを指定する。
 			modelInitData.m_skeleton = &m_skeleton;
 			//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
 			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
-			//モデルの上方向を指定する。
-			modelInitData.m_modelUpAxis = enModelUpAxis;
 		}
 		else {
 			//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
 			modelInitData.m_vsEntryPointFunc = "VSMain";
 		}
-
-
+		//モデルの上方向を指定する。
+		modelInitData.m_modelUpAxis = enModelUpAxis;
 		//ライトの情報を呈すバッファとしてディスクリプタヒープに登録するために
 		//モデルの初期化情報として渡す。
 		modelInitData.m_expandConstantBuffer = g_light.GetLightData();
 		modelInitData.m_expandConstantBufferSize = sizeof(*g_light.GetLightData());
-
-	/*	// シャドウマップを拡張SRVに設定する。
-		modelInitData.m_expandShaderResoruceView[0] = &g_shadow.GetShadowMap().GetRenderTargetTexture();
-		// ライトビュープロジェクション行列を拡張定数バッファに設定する
-		modelInitData.m_expandConstantBuffer = (void*)&g_shadow.GetLightCamera().GetViewProjectionMatrix();
-		modelInitData.m_expandConstantBufferSize = sizeof(&g_shadow.GetLightCamera().GetViewProjectionMatrix());
-	*/
-
 		//作成した初期化データをもとにモデルを初期化する。
 		m_model.Init(modelInitData);
 	}
-
-	void ModelRender::InitModelOnShadowMap(const char* filePath)
+	
+	void ModelRender::InitModelOnShadowMap(const char* filePath,
+		EnModelUpAxis enModelUpAxis
+	)
 	{
-		ModelInitData modelInitData;
+		ModelInitData shadowModelInitData;
 		//モデルの上方向を指定する。
-		modelInitData.m_modelUpAxis = enModelUpAxisY;
+		shadowModelInitData.m_modelUpAxis = enModelUpAxis;
 		// tkmファイルのファイルパスを指定する。
-		modelInitData.m_tkmFilePath = filePath;
+		shadowModelInitData.m_tkmFilePath = filePath;
 		// シェーダーファイルのファイルパスを指定する。
-		modelInitData.m_fxFilePath = "Assets/shader/shadowReciever.fx";
-		// シャドウマップを拡張SRVに設定する。
-		modelInitData.m_expandShaderResoruceView[0] = &g_shadow.GetShadowMap().GetRenderTargetTexture();
-		// ライトビュープロジェクション行列を拡張定数バッファに設定する
-		modelInitData.m_expandConstantBuffer = (void*)&g_shadow.GetLightCamera().GetViewProjectionMatrix();
-		modelInitData.m_expandConstantBufferSize = sizeof(&g_shadow.GetLightCamera().GetViewProjectionMatrix());
+		shadowModelInitData.m_fxFilePath = "Assets/shader/shadowMap.fx";
+		// 初期化データをもとにモデルを初期化
+		m_shadowMapModel.Init(shadowModelInitData);
 
-		m_model.Init(modelInitData);
 	}
 
 	
@@ -128,17 +163,29 @@ namespace nsK2EngineLow {
 		}
 		// アニメーションを進める
 		m_animation.Progress(g_gameTime->GetFrameDeltaTime());
-		// ワールド行列を更新
-		m_model.UpdateWorldMatrix(m_position, m_rotation, m_scale);
+		// 通常レンダリング用モデルのワールド行列を更新
+		m_model.UpdateWorldMatrix(
+			m_position, 
+			g_quatIdentity,
+			g_vec3One
+		);
+		// シャドウマップ描画用モデルのワールド行列を更新
+		m_shadowMapModel.UpdateWorldMatrix(
+			m_position,
+			g_quatIdentity,
+			g_vec3One
+		);
 
-		
+		if (m_isShadowCaster == true) {
+			// モデルの情報の受け渡し
+			g_shadow.SetShadowModel(&m_shadowMapModel);
+		}
+
 	}
 
 	void ModelRender::Draw(RenderContext& rc)
 	{
 		m_model.Draw(rc);
-
-		
 	}
 }
 

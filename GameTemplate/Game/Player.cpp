@@ -9,7 +9,7 @@ namespace
 bool Player::Start()
 {
 	m_modelRender.Init("Assets/modelData/human/jackie.tkm", animationClips, enAnimationClip_Num);
-	m_modelRender.Update();
+	//m_modelRender.Update();
 
 	//キャラコンを初期化する。
 	m_charaCon.Init(10.0f, 45.0f, m_position);
@@ -29,7 +29,9 @@ void Player::Update()
 	//回転処理。
 	Rotation();
 	//ステート遷移処理。
-	ManageState();	
+	//ManageState();	
+
+	m_modelRender.Update();
 }
 
 void Player::Move()
@@ -110,6 +112,7 @@ void Player::Rotation()
 	m_rotation.Apply(m_forward);
 }
 
+<<<<<<< HEAD
 void Player::TransitionState()
 {
 	//HPが0になったら
@@ -219,6 +222,8 @@ void Player::DownState()
 	TransitionState();
 }
 
+=======
+>>>>>>> 32225850552c59c6915f0bddda7d665cf1ed61bd
 void Player::Render(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);

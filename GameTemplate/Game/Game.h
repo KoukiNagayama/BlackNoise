@@ -1,4 +1,5 @@
 #pragma once
+class Player;
 
 class Game : public IGameObject
 {
@@ -18,8 +19,10 @@ private:
 
 	Light m_light;
 	ModelRender m_modelRender;				// モデルレンダー
+	ModelRender m_modelRender2;
 	ModelRender m_bgModelRender;		
 	Vector3		m_position;					// 座標
+	Vector3     m_position2;
 	Vector3		m_scale = g_vec3One;		// 拡大率
 	Quaternion	m_rotation;					// 回転
 	Animation   m_animation;				// アニメーション
@@ -27,5 +30,10 @@ private:
 	Vector3		m_spPosition = {0.0f,100.0f,-10.0f};
 	Quaternion	m_qRotY;
 	Quaternion  m_qRotX;
+	SpriteRender m_spriteRender1;
+	SpriteRender m_spriteRender2;
+	Vector3		m_spritePos1;
+	Quaternion  m_spriteRot1;
+	Vector3		m_spriteSca1;
 };
 

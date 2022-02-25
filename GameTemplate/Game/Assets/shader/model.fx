@@ -160,23 +160,10 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     
     // ライトの合算により最終的な光を求める
     float3 lig = directionLig + ambientLight;
-    
-    
-  /*  float2 shadowMapUV = psIn.posInLVP.xy / psIn.posInLVP.w;
-    shadowMapUV *= float2(0.5f, -0.5f);
-    shadowMapUV += 0.5f;
-    
-    float3 shadowMap = 1.0f;
-    if (shadowMapUV.x > 0.0f && shadowMapUV.x < 1.0f
-	&& shadowMapUV.y > 0.0f && shadowMapUV.y < 1.0f
-)
-    {
-        shadowMap = g_shadowMap.Sample(g_sampler, shadowMapUV);
-    }*/
 	
     float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
     albedoColor.xyz *= lig;
-    //albedoColor.xyz *= lig * shadowMap;
+
 	return albedoColor;
 }
 

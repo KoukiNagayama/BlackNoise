@@ -21,56 +21,55 @@ bool Game::Start()
 
 	
 	//モデルの初期化
+	m_bgModelRender.Init("Assets/modelData/bg.tkm", nullptr, 0, true, enModelUpAxisZ, false);
 
-	m_bgModelRender.Init("Assets/modelData/bg.tkm");
+	//m_modelRender.Init("Assets/modelData/unityChan.tkm", m_animationClipArray, enAnimClip_Num, false, enModelUpAxisY);
+	m_modelRender.Init("Assets/modelData/unityChan.tkm");
+	m_modelRender2.Init("Assets/modelData/unityChan.tkm");
 
-	m_modelRender.Init("Assets/modelData/unityChan.tkm", m_animationClipArray, enAnimClip_Num, true, enModelUpAxisY);
+	m_position2.x = 50.0f;
 
+	m_spriteRender1.Init("Assets/sprite/Acceleration.dds", 256, 256);
+	m_spriteRender2.Init("Assets/sprite/Deceleration.dds", 256, 256);
+
+	m_spritePos1.x = 100.0f;
+	m_spritePos1.y = 200.0f;
+
+	m_spriteRot1.AddRotationDegZ(45.0f);
+	m_spriteSca1.x = 2.5f;
+	m_spriteSca1.y = 1.0f;
+	m_spriteSca1.z = 1.0f;
 	return true;
 }
 
 void Game::Update()
 {
 	// 平行移動
-	//m_position.x += g_pad[0]->GetLStickXF();
-	//m_position.y += g_pad[0]->GetLStickYF();
+	m_position.x += g_pad[0]->GetLStickXF();
+	m_position.y += g_pad[0]->GetLStickYF();
 
-	// 回転
-/*	m_rotation.AddRotationY(g_pad[0]->GetRStickXF() * 0.05f);
-	m_rotation.AddRotationX(g_pad[0]->GetRStickYF() * 0.05f);*/
-
-	// 拡大率変更
-	/*if (g_pad[0]->IsPress(enButtonUp)) {
-		m_scale.y += 0.02f;
-	}
-	if (g_pad[0]->IsPress(enButtonDown)) {
-		m_scale.y -= 0.02f;
-	}
-	if (g_pad[0]->IsPress(enButtonRight)) {
-		m_scale.x += 0.02f;
-	}
-	if (g_pad[0]->IsPress(enButtonLeft)) {
-		m_scale.x -= 0.02f;
-	}*/
-
-	//アニメーション切り替え
+	/*//アニメーション切り替え
 	if (g_pad[0]->IsPress(enButtonA)) {
 		m_modelRender.PlayAnimation(enAnimClip_Idle, 0.2f);
 	}
 	if (g_pad[0]->IsPress(enButtonB)) {
 		m_modelRender.PlayAnimation(enAnimClip_Run, 0.2f);
-	}
-
-	//ポイントライト移動
-	//m_spPosition.x += g_pad[0]->GetLStickXF();
-	//m_spPosition.z += g_pad[0]->GetLStickYF(); 
-	//g_light.SetSpotLightPosition(m_spPosition);
+	}*/
 
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.SetRotation(m_rotation);
 	m_modelRender.SetScale(m_scale);
 	m_modelRender.Update();
+
+	m_modelRender2.SetPosition(m_position2);
+	m_modelRender2.Update();
 	m_bgModelRender.Update();
+
+	m_spriteRender1.SetPosition(m_spritePos1);
+	m_spriteRender1.SetRotation(m_spriteRot1);
+	m_spriteRender1.SetScale(m_spriteSca1);
+	m_spriteRender1.Update();
+	m_spriteRender2.Update();
 }
 
 void Game::Render(RenderContext& rc)
@@ -79,4 +78,9 @@ void Game::Render(RenderContext& rc)
 	m_bgModelRender.Draw(rc);
 
 	m_modelRender.Draw(rc);
+
+	m_modelRender2.Draw(rc);
+
+	m_spriteRender1.Draw(rc);
+	m_spriteRender2.Draw(rc);
 }

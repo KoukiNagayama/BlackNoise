@@ -27,26 +27,22 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	
 	g_light.Init();
 	
-	//g_shadow.Init("Assets/modelData/unityChan.tkm");
+	//g_shadow.Init();
 
 	auto game = NewGO<Game>(0,"game");
 
-	Model bgModel;
-	InitModel(bgModel);
-
-	RenderTarget mainRenderTarget;
-	mainRenderTarget.Create(
-		1280,						//テクスチャの幅。
-		720,						//テクスチャの高さ。
-		1,							//Mipmapレベル。
-		1,							//テクスチャ配列のサイズ。
-		DXGI_FORMAT_R8G8B8A8_UNORM, //カラーバッファのフォーマット。
-		DXGI_FORMAT_D32_FLOAT		//デプスステンシルバッファのフォーマット。
-	);
-
-	//g_bloom.InitBloom(mainRenderTarget);
 
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
+
+	/*SpriteInitData spriteInitData;
+	spriteInitData.m_ddsFilePath[0] = "Assets/sprite/Acceleration.dds";
+	//spriteInitData.m_textures[0] = &g_shadow.GetShadowMap().GetRenderTargetTexture();
+	spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
+	spriteInitData.m_width = 256;
+	spriteInitData.m_height = 256;
+
+	Sprite sprite;
+	sprite.Init(spriteInitData);*/
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -54,28 +50,25 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		
 		// フレームの開始時に呼び出す必要がある処理を実行
 		g_k2EngineLow->BeginFrame();
-		
-		//bgModel.Draw(renderContext);
+
 		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
+
+		// シャドウマップへのモデルの描画
+		//g_shadow.RenderToShadowMap(renderContext);
 		g_light.Update();
+
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 
-		//g_shadow.Render(renderContext);
+		//sprite.Update({ FRAME_BUFFER_W / -2.0f, FRAME_BUFFER_H / 2.0f,  0.0f }, g_quatIdentity, g_vec3One, { 0.0f, 1.0f });
+		//sprite.Draw(renderContext);
 
-		//g_bloom.ChangeRenderTarget(renderContext, mainRenderTarget);
-
-		//game->Render(renderContext);
-
-		//g_bloom.Render(renderContext, mainRenderTarget);
-
-
-
-		g_k2EngineLow->ExecuteRender();
-
+		
 		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();
+
+
 
 		// フレームの終了時に呼び出す必要がある処理を実行。
 		g_k2EngineLow->EndFrame();
@@ -86,15 +79,4 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	delete g_k2EngineLow;
 
 	return 0;
-}
-
-void InitModel(Model& bgModel)
-{
-	ModelInitData bgModelInitData;
-	bgModelInitData.m_tkmFilePath = "Assets/modelData/bg.tkm";
-	bgModelInitData.m_fxFilePath = "Assets/shader/model.fx";
-	bgModelInitData.m_vsEntryPointFunc = "VSMain";
-	bgModelInitData.m_expandConstantBuffer = g_light.GetLightData();
-	bgModelInitData.m_expandConstantBufferSize = sizeof(*g_light.GetLightData());
-	bgModel.Init(bgModelInitData);
 }
