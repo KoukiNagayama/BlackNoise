@@ -7,6 +7,7 @@
 #include "Shadow.h"
 
 
+
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
 
@@ -25,24 +26,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D->SetPosition({ 0.0f, 50.0f, 200.0f });
 	g_camera3D->SetTarget({ 0.0f, 70.0f, 0.0f });
 	
+	// ライト情報の初期化
 	g_light.Init();
 	
 	//g_shadow.Init();
 
 	auto game = NewGO<Game>(0,"game");
 
-
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
-
-	/*SpriteInitData spriteInitData;
-	spriteInitData.m_ddsFilePath[0] = "Assets/sprite/Acceleration.dds";
-	//spriteInitData.m_textures[0] = &g_shadow.GetShadowMap().GetRenderTargetTexture();
-	spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
-	spriteInitData.m_width = 256;
-	spriteInitData.m_height = 256;
-
-	Sprite sprite;
-	sprite.Init(spriteInitData);*/
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -56,15 +47,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 		// シャドウマップへのモデルの描画
 		//g_shadow.RenderToShadowMap(renderContext);
+
+		// ライト情報の更新
 		g_light.Update();
 
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 
-		//sprite.Update({ FRAME_BUFFER_W / -2.0f, FRAME_BUFFER_H / 2.0f,  0.0f }, g_quatIdentity, g_vec3One, { 0.0f, 1.0f });
-		//sprite.Draw(renderContext);
-
-		
 		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();
 

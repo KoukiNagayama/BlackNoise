@@ -123,13 +123,13 @@
       <Filter>HID</Filter>
     </ClCompile>
     <ClCompile Include="level2D\CaslFile.cpp">
-      <Filter>level2D</Filter>
+      <Filter>HID\level2D</Filter>
     </ClCompile>
     <ClCompile Include="level2D\Level2D.cpp">
-      <Filter>level2D</Filter>
+      <Filter>HID\level2D</Filter>
     </ClCompile>
     <ClCompile Include="level2D\MapChip2D.cpp">
-      <Filter>level2D</Filter>
+      <Filter>HID\level2D</Filter>
     </ClCompile>
     <ClCompile Include="level3D\TklFile.cpp">
       <Filter>level3D</Filter>
@@ -232,6 +232,7 @@
     <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="SpriteRender.cpp" />
+    <ClCompile Include="FontRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -380,13 +381,13 @@
       <Filter>HID</Filter>
     </ClInclude>
     <ClInclude Include="level2D\MapChip2D.h">
-      <Filter>level2D</Filter>
+      <Filter>HID\level2D</Filter>
     </ClInclude>
     <ClInclude Include="level2D\CaslFile.h">
-      <Filter>level2D</Filter>
+      <Filter>HID\level2D</Filter>
     </ClInclude>
     <ClInclude Include="level2D\Level2D.h">
-      <Filter>level2D</Filter>
+      <Filter>HID\level2D</Filter>
     </ClInclude>
     <ClInclude Include="level3D\TklFile.h">
       <Filter>level3D</Filter>
@@ -513,6 +514,7 @@
     <ClInclude Include="Bloom.h" />
     <ClInclude Include="Shadow.h" />
     <ClInclude Include="SpriteRender.h" />
+    <ClInclude Include="FontRender.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">
@@ -535,9 +537,6 @@
     </Filter>
     <Filter Include="HID">
       <UniqueIdentifier>{40fbc6f1-281e-445e-840a-214900cbae58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="level2D">
-      <UniqueIdentifier>{7f0084f2-a2b2-4404-99e9-723b67f2d09f}</UniqueIdentifier>
     </Filter>
     <Filter Include="level3D">
       <UniqueIdentifier>{8468c3ec-e994-49b3-9b6a-a58ff7b275bf}</UniqueIdentifier>
@@ -574,6 +573,9 @@
     </Filter>
     <Filter Include="light">
       <UniqueIdentifier>{17acc50a-817e-4dc9-bb98-bf6889cd1ebd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HID\level2D">
+      <UniqueIdentifier>{7f0084f2-a2b2-4404-99e9-723b67f2d09f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

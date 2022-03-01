@@ -48,7 +48,9 @@ struct SVSIn{
 	float4 pos 		: POSITION;		//モデルの頂点座標。
 	float2 uv 		: TEXCOORD0;	//UV座標。
 	SSkinVSIn skinVert;				//スキン用のデータ。
-	float3 normal	: NORMAL;
+	float3 normal	: NORMAL;       //法線
+  //  float3 tangent  : TANGENT;      //接ベクトル。 
+  //  float3 biNormal : BINORMAL;　　 //従ベクトル。
 };
 //ピクセルシェーダーへの入力。
 struct SPSIn{
@@ -58,16 +60,16 @@ struct SPSIn{
     float3 worldPos		: TEXCOORD1;
     float3 normalInView : TEXCOORD2;
     float4 posInLVP     : TEXCOORD3;    //ライトビュースクリーン空間でのピクセルの座標
-
 };
 
 ////////////////////////////////////////////////
 // グローバル変数。
 ////////////////////////////////////////////////
 Texture2D<float4> g_albedo : register(t0);				//アルベドマップ
+//Texture2D<float4> g_normalMap : register(t1);           //法線マップ
 Texture2D<float4> g_specularMap : register(t2);         //スペキュラマップ
 StructuredBuffer<float4x4> g_boneMatrix : register(t3);	//ボーン行列。
-Texture2D<float4> g_shadowMap : register(t10);          // シャドウマップ
+Texture2D<float4> g_shadowMap : register(t10);          //シャドウマップ
 sampler g_sampler : register(s0);	//サンプラステート。
 
 ////////////////////////////////////////////////
@@ -85,6 +87,8 @@ float3 CalcLigFromDirectionLight(SPSIn psIn);
 float3 CalcLigFromSpotLight(SPSIn psIn);
 // リムライトの計算
 float3 CalcLigFromLimLight(SPSIn psIn);
+// 法線の計算
+float3 CalcNormal(SPSIn psIn);
 
 /// <summary>
 //スキン行列を計算する。
@@ -126,7 +130,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	psIn.uv = vsIn.uv;
     
     psIn.normalInView = mul(mView, psIn.normal);
-    //psIn.posInLVP = mul(mLVP, psIn.worldPos);
+    
 	return psIn;
 }
 
