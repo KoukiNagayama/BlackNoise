@@ -112,6 +112,118 @@ void Player::Rotation()
 	m_rotation.Apply(m_forward);
 }
 
+<<<<<<< HEAD
+void Player::TransitionState()
+{
+	//HPが0になったら
+	if (m_hp == 0)
+	{
+		m_playerState = enPlayerState_Down;
+		return;
+	}
+	//xかzの移動速度があったら(スティックの入力があったら)。
+	if (fabsf(m_moveSpeed.x) >= 0.001f || fabsf(m_moveSpeed.z) >= 0.001f)
+	{
+		//Bボタンを押している間は走る。
+		if (g_pad[0]->IsPress(enButtonB))
+		{
+			m_playerState = enPlayerState_Run;
+			return;
+		}
+		//LBボタンを押している間しゃがむ。
+		if (g_pad[0]->IsPress(enButtonLB2))
+		{
+			m_playerState = enPlayerState_Sneak;
+			return;
+		}
+		m_playerState = enPlayerState_Walk;
+	}
+	else
+	{
+		//止まる前がしゃがみ状態だったら
+		if (m_playerState = enPlayerState_SneakIdle)
+		{
+			m_playerState = enPlayerState_SneakIdle;
+			return;
+		}
+		m_playerState = enPlayerState_Idle;
+	}
+}
+
+void Player::ManageState()
+{
+	switch (m_playerState)
+	{
+		//待機ステート
+	case enPlayerState_Idle:
+		IdleState();
+		break;
+		//歩きステート
+	case enPlayerState_Walk:
+		WalkState();
+		break;
+		//走りステート
+	case enPlayerState_Run:
+		RunState();
+		break;
+		//しゃがみ状態
+	case enPlayerState_Sneak:
+		SneakState();
+		break;
+		//しゃがみ待機状態
+	case enPlayerState_SneakIdle:
+		SneakIdleState();
+		break;
+		//ダメージ状態
+	case enPlayerState_Damage:
+		DamageState();
+		break;
+		//ダウン状態
+	case enPlayerState_Down:
+		DownState();
+		break;
+	default:
+		break;
+	}
+}
+//待機ステート時の処理
+void Player::IdleState()
+{
+	TransitionState();
+}
+//歩きステート時の処理
+void Player::WalkState()
+{
+	TransitionState();
+}
+//走りステージの処理
+void Player::RunState()
+{
+	TransitionState();
+}
+//しゃがみステート時の処理
+void Player::SneakState()
+{
+	TransitionState();
+}
+//しゃがみ待機ステート時の処理
+void Player::SneakIdleState()
+{
+	TransitionState();
+}
+//ダメージステート時の処理
+void Player::DamageState()
+{
+	TransitionState();
+}
+//ダウンステート時の処理
+void Player::DownState()
+{
+	TransitionState();
+}
+
+=======
+>>>>>>> 32225850552c59c6915f0bddda7d665cf1ed61bd
 void Player::Render(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);

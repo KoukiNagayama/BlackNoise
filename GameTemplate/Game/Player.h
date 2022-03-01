@@ -32,6 +32,11 @@ public:
 			m_playerState != enPlayerState_Down;
 	}
 
+	void ReceiveDamege()
+	{
+		m_playerState = enPlayerState_Damage;
+	}
+
 private:
 	/// <summary>
 	/// 更新処理
@@ -75,6 +80,10 @@ private:
 	/// </summary>
 	void SneakState();
 	/// <summary>
+	/// しゃがみ待機ステート時の処理。
+	/// </summary>
+	void SneakIdleState();
+	/// <summary>
 	/// ダメージステート時の処理。
 	/// </summary>
 	void DamageState();
@@ -96,13 +105,15 @@ private:
 		enAnimationClip_Num				//アニメーションの数
 	};
 
-	Vector3 m_moveSpeed;
-	Vector3 m_forward;
-	Vector3 m_position;
-	Quaternion m_rotation;
-	EnPlayerState m_playerState = enPlayerState_Idle;
-	ModelRender m_modelRender;
-	AnimationClip animationClips[enAnimationClip_Num];
-	CharacterController m_charaCon;
+	int m_hp = 3;											//HP
+
+	Vector3 m_moveSpeed;									//移動速度
+	Vector3 m_forward;										//プレイヤーの前方向
+	Vector3 m_position;										//座標
+	Quaternion m_rotation;									//回転
+	EnPlayerState m_playerState = enPlayerState_Idle;		//ステート
+	ModelRender m_modelRender;								//モデルレンダー
+	AnimationClip animationClips[enAnimationClip_Num];		//アニメーションクリップ
+	CharacterController m_charaCon;							//キャラクターコントローラー
 };
 
