@@ -1,5 +1,6 @@
 #pragma once
 class Player;
+class GameCamera;
 
 class Game : public IGameObject
 {
@@ -29,5 +30,6 @@ private:
 	AnimationClip m_animationClipArray[enAnimClip_Num];	// アニメーションクリップ
 
 	Player* m_player = nullptr;
+	GameCamera* m_gamecam = nullptr;
 };
 

@@ -31,10 +31,20 @@ public:
 		return m_playerState != enPlayerState_Damage &&
 			m_playerState != enPlayerState_Down;
 	}
-
+	/// <summary>
+	/// ダメージステートの設定
+	/// </summary>
 	void ReceiveDamege()
 	{
 		m_playerState = enPlayerState_Damage;
+	}
+	/// <summary>
+	/// 座標を渡す。
+	/// </summary>
+	/// <returns>m_positon</returns>
+	const Vector3 GetPosition()
+	{
+		return m_position;
 	}
 
 private:
@@ -108,8 +118,8 @@ private:
 	int m_hp = 3;											//HP
 
 	Vector3 m_moveSpeed;									//移動速度
-	Vector3 m_forward;										//プレイヤーの前方向
-	Vector3 m_position;										//座標
+	Vector3 m_forward ;						//プレイヤーの前方向
+	Vector3 m_position = Vector3::Zero;										//座標
 	Quaternion m_rotation;									//回転
 	EnPlayerState m_playerState = enPlayerState_Idle;		//ステート
 	ModelRender m_modelRender;								//モデルレンダー
