@@ -112,7 +112,6 @@ void Player::Rotation()
 	m_rotation.Apply(m_forward);
 }
 
-<<<<<<< HEAD
 void Player::TransitionState()
 {
 	//HP‚ª0‚É‚È‚Á‚½‚ç
@@ -222,8 +221,6 @@ void Player::DownState()
 	TransitionState();
 }
 
-=======
->>>>>>> 32225850552c59c6915f0bddda7d665cf1ed61bd
 void Player::Render(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);

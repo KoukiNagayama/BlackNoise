@@ -19,7 +19,8 @@ namespace nsK2EngineLow {
 			int numAnimationClips = 0,
 			bool isShadowReceiver = true,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
-			bool isShadowCaster = true
+			bool isShadowCaster = true,
+			bool isDrawingEdges = true
 		);
 		/// <summary>
 		/// 更新処理
@@ -92,7 +93,16 @@ namespace nsK2EngineLow {
 		/// シャドウマップ描画用のモデルを初期化
 		/// </summary>
 		/// <param name="filePath">ファイルパス</param>
+		/// <param name="enModelUpAxis">モデルの上方向</param>
 		void InitModelOnShadowMap(const char* filePath,
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+		);
+		/// <summary>
+		/// 輪郭線描画用のモデルを初期化
+		/// </summary>
+		/// <param name="filePath">ファイルパス</param>
+		/// <param name="enModelUpAxis">モデルの上方向</param>
+		void InitModelOnDepthValueMap(const char* filePath,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
 		);
 
@@ -109,6 +119,8 @@ namespace nsK2EngineLow {
 		Model				m_shadowMapModel;
 		Model				m_shadowModel;
 		bool				m_isShadowCaster;
+		std::vector<Model>	m_modelArray;
+		Model				m_depthValueMapModel;
 
 	};
 }

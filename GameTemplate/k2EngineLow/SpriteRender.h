@@ -113,7 +113,6 @@ namespace nsK2EngineLow {
 		Quaternion	m_rotation = Quaternion::Identity;		// 回転
 		Vector3		m_scale = Vector3::One;					// 大きさ
 		Vector2		m_pivot = Sprite::DEFAULT_PIVOT;		// ピボット
-		std::vector<Sprite*> m_spriteArray;
 	};
 }
 

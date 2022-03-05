@@ -4,6 +4,7 @@
 #include "PointLight.h"
 #include "Light.h"
 #include "Shadow.h"
+#include "DepthValueMap.h"
 
 namespace nsK2EngineLow {
 	ModelRender::ModelRender()
@@ -21,7 +22,8 @@ namespace nsK2EngineLow {
 		int numAnimationClips,
 		bool isShadowReceiver,
 		EnModelUpAxis enModelUpAxis,
-		bool isShadowCaster
+		bool isShadowCaster,
+		bool isDrawingEdges
 	)
 	{
 		// アニメーションを代入(アニメーションの有無判定のため)
@@ -33,6 +35,9 @@ namespace nsK2EngineLow {
 		if (isShadowCaster == true) {
 			// シャドウマップ描画用モデルの初期化
 			InitModelOnShadowMap(filePath);
+		}
+		if (isDrawingEdges) {
+			//InitModelForEdgeDrawing(filePath, enModelUpAxis);
 		}
 		// モデルの初期化
 		InitModel(filePath, enModelUpAxis, isShadowReceiver);
@@ -154,6 +159,20 @@ namespace nsK2EngineLow {
 
 	}
 
+	void ModelRender::InitModelOnDepthValueMap(const char* filePath,
+		EnModelUpAxis enModelUpAxis)
+	{
+		ModelInitData modelInitData;
+		// モデルの上方向を指定する
+		modelInitData.m_modelUpAxis = enModelUpAxis;
+		// シェーダーファイルのファイルパスを指定する
+		modelInitData.m_fxFilePath = "Assets/shader/depthValueMap.fx";
+		// tkmファイルのファイルパスを指定する
+		modelInitData.m_tkmFilePath = filePath;
+		// 初期化データをもとにモデルを初期化
+		m_depthValueMapModel.Init(modelInitData);
+	}
+
 	
 	void ModelRender::Update()
 	{
@@ -171,6 +190,12 @@ namespace nsK2EngineLow {
 		);
 		// シャドウマップ描画用モデルのワールド行列を更新
 		m_shadowMapModel.UpdateWorldMatrix(
+			m_position,
+			g_quatIdentity,
+			g_vec3One
+		);
+
+		m_depthValueMapModel.UpdateWorldMatrix(
 			m_position,
 			g_quatIdentity,
 			g_vec3One

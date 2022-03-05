@@ -94,24 +94,6 @@ namespace nsK2EngineLow {
 
 	void Light::Update()
 	{
-		m_light.spPosition = m_spPosition;
-
-		/*Quaternion qRotY;
-		qRotY.SetRotationY(g_pad[0]->GetRStickXF() * 0.01f);
-		//計算したクォータニオンでライトの方向を回す。
-		qRotY.Apply(m_light.spDirection);
-
-		//X軸周りの回転クォータニオンを計算する。
-		Vector3 rotAxis;
-		rotAxis.Cross(g_vec3AxisY, m_light.spDirection);*/
-		/*Quaternion qRotY;
-		qRotY.SetRotation(g_vec3AxisY, g_pad[0]->GetRStickXF() * 0.02f);
-		//計算したクォータニオンでライトの方向を回す。
-		qRotY.Apply(m_light.limDirection);*/
-
-		//m_light.dirColor.x += g_pad[0]->GetLStickXF() * 0.8f;
-		//m_light.dirColor.y += g_pad[0]->GetLStickXF() * 0.8f;
-		//m_light.dirColor.z += g_pad[0]->GetLStickXF() * 0.8f;
 
 	}
 	Light g_light;

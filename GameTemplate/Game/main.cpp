@@ -5,6 +5,7 @@
 #include "Light.h"
 #include "Bloom.h"
 #include "Shadow.h"
+#include "DepthValueMap.h"
 
 
 
@@ -31,6 +32,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	
 	//g_shadow.Init();
 
+	g_depthValueMap.Init();
+
 	auto game = NewGO<Game>(0,"game");
 
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
@@ -47,6 +50,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 		// シャドウマップへのモデルの描画
 		//g_shadow.RenderToShadowMap(renderContext);
+
+		g_depthValueMap.RenderToDepthValueMap(renderContext);
 
 		// ライト情報の更新
 		g_light.Update();
