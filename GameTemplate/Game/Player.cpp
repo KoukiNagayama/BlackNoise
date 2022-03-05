@@ -3,13 +3,15 @@
 
 namespace
 {
-	const float MOVESPEED = 250.0f;
+	const float MOVESPEED = 70.0f;
+	const float MOVE_RUN = 1.4f;
+	const float MOVE_SNEAK = 0.58f;
 }
 
 bool Player::Start()
 {
-	m_modelRender.Init("Assets/modelData/human/jackie.tkm", animationClips, enAnimationClip_Num);
-	//m_modelRender.Update();
+	m_modelRender.Init("Assets/modelData/human/jackie.tkm");
+	m_modelRender.SetPosition(m_position);
 
 	//キャラコンを初期化する。
 	m_charaCon.Init(10.0f, 45.0f, m_position);
@@ -29,7 +31,7 @@ void Player::Update()
 	//回転処理。
 	Rotation();
 	//ステート遷移処理。
-	//ManageState();	
+	ManageState();	
 
 	m_modelRender.Update();
 }
@@ -42,7 +44,7 @@ void Player::Move()
 	}
 	//x,zの移動速度を0にする。
 	m_moveSpeed.x = 0.0f;
-	m_moveSpeed.y = 0.0f;
+	m_moveSpeed.z = 0.0f;
 
 	//左スティックの入力量を計算
 	Vector3 stickL;
@@ -64,29 +66,21 @@ void Player::Move()
 	//走りステートなら速度を1.3倍にする。
 	if (m_playerState == enPlayerState_Run)
 	{
-		m_moveSpeed.x *= 1.3f;
-		m_moveSpeed.z *= 1.3f;
+		m_moveSpeed.x *= MOVE_RUN;
+		m_moveSpeed.z *= MOVE_RUN;
 	}
 	//しゃがみステートなら速度を0.7倍にする。
 	if (m_playerState == enPlayerState_Sneak)
 	{
-		m_moveSpeed.x *= 0.7f;
-		m_moveSpeed.z *= 0.7f;
+		m_moveSpeed.x *= MOVE_SNEAK;
+		m_moveSpeed.z *= MOVE_SNEAK;
 	}
-
 	//地面についていたら
 	if (m_charaCon.IsOnGround())
 	{
 		//重力をなくす。
 		m_moveSpeed.y = 0.0f;
 	}
-	//地面についていなかったら
-	else
-	{
-		//重力を発生させる。
-		m_moveSpeed.y -= pow(m_moveSpeed.y, 9.8f);
-	}
-
 	//キャラコンを使って座標を移動させる。
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 	//座標を設定する。
@@ -95,11 +89,7 @@ void Player::Move()
 
 void Player::Rotation()
 {
-	//移動していないときは回転しない
-	if (fabsf(m_moveSpeed.x) < 0.001f
-		&& fabsf(m_moveSpeed.z) < 0.001f) {
-		return;
-	}
+
 	//回転角度を計算する。
 	float angle = atan2(-m_moveSpeed.x, m_moveSpeed.z);
 	m_rotation.SetRotationY(-angle);
@@ -108,7 +98,6 @@ void Player::Rotation()
 	m_modelRender.SetRotation(m_rotation);
 
 	//プレイヤーの正面ベクトルを計算する。
-	m_forward = Vector3::AxisZ;
 	m_rotation.Apply(m_forward);
 }
 

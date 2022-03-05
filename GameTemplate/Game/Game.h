@@ -1,5 +1,6 @@
 #pragma once
 class Player;
+class GameCamera;
 
 class Game : public IGameObject
 {
@@ -27,10 +28,8 @@ private:
 	Quaternion	m_rotation;					// 回転
 	Animation   m_animation;				// アニメーション
 	AnimationClip m_animationClipArray[enAnimClip_Num];	// アニメーションクリップ
-	SpriteRender m_sprite1;
-	SpriteRender m_sprite2;
-	Vector3	m_spritePos1;
-	FontRender m_font1;
-	FontRender m_font2;
+
+	Player*		m_player;
+	GameCamera* m_gamecam;
 };
 
