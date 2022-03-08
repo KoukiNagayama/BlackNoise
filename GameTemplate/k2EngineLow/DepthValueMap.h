@@ -43,9 +43,9 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void InitCamera();
 	private:
-		std::vector<Model*> m_modelArray;
-		Camera				m_camera;
-		RenderTarget		m_depthValueMap;
+		std::vector<Model*> m_modelArray;		// モデル配列
+		Camera				m_camera;			// カメラ
+		RenderTarget		m_depthValueMap;	// 深度値マップのレンダリングターゲット
 	};
 
 	extern DepthValueMap g_depthValueMap;

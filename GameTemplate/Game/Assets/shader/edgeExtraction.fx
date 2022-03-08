@@ -35,7 +35,8 @@ cbuffer ModelCb : register(b0)
 ///////////////////////////////////////////
 // シェーダーリソース
 ///////////////////////////////////////////
-Texture2D<float4> g_texture : register(t0);　// モデルテクスチャ
+Texture2D<float4> g_texture : register(t0); // モデルテクスチャ
+Texture2D<float4> g_normalTexture : register(t1); // 法線テクスチャ
 Texture2D<float4> g_depthValueTexture : register(t10); // 深度テクスチャ
 
 ///////////////////////////////////////////
@@ -46,7 +47,7 @@ sampler g_sampler : register(s0); // サンプラー
 /// <summary>
 /// モデル用の頂点シェーダーのエントリーポイント
 /// </summary>
-SPSIn VSMain(SVSIn vsIn, uniform bool hasSkin)
+SPSIn VSMain(SVSIn vsIn)
 {
     SPSIn psIn;
 
@@ -55,8 +56,7 @@ SPSIn VSMain(SVSIn vsIn, uniform bool hasSkin)
     psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
     psIn.uv = vsIn.uv;
     psIn.posInProj = psIn.pos; // 頂点の正規化スクリーン座標系の座標をピクセルシェーダーに渡す
-    psIn.posInProj.xy /= psIn.posInProj.w;
-
+    
     return psIn;
 }
 
@@ -66,21 +66,23 @@ SPSIn VSMain(SVSIn vsIn, uniform bool hasSkin)
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
     // 正規化スクリーン座標系からUV座標系に変換する
-    float2 uv = psIn.posInProj.xy * float2(0.5f, -0.5f) + 0.5f;
-
+    float2 uv = (psIn.posInProj.xy / psIn.posInProj.w) * float2(0.5f, -0.5f) + 0.5f;
+    
     // 近傍8テクセルへのUVオフセット
     float2 uvOffset[8] =
     {
-        float2(0.0f, 1.0f / 720.0f), //上
-        float2(0.0f, -1.0f / 720.0f), //下
-        float2(1.0f / 1280.0f, 0.0f), //右
-        float2(-1.0f / 1280.0f, 0.0f), //左
-        float2(1.0f / 1280.0f, 1.0f / 720.0f), //右上
-        float2(-1.0f / 1280.0f, 1.0f / 720.0f), //左上
-        float2(1.0f / 1280.0f, -1.0f / 720.0f), //右下
-        float2(-1.0f / 1280.0f, -1.0f / 720.0f) //左下
+        float2(0.0f, 1.0f / 900.0f), //上
+        float2(0.0f, -1.0f / 900.0f), //下
+        float2(1.0f / 1600.0f, 0.0f), //右
+        float2(-1.0f / 1600.0f, 0.0f), //左
+        float2(1.0f / 1600.0f, 1.0f / 900.0f), //右上
+        float2(-1.0f / 1600.0f, 1.0f / 900.0f), //左上
+        float2(1.0f / 1600.0f, -1.0f / 900.0f), //右下
+        float2(-1.0f / 1600.0f, -1.0f / 900.0f) //左下
     };
 
+    
+    // 深度値
     // このピクセルの深度値を取得
     float depth = g_depthValueTexture.Sample(g_sampler, uv).x;
 
@@ -93,12 +95,14 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     depth2 /= 8.0f;
 
     // 自身の深度値と近傍8テクセルの深度値の差を調べる
-    if (abs(depth - depth2) > 0.00005f)
+    if (abs(depth - depth2) > 0.000045f)
     {
-        // 深度値が結構違う場合はピクセルカラーを黒にする
-        return float4(0.0f, 0.0f, 0.0f, 1.0f);
+        // 深度値が結構違う場合はピクセルカラーを白にする
+        return float4(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     // 普通にテクスチャを
-    return g_texture.Sample(g_sampler, psIn.uv);
+    //return g_texture.Sample(g_sampler, psIn.uv);
+    // ピクセルカラーを白にしなかったピクセルは黒にする
+    return float4(0.0f, 0.0f, 0.0f, 1.0f);
 }

@@ -1,6 +1,5 @@
 #pragma once
 namespace nsK2EngineLow {
-	class Shadow;
 	class ModelRender
 	{
 	public:
@@ -14,13 +13,13 @@ namespace nsK2EngineLow {
 		/// <param name="numAnimationClips">アニメーションクリップの数</param>
 		/// <param name="isShadowReceiver">影を受けるかどうか</param>
 		/// <param name="enModelUpAxis">モデルの上方向</param>
+		/// <param name="isShadowCaster">影をキャストするか</param>
 		void Init(const char* filePath,
 			AnimationClip* animationClips = nullptr,
 			int numAnimationClips = 0,
 			bool isShadowReceiver = true,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
-			bool isShadowCaster = true,
-			bool isDrawingEdges = true
+			bool isShadowCaster = true
 		);
 		/// <summary>
 		/// 更新処理
@@ -78,6 +77,14 @@ namespace nsK2EngineLow {
 			bool isShadowReceiver = true
 		);
 		/// <summary>
+		/// 輪郭線描画モデルの初期化
+		/// </summary>
+		/// <param name="filePath">ファイルパス</param>
+		/// <param name="enModelUpAxis">モデルの上方向</param>
+		void InitModelWithContours(const char* filePath,
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+		);
+		/// <summary>
 		/// スケルトンの初期化
 		/// </summary>
 		/// <param name="filePath">ファイルパス</param>
@@ -98,7 +105,7 @@ namespace nsK2EngineLow {
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
 		);
 		/// <summary>
-		/// 輪郭線描画用のモデルを初期化
+		/// 深度値マップ描画用のモデルを初期化
 		/// </summary>
 		/// <param name="filePath">ファイルパス</param>
 		/// <param name="enModelUpAxis">モデルの上方向</param>
@@ -107,6 +114,7 @@ namespace nsK2EngineLow {
 		);
 
 
+	private:
 		Model				m_model;							// モデル
 		Skeleton			m_skeleton;							// スケルトン
 		Animation			m_animation;						// アニメーション
@@ -115,12 +123,12 @@ namespace nsK2EngineLow {
 		Vector3				m_position = Vector3::Zero;			// 座標
 		Vector3				m_scale = Vector3::One;				// 拡大率
 		Quaternion			m_rotation = Quaternion::Identity;	// 回転
-		std::vector<Model>  m_shadowModelArray;					// 影モデル
-		Model				m_shadowMapModel;
-		Model				m_shadowModel;
-		bool				m_isShadowCaster;
-		std::vector<Model>	m_modelArray;
-		Model				m_depthValueMapModel;
+		std::vector<Model>  m_shadowModelArray;					// 影モデル配列
+		Model				m_shadowMapModel;					// シャドウマップ描画用モデル
+		Model				m_shadowModel;						// 影モデル
+		bool				m_isShadowCaster;					// 影をキャストするか
+		std::vector<Model>	m_modelArray;						// モデル配列
+		Model				m_depthValueMapModel;				// 深度値マップ描画用モデル
 
 	};
 }

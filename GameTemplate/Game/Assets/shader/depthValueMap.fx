@@ -31,7 +31,7 @@ struct SPSIn
 // ピクセルシェーダーからの出力
 struct SPSOut
 {
-    float depth : SV_TARGET0;   // レンダリングターゲット0に描画
+    float depth : SV_TARGET0;   //レンダリングターゲット0に描画
 };
 
 ///////////////////////////////////////////
@@ -59,12 +59,8 @@ SPSIn VSMain(SVSIn vsIn)
     psIn.pos = mul(mWorld, vsIn.pos);
     psIn.worldPos = psIn.pos;
     psIn.pos = mul(mView, psIn.pos);
-    
-    psIn.depthInView = psIn.pos.z;
     psIn.pos = mul(mProj, psIn.pos);
-    psIn.normal = normalize(mul(mWorld, vsIn.normal));
-    psIn.tangent = normalize(mul(mWorld, vsIn.tangent));
-    psIn.biNormal = normalize(mul(mWorld, vsIn.biNormal));
+    
     psIn.uv = vsIn.uv;
     
     return psIn;
@@ -78,7 +74,7 @@ SPSOut PSMain(SPSIn psIn)
     SPSOut psOut;
     
     // カメラ空間での深度値を設定
-    psOut.depth = psIn.depthInView;
+    psOut.depth = psIn.pos.z;
     
     return psOut;
 }

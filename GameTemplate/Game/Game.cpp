@@ -28,9 +28,13 @@ bool Game::Start()
 	//////////////////////////////////////////////////////////////////////////////////////
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 	//”wŒiƒ‚ƒfƒ‹‚Ì“Ç‚Ýž‚ÝB
+	
+	m_modelRender.Init("Assets/modelData/unityChan.tkm");
+
 	m_bgModelRender.Init("Assets/modelData/bg.tkm", nullptr, 0, true, enModelUpAxisZ, false);
 
-	m_modelRender.Init("Assets/modelData/unityChan.tkm");
+
+	m_position.x = 100.0f;
 	return true;
 }
 
@@ -38,8 +42,9 @@ void Game::Update()
 {
 	//////////////////////////////////////////////////////
 	//// •½sˆÚ“®
-	//m_position.x += g_pad[0]->GetLStickXF();
-	//m_position.y += g_pad[0]->GetLStickYF();
+	m_position.x += g_pad[0]->GetLStickXF();
+	m_position.z += g_pad[0]->GetLStickYF();
+
 
 	///*//ƒAƒjƒ[ƒVƒ‡ƒ“Ø‚è‘Ö‚¦
 	//if (g_pad[0]->IsPress(enButtonA)) {
@@ -60,15 +65,16 @@ void Game::Update()
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.SetRotation(m_rotation);
 	m_modelRender.SetScale(m_scale);
+	m_bgModelRender.Update();
 	m_modelRender.Update();
 
-	m_bgModelRender.Update();
+
 }
 
 void Game::Render(RenderContext& rc)
 {
 	//”wŒi‚ð•`ŽÊ
-	m_bgModelRender.Draw(rc);
+	
 	m_modelRender.Draw(rc);
-
+	m_bgModelRender.Draw(rc);
 }

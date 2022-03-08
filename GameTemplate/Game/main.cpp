@@ -9,6 +9,7 @@
 
 
 
+
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
 
@@ -36,6 +37,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	auto game = NewGO<Game>(0,"game");
 
+	SpriteInitData spriteInitData;
+	spriteInitData.m_textures[0] = &g_depthValueMap.GetDepthValueMap().GetRenderTargetTexture();
+	spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
+	spriteInitData.m_width = 256;
+	spriteInitData.m_height = 256;
+
+	Sprite sprite;
+	sprite.Init(spriteInitData);
+
+
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
 
 	// ここからゲームループ。
@@ -51,6 +62,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// シャドウマップへのモデルの描画
 		//g_shadow.RenderToShadowMap(renderContext);
 
+		// 深度値マップへのモデルの描画
 		g_depthValueMap.RenderToDepthValueMap(renderContext);
 
 		// ライト情報の更新
@@ -58,6 +70,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
+
+
+		//sprite.Update({ FRAME_BUFFER_W / -2.0f, FRAME_BUFFER_H / 2.0f,  0.0f }, g_quatIdentity, g_vec3One, { 0.0f, 1.0f });
+		//sprite.Draw(renderContext);
 
 		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();
@@ -67,8 +83,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// フレームの終了時に呼び出す必要がある処理を実行。
 		g_k2EngineLow->EndFrame();
 	}
-
-	
 
 	delete g_k2EngineLow;
 

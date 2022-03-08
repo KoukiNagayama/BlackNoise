@@ -22,8 +22,7 @@ namespace nsK2EngineLow {
 		int numAnimationClips,
 		bool isShadowReceiver,
 		EnModelUpAxis enModelUpAxis,
-		bool isShadowCaster,
-		bool isDrawingEdges
+		bool isShadowCaster
 	)
 	{
 		// アニメーションを代入(アニメーションの有無判定のため)
@@ -32,16 +31,16 @@ namespace nsK2EngineLow {
 		InitSkeleton(filePath);
 		// アニメーションの初期化
 		InitAnimation(animationClips, numAnimationClips);
-		if (isShadowCaster == true) {
+		/*if (isShadowCaster == true) {
 			// シャドウマップ描画用モデルの初期化
 			InitModelOnShadowMap(filePath);
-		}
-		if (isDrawingEdges) {
-			//InitModelForEdgeDrawing(filePath, enModelUpAxis);
-		}
+		}*/
+		// 深度値マップ描画用モデルの初期化
+		InitModelOnDepthValueMap(filePath);
 		// モデルの初期化
-		InitModel(filePath, enModelUpAxis, isShadowReceiver);
-
+		//InitModel(filePath, enModelUpAxis, isShadowReceiver);
+		InitModelWithContours(filePath, enModelUpAxis);
+		// 影をキャストするか
 		m_isShadowCaster = isShadowCaster;
 	}
 
@@ -142,6 +141,19 @@ namespace nsK2EngineLow {
 		//作成した初期化データをもとにモデルを初期化する。
 		m_model.Init(modelInitData);
 	}
+
+	void ModelRender::InitModelWithContours(const char* filePath,
+		EnModelUpAxis enModelUpAxis
+	)
+	{
+		ModelInitData modelInitData;
+		modelInitData.m_tkmFilePath = filePath;
+		modelInitData.m_fxFilePath = "Assets/shader/edgeExtraction.fx";
+		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		modelInitData.m_expandShaderResoruceView[0] = &g_depthValueMap.GetDepthValueMap().GetRenderTargetTexture();
+		modelInitData.m_modelUpAxis = enModelUpAxis;
+		m_model.Init(modelInitData);
+	}
 	
 	void ModelRender::InitModelOnShadowMap(const char* filePath,
 		EnModelUpAxis enModelUpAxis
@@ -182,29 +194,32 @@ namespace nsK2EngineLow {
 		}
 		// アニメーションを進める
 		m_animation.Progress(g_gameTime->GetFrameDeltaTime());
+
 		// 通常レンダリング用モデルのワールド行列を更新
 		m_model.UpdateWorldMatrix(
 			m_position, 
-			g_quatIdentity,
-			g_vec3One
+			m_rotation,
+			m_scale
 		);
 		// シャドウマップ描画用モデルのワールド行列を更新
 		m_shadowMapModel.UpdateWorldMatrix(
 			m_position,
-			g_quatIdentity,
-			g_vec3One
+			m_rotation,
+			m_scale
 		);
-
+		// 深度値マップ描画用モデルのワールド行列を更新
 		m_depthValueMapModel.UpdateWorldMatrix(
 			m_position,
-			g_quatIdentity,
-			g_vec3One
+			m_rotation,
+			m_scale
 		);
 
 		if (m_isShadowCaster == true) {
 			// モデルの情報の受け渡し
 			g_shadow.SetShadowModel(&m_shadowMapModel);
 		}
+
+		g_depthValueMap.SetModel(&m_depthValueMapModel);
 
 	}
 
