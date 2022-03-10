@@ -28,11 +28,12 @@ bool Game::Start()
 	//////////////////////////////////////////////////////////////////////////////////////
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 	//背景モデルの読み込み。
-	m_bgModelRender.Init("Assets/modelData/bg.tkm", nullptr, 0, true, enModelUpAxisZ, false);
-	
+	m_bgModelRender.Init("Assets/modelData/stage/Sample.tkm", nullptr, 0, true, enModelUpAxisZ, false);
+
 	//各クラスを生成。
+	m_gamecam = NewGO<GameCamera>(0, "gamecamera");
 	m_player = NewGO<Player>(0, "player");
-	m_gamecam = NewGO<GameCamera>(0, "gamecam");
+	
 	return true;
 }
 

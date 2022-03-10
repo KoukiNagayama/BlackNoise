@@ -1,4 +1,7 @@
 #pragma once
+
+class GameCamera;
+
 class Player : public IGameObject
 {
 public:
@@ -103,6 +106,7 @@ private:
 	void DownState();
 
 	//メンバ変数
+	//アニメーションクリップ
 	enum EnAnimationClip
 	{
 		enAnimationClip_Idle,			//待機アニメーション
@@ -118,12 +122,13 @@ private:
 	int m_hp = 3;											//HP
 
 	Vector3 m_moveSpeed;									//移動速度
-	Vector3 m_forward ;						//プレイヤーの前方向
-	Vector3 m_position = Vector3::Zero;										//座標
-	Quaternion m_rotation;									//回転
+	Vector3 m_toCameraPos;									//カメラの注視点から視点に向かうベクトル
+	Vector3 m_position ;									//座標
+	Quaternion m_rotation = Quaternion::Identity;			//回転
 	EnPlayerState m_playerState = enPlayerState_Idle;		//ステート
 	ModelRender m_modelRender;								//モデルレンダー
 	AnimationClip animationClips[enAnimationClip_Num];		//アニメーションクリップ
 	CharacterController m_charaCon;							//キャラクターコントローラー
+	GameCamera* m_gamecam = nullptr;						//ゲームカメラのポインタ
 };
 

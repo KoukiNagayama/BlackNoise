@@ -166,13 +166,13 @@ namespace nsK2EngineLow {
 		// 通常レンダリング用モデルのワールド行列を更新
 		m_model.UpdateWorldMatrix(
 			m_position, 
-			g_quatIdentity,
+			m_rotation,
 			g_vec3One
 		);
 		// シャドウマップ描画用モデルのワールド行列を更新
 		m_shadowMapModel.UpdateWorldMatrix(
 			m_position,
-			g_quatIdentity,
+			m_rotation,
 			g_vec3One
 		);
 
