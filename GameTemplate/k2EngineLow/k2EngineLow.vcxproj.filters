@@ -233,6 +233,7 @@
     <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="SpriteRender.cpp" />
     <ClCompile Include="FontRender.cpp" />
+    <ClCompile Include="DepthValueMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -515,6 +516,7 @@
     <ClInclude Include="Shadow.h" />
     <ClInclude Include="SpriteRender.h" />
     <ClInclude Include="FontRender.h" />
+    <ClInclude Include="DepthValueMap.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

@@ -30,14 +30,10 @@ namespace nsK2EngineLow {
 			m_scale,
 			m_pivot
 		);
-		m_spriteArray.push_back(&m_sprite);
 	}
 
 	void SpriteRender::Draw(RenderContext& rc)
 	{
-		for (auto& sprite : m_spriteArray) {
-			sprite->Draw(rc);
-		}
-		m_spriteArray.clear();
+		m_sprite.Draw(rc);
 	}
 }

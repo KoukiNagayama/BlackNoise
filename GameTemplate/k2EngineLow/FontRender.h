@@ -9,17 +9,6 @@ namespace nsK2EngineLow {
 	class FontRender
 	{
 	public:
-		// フォント構造体
-		struct SFont {
-			wchar_t		s_text[MAX_TEXT_SIZE];
-			Vector2		s_position;
-			float		s_scale = 1.0f;
-			Vector4		s_color = g_vec4White;;
-			float		s_rotation = 0.0f;
-			Vector2		s_pivot = Sprite::DEFAULT_PIVOT;
-		};
-
-
 		~FontRender() {};
 		/// <summary>
 		/// 表示する文字を設定
@@ -183,12 +172,7 @@ namespace nsK2EngineLow {
 		float		m_rotation = 0.0f;
 		Vector2		m_pivot = Sprite::DEFAULT_PIVOT;
 		Font		m_font;
-		std::vector<SFont*> m_fontArray;
-		int			m_initCount = 0;
-		bool		m_initCheck = false;
-		
-		SFont		m_sfont;
-
+		Vector2		m_spPosition;
 	};
 }
 

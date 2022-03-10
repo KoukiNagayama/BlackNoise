@@ -29,7 +29,7 @@ private:
 	Animation   m_animation;				// アニメーション
 	AnimationClip m_animationClipArray[enAnimClip_Num];	// アニメーションクリップ
 
-	Player* m_player = nullptr;
-	GameCamera* m_gamecam = nullptr;
+	Player*		m_player;
+	GameCamera* m_gamecam;
 };
 
