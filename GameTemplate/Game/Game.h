@@ -1,6 +1,7 @@
 #pragma once
 class Player;
 class GameCamera;
+#include "sound/SoundSource.h"
 
 class Game : public IGameObject
 {
@@ -31,5 +32,7 @@ private:
 
 	Player*		m_player;
 	GameCamera* m_gamecam;
+	SoundSource* m_sound1;
+	SoundSource* m_sound2;
 };
 

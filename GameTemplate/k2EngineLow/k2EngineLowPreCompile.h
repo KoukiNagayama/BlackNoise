@@ -85,6 +85,7 @@ using namespace Microsoft::WRL;
 #include "SpriteRender.h"
 #include "FontRender.h"
 #include "DepthValueMap.h"
+#include "InfoForEdge.h"
 
 
 const UINT FRAME_BUFFER_W = 1600;	// フレームバッファの幅。

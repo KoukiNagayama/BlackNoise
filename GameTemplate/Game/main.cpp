@@ -8,8 +8,6 @@
 #include "DepthValueMap.h"
 
 
-
-
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
 
@@ -77,8 +75,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();
-
-
 
 		// フレームの終了時に呼び出す必要がある処理を実行。
 		g_k2EngineLow->EndFrame();

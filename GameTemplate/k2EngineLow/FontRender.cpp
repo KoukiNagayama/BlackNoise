@@ -10,19 +10,19 @@ namespace nsK2EngineLow {
 			return;
 		}
 
-
+		// 3次元ベクトルを2次元ベクトルに
 		m_spPosition.x = m_position.x;
 		m_spPosition.y = m_position.y;
 
 		Font font;
 		font.Begin(rc);
 		font.Draw(
-			m_text,
-			m_spPosition,
-			m_color,
-			m_rotation,
-			m_scale,
-			m_pivot
+			m_text,				// テキスト
+			m_spPosition,		// 座標
+			m_color,			// 色
+			m_rotation,			// 回転
+			m_scale,			// 拡大
+			m_pivot				// 基点
 		);
 		font.End(rc);
 	}

@@ -3,6 +3,8 @@
 #include "Light.h";
 #include "Player.h"
 #include "GameCamera.h"
+#include "sound/SoundEngine.h"
+#include "InfoForEdge.h"
 
 Game::Game()
 {
@@ -33,6 +35,23 @@ bool Game::Start()
 
 	m_bgModelRender.Init("Assets/modelData/bg.tkm", nullptr, 0, true, enModelUpAxisZ, false);
 
+	// サウンドテスト
+	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/gameBGM.wav");
+	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/shot.wav");
+	//m_sound1->Play(false);
+	Vector3 position;
+	position.x = 5.0f;
+	position.y = 1.0f;
+	position.z = 1.0f;
+	Vector3 position2;
+	position2.x = 10.0f;
+	position2.y = 0.0f;
+	position2.z = 0.0f;
+	g_infoForEdge.InitForSound(0, position, 200.0f, 0);
+	g_infoForEdge.InitForSound(1, position2, 500.0f, 0);
+
+	m_sound1 = NewGO<SoundSource>(0);
+	m_sound2 = NewGO<SoundSource>(1);
 
 	m_position.x = 100.0f;
 	return true;
@@ -44,6 +63,29 @@ void Game::Update()
 	//// 平行移動
 	m_position.x += g_pad[0]->GetLStickXF();
 	m_position.z += g_pad[0]->GetLStickYF();
+
+	Vector3 position2;
+	position2.x = 10.0f;
+	position2.y = 0.0f;
+	position2.z = 0.0f;
+
+	if (g_pad[0]->IsTrigger(enButtonB)) {
+		m_sound2->Init(1, true);
+		m_sound2->SetPosition(position2);
+		m_sound2->Play(false);
+	}
+
+	int check2;
+	if (m_sound2->IsPlaying() == true)
+	{
+		check2 = 1;
+	}
+	else {
+		check2 = 0;
+		m_sound2 = NewGO<SoundSource>(1);
+	}
+	g_infoForEdge.SetIsSound(1, check2);
+
 
 
 	///*//アニメーション切り替え

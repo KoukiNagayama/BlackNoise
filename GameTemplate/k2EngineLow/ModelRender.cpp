@@ -5,6 +5,8 @@
 #include "Light.h"
 #include "Shadow.h"
 #include "DepthValueMap.h"
+#include "sound/SoundSource.h"
+#include "InfoForEdge.h"
 
 namespace nsK2EngineLow {
 	ModelRender::ModelRender()
@@ -147,11 +149,20 @@ namespace nsK2EngineLow {
 	)
 	{
 		ModelInitData modelInitData;
+		// tkmファイルのファイルパスを指定する。
 		modelInitData.m_tkmFilePath = filePath;
+		// シェーダーファイルのファイルパスを指定する。
 		modelInitData.m_fxFilePath = "Assets/shader/edgeExtraction.fx";
+		// カラーバッファのフォーマットを指定する。
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		// 深度値マップを拡張SRVに設定する。
 		modelInitData.m_expandShaderResoruceView[0] = &g_depthValueMap.GetDepthValueMap().GetRenderTargetTexture();
+		// モデルの上方向を指定する。
 		modelInitData.m_modelUpAxis = enModelUpAxis;
+		//
+		modelInitData.m_expandConstantBuffer = (void *)&g_infoForEdge.GetSoundSourceData();
+		modelInitData.m_expandConstantBufferSize = sizeof(g_infoForEdge.GetSoundSourceData());
+		// 作成した初期化データをもとにモデルを初期化する。
 		m_model.Init(modelInitData);
 	}
 	

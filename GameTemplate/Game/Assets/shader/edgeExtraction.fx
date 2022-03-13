@@ -3,6 +3,12 @@
  */
 
 ////////////////////////////////////////////////
+// 定数
+////////////////////////////////////////////////
+// 音源の最大個数
+#define MAX_DATA 100
+
+////////////////////////////////////////////////
 // 構造体
 ////////////////////////////////////////////////
 // 頂点シェーダーへの入力
@@ -20,6 +26,15 @@ struct SPSIn
     float4 posInProj : TEXCOORD1;
 };
 
+// 音源
+struct SoundSourceData
+{
+    float3 pos;
+    int isSound; 
+    float range; 
+    float3 pad;
+};
+
 ///////////////////////////////////////////
 // 定数バッファー
 ///////////////////////////////////////////
@@ -29,6 +44,12 @@ cbuffer ModelCb : register(b0)
     float4x4 mWorld;
     float4x4 mView;
     float4x4 mProj;
+};
+// 音源用の定数バッファー
+cbuffer SoundSourceCb : register(b1)
+{
+    SoundSourceData soundSourceData[MAX_DATA];
+    int numSoundSource;
 };
 
 
@@ -66,43 +87,52 @@ SPSIn VSMain(SVSIn vsIn)
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
     // 正規化スクリーン座標系からUV座標系に変換する
-    float2 uv = (psIn.posInProj.xy / psIn.posInProj.w) * float2(0.5f, -0.5f) + 0.5f;
+    float2 uv = ( psIn.posInProj.xy / psIn.posInProj.w ) * float2( 0.5f, -0.5f ) + 0.5f;
     
     // 近傍8テクセルへのUVオフセット
     float2 uvOffset[8] =
     {
-        float2(0.0f, 1.0f / 900.0f), //上
-        float2(0.0f, -1.0f / 900.0f), //下
-        float2(1.0f / 1600.0f, 0.0f), //右
-        float2(-1.0f / 1600.0f, 0.0f), //左
-        float2(1.0f / 1600.0f, 1.0f / 900.0f), //右上
-        float2(-1.0f / 1600.0f, 1.0f / 900.0f), //左上
-        float2(1.0f / 1600.0f, -1.0f / 900.0f), //右下
-        float2(-1.0f / 1600.0f, -1.0f / 900.0f) //左下
+        float2( 0.0f, 1.0f / 900.0f ), //上
+        float2( 0.0f, -1.0f / 900.0f ), //下
+        float2( 1.0f / 1600.0f, 0.0f ), //右
+        float2(-1.0f / 1600.0f, 0.0f ), //左
+        float2( 1.0f / 1600.0f, 1.0f / 900.0f ), //右上
+        float2(-1.0f / 1600.0f, 1.0f / 900.0f ), //左上
+        float2( 1.0f / 1600.0f, -1.0f / 900.0f ), //右下
+        float2(-1.0f / 1600.0f, -1.0f / 900.0f ) //左下
     };
-
     
-    // 深度値
-    // このピクセルの深度値を取得
-    float depth = g_depthValueTexture.Sample(g_sampler, uv).x;
-
-    // 近傍8テクセルの深度値の平均値を計算する
-    float depth2 = 0.0f;
-    for (int i = 0; i < 8; i++)
+    int drawEdge = 0;
+    for (int i = 0; i < numSoundSource ; i++)
     {
-        depth2 += g_depthValueTexture.Sample(g_sampler, uv + uvOffset[i]).x;
+        if (soundSourceData[i].isSound == 1)
+        {
+            drawEdge = 1;
+        }
     }
-    depth2 /= 8.0f;
-
-    // 自身の深度値と近傍8テクセルの深度値の差を調べる
-    if (abs(depth - depth2) > 0.000045f)
+    if(drawEdge != 0)
     {
-        // 深度値が結構違う場合はピクセルカラーを白にする
-        return float4(1.0f, 1.0f, 1.0f, 1.0f);
-    }
+        // 深度値
+        // このピクセルの深度値を取得
+        float depth = g_depthValueTexture.Sample(g_sampler, uv).x;
+  
+        // 近傍8テクセルの深度値の平均値を計算する
+        float depth2 = 0.0f;
+        for (int i = 0; i < 8; i++)
+        {
+            depth2 += g_depthValueTexture.Sample(g_sampler, uv + uvOffset[i]).x;
+        }
+        depth2 /= 8.0f;
 
+        // 自身の深度値と近傍8テクセルの深度値の差を調べる
+        if (abs(depth - depth2) > 0.000045f)
+        {
+            // 深度値が結構違う場合はピクセルカラーを白にする
+            return float4(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+    }
     // 普通にテクスチャを
     //return g_texture.Sample(g_sampler, psIn.uv);
-    // ピクセルカラーを白にしなかったピクセルは黒にする
+    // ピクセルカラーを黒にする
     return float4(0.0f, 0.0f, 0.0f, 1.0f);
 }

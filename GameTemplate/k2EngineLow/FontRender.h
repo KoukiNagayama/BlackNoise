@@ -158,11 +158,7 @@ namespace nsK2EngineLow {
 			m_font.SetShadowParam(isDrawShadow, shadowOffset, shadowColor);
 		}
 	private:
-		/// <summary>
-		/// 文字の描画
-		/// </summary>
-		/// <param name="rc">レンダリングコンテキスト</param>
-		void RenderFont(RenderContext& rc);
+	
 
 	private:
 		wchar_t		m_text[MAX_TEXT_SIZE];
