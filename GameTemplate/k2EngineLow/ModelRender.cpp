@@ -210,12 +210,19 @@ namespace nsK2EngineLow {
 		m_model.UpdateWorldMatrix(
 			m_position, 
 			m_rotation,
+<<<<<<< HEAD
+			g_vec3One
+=======
 			m_scale
+>>>>>>> d62835381d80ec88165b89f26f2660855a42bad4
 		);
 		// シャドウマップ描画用モデルのワールド行列を更新
 		m_shadowMapModel.UpdateWorldMatrix(
 			m_position,
 			m_rotation,
+<<<<<<< HEAD
+			g_vec3One
+=======
 			m_scale
 		);
 		// 深度値マップ描画用モデルのワールド行列を更新
@@ -223,6 +230,7 @@ namespace nsK2EngineLow {
 			m_position,
 			m_rotation,
 			m_scale
+>>>>>>> d62835381d80ec88165b89f26f2660855a42bad4
 		);
 
 		if (m_isShadowCaster == true) {

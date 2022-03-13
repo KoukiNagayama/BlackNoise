@@ -30,6 +30,14 @@ bool Game::Start()
 	//////////////////////////////////////////////////////////////////////////////////////
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 	//背景モデルの読み込み。
+<<<<<<< HEAD
+	m_bgModelRender.Init("Assets/modelData/stage/Sample.tkm", nullptr, 0, true, enModelUpAxisZ, false);
+
+	//各クラスを生成。
+	m_gamecam = NewGO<GameCamera>(0, "gamecamera");
+	m_player = NewGO<Player>(0, "player");
+	
+=======
 	
 	m_modelRender.Init("Assets/modelData/unityChan.tkm");
 
@@ -54,6 +62,7 @@ bool Game::Start()
 	m_sound2 = NewGO<SoundSource>(1);
 
 	m_position.x = 100.0f;
+>>>>>>> d62835381d80ec88165b89f26f2660855a42bad4
 	return true;
 }
 
