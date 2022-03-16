@@ -233,7 +233,7 @@
     <ClCompile Include="Shadow.cpp" />
     <ClCompile Include="SpriteRender.cpp" />
     <ClCompile Include="FontRender.cpp" />
-    <ClCompile Include="DepthValueMap.cpp" />
+    <ClCompile Include="CreatingMaps.cpp" />
     <ClCompile Include="InfoForEdge.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -517,7 +517,7 @@
     <ClInclude Include="Shadow.h" />
     <ClInclude Include="SpriteRender.h" />
     <ClInclude Include="FontRender.h" />
-    <ClInclude Include="DepthValueMap.h" />
+    <ClInclude Include="CreatingMaps.h" />
     <ClInclude Include="InfoForEdge.h" />
   </ItemGroup>
   <ItemGroup>

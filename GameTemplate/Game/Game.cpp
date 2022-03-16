@@ -30,16 +30,15 @@ bool Game::Start()
 	//////////////////////////////////////////////////////////////////////////////////////
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 	//背景モデルの読み込み。
-<<<<<<< HEAD
-	m_bgModelRender.Init("Assets/modelData/stage/Sample.tkm", nullptr, 0, true, enModelUpAxisZ, false);
+
+	//m_bgModelRender.Init("Assets/modelData/stage/Sample.tkm", nullptr, 0, true, enModelUpAxisZ, false);
 
 	//各クラスを生成。
 	m_gamecam = NewGO<GameCamera>(0, "gamecamera");
 	m_player = NewGO<Player>(0, "player");
 	
-=======
 	
-	m_modelRender.Init("Assets/modelData/unityChan.tkm");
+	//m_modelRender.Init("Assets/modelData/unityChan.tkm");
 
 	m_bgModelRender.Init("Assets/modelData/bg.tkm", nullptr, 0, true, enModelUpAxisZ, false);
 
@@ -52,31 +51,29 @@ bool Game::Start()
 	position.y = 1.0f;
 	position.z = 1.0f;
 	Vector3 position2;
-	position2.x = 10.0f;
+	position2.x = 0.0f;
 	position2.y = 0.0f;
-	position2.z = 0.0f;
+	position2.z = 5.0f;
 	g_infoForEdge.InitForSound(0, position, 200.0f, 0);
-	g_infoForEdge.InitForSound(1, position2, 500.0f, 0);
+	g_infoForEdge.InitForSound(1, position2, 500.0f, 1);
 
 	m_sound1 = NewGO<SoundSource>(0);
 	m_sound2 = NewGO<SoundSource>(1);
 
 	m_position.x = 100.0f;
->>>>>>> d62835381d80ec88165b89f26f2660855a42bad4
 	return true;
 }
 
 void Game::Update()
 {
-	//////////////////////////////////////////////////////
-	//// 平行移動
+
 	m_position.x += g_pad[0]->GetLStickXF();
 	m_position.z += g_pad[0]->GetLStickYF();
 
 	Vector3 position2;
-	position2.x = 10.0f;
+	position2.x = 0.0f;
 	position2.y = 0.0f;
-	position2.z = 0.0f;
+	position2.z = 5.0f;
 
 	if (g_pad[0]->IsTrigger(enButtonB)) {
 		m_sound2->Init(1, true);
@@ -95,30 +92,11 @@ void Game::Update()
 	}
 	g_infoForEdge.SetIsSound(1, check2);
 
-
-
-	///*//アニメーション切り替え
-	//if (g_pad[0]->IsPress(enButtonA)) {
-	//	m_modelRender.PlayAnimation(enAnimClip_Idle, 0.2f);
-	//}
-	//if (g_pad[0]->IsPress(enButtonB)) {
-	//	m_modelRender.PlayAnimation(enAnimClip_Run, 0.2f);
-	//}*/
-
-	/*//アニメーション切り替え
-	if (g_pad[0]->IsPress(enButtonA)) {
-		m_modelRender.PlayAnimation(enAnimClip_Idle, 0.2f);
-	}
-	if (g_pad[0]->IsPress(enButtonB)) {
-		m_modelRender.PlayAnimation(enAnimClip_Run, 0.2f);
-	}*/
-
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.SetRotation(m_rotation);
 	m_modelRender.SetScale(m_scale);
 	m_bgModelRender.Update();
 	m_modelRender.Update();
-
 
 }
 

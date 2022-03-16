@@ -19,7 +19,6 @@ private:
 		enAnimClip_Num,						// アニメーションクリップの数
 	};
 
-	Light m_light;
 	ModelRender m_modelRender;				// モデルレンダー
 	ModelRender m_modelRender2;
 	ModelRender m_bgModelRender;		

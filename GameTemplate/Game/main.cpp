@@ -5,13 +5,12 @@
 #include "Light.h"
 #include "Bloom.h"
 #include "Shadow.h"
-#include "DepthValueMap.h"
+#include "CreatingMaps.h"
 
 
 // K2EngineLowのグローバルアクセスポイント。
 K2EngineLow* g_k2EngineLow = nullptr;
 
-void InitModel(Model& bgModel);
 /// <summary>
 /// メイン関数
 /// </summary>
@@ -31,12 +30,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	
 	//g_shadow.Init();
 
-	g_depthValueMap.Init();
+	g_creatingMaps.Init();
 
 	auto game = NewGO<Game>(0,"game");
 
 	SpriteInitData spriteInitData;
-	spriteInitData.m_textures[0] = &g_depthValueMap.GetDepthValueMap().GetRenderTargetTexture();
+	spriteInitData.m_textures[0] = &g_creatingMaps.GetDepthValueMap().GetRenderTargetTexture();
 	spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
 	spriteInitData.m_width = 256;
 	spriteInitData.m_height = 256;
@@ -60,8 +59,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// シャドウマップへのモデルの描画
 		//g_shadow.RenderToShadowMap(renderContext);
 
+		// 深度値マップのモデル
+		g_creatingMaps.Update();
+
 		// 深度値マップへのモデルの描画
-		g_depthValueMap.RenderToDepthValueMap(renderContext);
+		g_creatingMaps.RenderToDepthValueMap(renderContext);
 
 		// ライト情報の更新
 		g_light.Update();

@@ -4,7 +4,7 @@
 #include "PointLight.h"
 #include "Light.h"
 #include "Shadow.h"
-#include "DepthValueMap.h"
+#include "CreatingMaps.h"
 #include "sound/SoundSource.h"
 #include "InfoForEdge.h"
 
@@ -156,7 +156,9 @@ namespace nsK2EngineLow {
 		// カラーバッファのフォーマットを指定する。
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		// 深度値マップを拡張SRVに設定する。
-		modelInitData.m_expandShaderResoruceView[0] = &g_depthValueMap.GetDepthValueMap().GetRenderTargetTexture();
+		modelInitData.m_expandShaderResoruceView[0] = &g_creatingMaps.GetDepthValueMap().GetRenderTargetTexture();
+		modelInitData.m_expandShaderResoruceView[1] = &g_creatingMaps.GetWorldCoordinateMap().GetRenderTargetTexture();
+		modelInitData.m_expandShaderResoruceView[2] = &g_creatingMaps.GetNormalMap().GetRenderTargetTexture();
 		// モデルの上方向を指定する。
 		modelInitData.m_modelUpAxis = enModelUpAxis;
 		//
@@ -210,27 +212,22 @@ namespace nsK2EngineLow {
 		m_model.UpdateWorldMatrix(
 			m_position, 
 			m_rotation,
-<<<<<<< HEAD
-			g_vec3One
-=======
 			m_scale
->>>>>>> d62835381d80ec88165b89f26f2660855a42bad4
+
 		);
+
 		// シャドウマップ描画用モデルのワールド行列を更新
 		m_shadowMapModel.UpdateWorldMatrix(
 			m_position,
 			m_rotation,
-<<<<<<< HEAD
-			g_vec3One
-=======
 			m_scale
 		);
+
 		// 深度値マップ描画用モデルのワールド行列を更新
 		m_depthValueMapModel.UpdateWorldMatrix(
 			m_position,
 			m_rotation,
 			m_scale
->>>>>>> d62835381d80ec88165b89f26f2660855a42bad4
 		);
 
 		if (m_isShadowCaster == true) {
@@ -238,7 +235,7 @@ namespace nsK2EngineLow {
 			g_shadow.SetShadowModel(&m_shadowMapModel);
 		}
 
-		g_depthValueMap.SetModel(&m_depthValueMapModel);
+		g_creatingMaps.SetModel(&m_depthValueMapModel);
 
 	}
 
