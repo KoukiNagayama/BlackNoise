@@ -213,7 +213,6 @@ namespace nsK2EngineLow {
 			m_position, 
 			m_rotation,
 			m_scale
-
 		);
 
 		// シャドウマップ描画用モデルのワールド行列を更新

@@ -31,14 +31,19 @@ bool Game::Start()
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 	//”wŒiƒ‚ƒfƒ‹‚Ì“Ç‚İ‚İB
 
+
 	//m_bgModelRender.Init("Assets/modelData/stage/Sample.tkm", nullptr, 0, true, enModelUpAxisZ, false);
+
+	m_bgModelRender.Init("Assets/modelData/stage/Sample.tkm", nullptr, 0, true, enModelUpAxisZ, false);
 
 	//ŠeƒNƒ‰ƒX‚ğ¶¬B
 	m_gamecam = NewGO<GameCamera>(0, "gamecamera");
 	m_player = NewGO<Player>(0, "player");
 	
-	
 	//m_modelRender.Init("Assets/modelData/unityChan.tkm");
+		
+	m_modelRender.Init("Assets/modelData/unityChan.tkm");
+
 
 	m_bgModelRender.Init("Assets/modelData/bg.tkm", nullptr, 0, true, enModelUpAxisZ, false);
 
@@ -103,7 +108,6 @@ void Game::Update()
 void Game::Render(RenderContext& rc)
 {
 	//”wŒi‚ğ•`Ê
-	
 	m_modelRender.Draw(rc);
 	m_bgModelRender.Draw(rc);
 }
