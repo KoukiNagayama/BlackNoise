@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "system/system.h"
 #include "Game.h"
+#include "GameStart.h"
 #include "DirectionLight.h"
 #include "Light.h"
 #include "Bloom.h"
@@ -33,7 +34,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	g_depthValueMap.Init();
 
-	auto game = NewGO<Game>(0,"game");
+	auto game = NewGO<GameStart>(0,"game");
 
 	SpriteInitData spriteInitData;
 	spriteInitData.m_textures[0] = &g_depthValueMap.GetDepthValueMap().GetRenderTargetTexture();

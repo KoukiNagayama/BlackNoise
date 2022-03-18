@@ -38,10 +38,10 @@ namespace nsK2EngineLow {
 			InitModelOnShadowMap(filePath);
 		}*/
 		// 深度値マップ描画用モデルの初期化
-		InitModelOnDepthValueMap(filePath);
+		//InitModelOnDepthValueMap(filePath);
 		// モデルの初期化
-		//InitModel(filePath, enModelUpAxis, isShadowReceiver);
-		InitModelWithContours(filePath, enModelUpAxis);
+		InitModel(filePath, enModelUpAxis, isShadowReceiver);
+		//InitModelWithContours(filePath, enModelUpAxis);
 		// 影をキャストするか
 		m_isShadowCaster = isShadowCaster;
 	}
