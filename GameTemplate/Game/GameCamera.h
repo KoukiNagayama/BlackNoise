@@ -35,6 +35,11 @@ public:
 	{
 		return m_position;
 	}
+
+	const Quaternion GetRotation()
+	{
+		return m_rotation;
+	}
 	/// <summary>
 	/// 注視点から視点に向かうベクトルの取得
 	/// </summary>
@@ -103,4 +108,5 @@ private:
 	EnMoveState m_moveState = enMoveState_Idle;		//ステート。
 	Vector3 m_target;								//ターゲット。
 	CharacterController m_charaCon;					//キャラクターコントローラー。
+	Quaternion m_rotation;							//回転。
 };

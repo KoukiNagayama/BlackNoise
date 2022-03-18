@@ -2,6 +2,7 @@
 class Player;
 class GameCamera;
 class BackGround;
+class Bell;
 
 class GameStart : public IGameObject
 {
@@ -15,5 +16,6 @@ private:
 	Player* m_player;
 	GameCamera* m_gamecam;
 	BackGround* m_bg;
+	Bell* m_bell;
 };
 

@@ -9,11 +9,7 @@ public:
 	/// ステート
 	/// </summary>
 	enum EnPlayerState {
-		enPlayerState_Idle,			//待機ステート
-		enPlayerState_Walk,			//歩きステート
-		enPlayerState_Run,			//走りステート
-		enPlayerState_Sneak,		//しゃがみ、隠れステート
-		enPlayerState_SneakIdle,	//しゃがみ、隠れ待機ステート
+		enPlayerState_Nomal,		//通常
 		enPlayerState_Damage,		//ダメージステート
 		enPlayerState_Down			//ダウンステート
 	};
@@ -50,6 +46,11 @@ public:
 		return m_position;
 	}
 
+	const Quaternion GetRotation()
+	{
+		return m_rotation;
+	}
+
 private:
 	/// <summary>
 	/// 更新処理
@@ -77,25 +78,9 @@ private:
 	/// </summary>
 	void ManageState();
 	/// <summary>
-	/// 待機ステート時の処理。
+	/// 通常時の処理。
 	/// </summary>
-	void IdleState();
-	/// <summary>
-	/// 歩きステート時の処理。
-	/// </summary>
-	void WalkState();
-	/// <summary>
-	/// 走りステート時の処理。
-	/// </summary>
-	void RunState();
-	/// <summary>
-	/// しゃがみ・隠れステート時の処理。
-	/// </summary>
-	void SneakState();
-	/// <summary>
-	/// しゃがみ待機ステート時の処理。
-	/// </summary>
-	void SneakIdleState();
+	void NomalState();
 	/// <summary>
 	/// ダメージステート時の処理。
 	/// </summary>
@@ -125,10 +110,9 @@ private:
 	Vector3 m_toCameraPos;									//カメラの注視点から視点に向かうベクトル
 	Vector3 m_position ;									//座標
 	Quaternion m_rotation = Quaternion::Identity;			//回転
-	EnPlayerState m_playerState = enPlayerState_Idle;		//ステート
+	EnPlayerState m_playerState = enPlayerState_Nomal;		//ステート
 	ModelRender m_modelRender;								//モデルレンダー
 	AnimationClip animationClips[enAnimationClip_Num];		//アニメーションクリップ
-	CharacterController m_charaCon;							//キャラクターコントローラー
 	GameCamera* m_gamecam = nullptr;						//ゲームカメラのポインタ
 };
 

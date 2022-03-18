@@ -4,11 +4,13 @@
 BackGround::BackGround()
 {
 	//コメントアウトする。
-	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+	PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
-	m_modelRender.Init("Assets/modelData/stage/Sample.tkm");
+	m_modelRender.Init("Assets/modelData/stage/Floor2.tkm");
 
 	m_modelRender.Update();
+	//m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
+
 }
 
 BackGround::~BackGround()
