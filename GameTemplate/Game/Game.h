@@ -19,7 +19,6 @@ private:
 		enAnimClip_Num,						// アニメーションクリップの数
 	};
 
-	Light m_light;
 	ModelRender m_modelRender;				// モデルレンダー
 	ModelRender m_modelRender2;
 	ModelRender m_bgModelRender;		
@@ -34,5 +33,7 @@ private:
 	GameCamera* m_gamecam;
 	SoundSource* m_sound1;
 	SoundSource* m_sound2;
+	float rate;
+	float beforeRate;
 };
 

@@ -84,7 +84,7 @@ using namespace Microsoft::WRL;
 #include "Shadow.h"
 #include "SpriteRender.h"
 #include "FontRender.h"
-#include "DepthValueMap.h"
+#include "CreatingMaps.h"
 #include "InfoForEdge.h"
 
 

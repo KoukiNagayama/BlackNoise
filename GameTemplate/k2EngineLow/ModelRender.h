@@ -41,6 +41,21 @@ namespace nsK2EngineLow {
 			m_animation.Play(animNo, interpolateTime);
 		}
 		/// <summary>
+		/// モデルを取得
+		/// </summary>
+		/// <returns>モデル</returns>
+		Model& GetModel()
+		{
+			return m_model;
+		}
+		/// <summary>
+		/// アニメーションの再生中？
+		/// </summary>
+		bool IsPlayingAnimation() const
+		{
+			return m_animation.IsPlaying();
+		}
+		/// <summary>
 		/// 座標を設定
 		/// </summary>
 		/// <param name="pos">座標</param>

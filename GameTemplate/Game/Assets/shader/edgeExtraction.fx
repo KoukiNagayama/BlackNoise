@@ -15,15 +15,21 @@
 struct SVSIn
 {
     float4 pos : POSITION;
+    float3 normal : NORMAL;
     float2 uv : TEXCOORD0;
+    float3 tangent : TANGENT;
+    float3 biNormal : BINORMAL;
 };
 
 // ピクセルシェーダーへの入力
 struct SPSIn
 {
     float4 pos : SV_POSITION;
+    float3 normal : NORMAL;
     float2 uv : TEXCOORD0;
     float4 posInProj : TEXCOORD1;
+    float3 tangent : TANGENT;
+    float3 biNormal : BINORMAL;                             
 };
 
 // 音源
@@ -31,8 +37,10 @@ struct SoundSourceData
 {
     float3 pos;
     int isSound; 
-    float range; 
-    float3 pad;
+    float range;
+    float rate;
+    float currentRate;
+    int pad;
 };
 
 ///////////////////////////////////////////
@@ -53,12 +61,14 @@ cbuffer SoundSourceCb : register(b1)
 };
 
 
+
 ///////////////////////////////////////////
 // シェーダーリソース
 ///////////////////////////////////////////
-Texture2D<float4> g_texture : register(t0); // モデルテクスチャ
-Texture2D<float4> g_normalTexture : register(t1); // 法線テクスチャ
-Texture2D<float4> g_depthValueTexture : register(t10); // 深度テクスチャ
+Texture2D<float4> g_texture : register(t0);                 // モデルテクスチャ
+Texture2D<float4> g_depthValueTexture : register(t10);      // 深度テクスチャ
+Texture2D<float4> g_worldCoordinateTexture : register(t11); // ワールド座標テクスチャ
+Texture2D<float4> g_normalTexture : register(t12);          // 法線テクスチャ
 
 ///////////////////////////////////////////
 // サンプラーステート
@@ -77,7 +87,6 @@ SPSIn VSMain(SVSIn vsIn)
     psIn.pos = mul(mProj, psIn.pos); // カメラ座標系からスクリーン座標系に変換
     psIn.uv = vsIn.uv;
     psIn.posInProj = psIn.pos; // 頂点の正規化スクリーン座標系の座標をピクセルシェーダーに渡す
-    
     return psIn;
 }
 
@@ -88,7 +97,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 {
     // 正規化スクリーン座標系からUV座標系に変換する
     float2 uv = ( psIn.posInProj.xy / psIn.posInProj.w ) * float2( 0.5f, -0.5f ) + 0.5f;
-    
+
     // 近傍8テクセルへのUVオフセット
     float2 uvOffset[8] =
     {
@@ -103,14 +112,26 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     };
     
     int drawEdge = 0;
+    
+    int a = 0;
+    
+    // ワールド座標
+    float3 worldPos = g_worldCoordinateTexture.Sample(g_sampler, uv);
+    
     for (int i = 0; i < numSoundSource ; i++)
     {
-        if (soundSourceData[i].isSound == 1)
+        if (soundSourceData[i].isSound == 1 || soundSourceData[i].rate > 0.00f )
         {
-            drawEdge = 1;
+            // 音源からの距離によって輪郭線を描画するか判断
+            float dist = length(worldPos - soundSourceData[i].pos);
+            if(dist < soundSourceData[i].range)
+            {
+                drawEdge = 1;
+                a = i;
+            }
         }
     }
-    if(drawEdge != 0)
+    if (drawEdge == 1)
     {
         // 深度値
         // このピクセルの深度値を取得
@@ -123,12 +144,25 @@ float4 PSMain(SPSIn psIn) : SV_Target0
             depth2 += g_depthValueTexture.Sample(g_sampler, uv + uvOffset[i]).x;
         }
         depth2 /= 8.0f;
-
-        // 自身の深度値と近傍8テクセルの深度値の差を調べる
-        if (abs(depth - depth2) > 0.000045f)
+        
+        
+        // 法線
+        // このピクセルの法線を取得
+        float3 normal = g_normalTexture.Sample(g_sampler, uv).xyz * -8.0f;
+        
+        // 近傍8テクセルの法線の平均値を計算する
+        for (i = 0; i < 8; i++)
         {
-            // 深度値が結構違う場合はピクセルカラーを白にする
-            return float4(1.0f, 1.0f, 1.0f, 1.0f);
+            normal += g_normalTexture.Sample(g_sampler, uv + uvOffset[i]).xyz;
+        }
+        
+        
+        // 自身の深度値・法線と近傍8テクセルの深度値の差・法線の差を調べる
+        if (abs(depth - depth2) > 0.000045f || length(normal) >= 0.2f)
+        {
+            // 深度値または法線が大きく違う場合はピクセルカラーを影響率の値にする
+            return float4(soundSourceData[a].rate, soundSourceData[a].rate, soundSourceData[a].rate, 1.0f);
+            
         }
     }
     // 普通にテクスチャを
