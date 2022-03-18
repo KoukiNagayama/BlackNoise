@@ -57,10 +57,10 @@ void GameCamera::Update()
 
 void GameCamera::Move()
 {
-	if (m_player->IsEnableMove() == false)
+	/*if (m_player->IsEnableMove() == false)
 	{
 		return;
-	}
+	}*/
 	//x,z‚ÌˆÚ“®‘¬“x‚ğ0‚É‚·‚éB
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;

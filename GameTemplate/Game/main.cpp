@@ -68,6 +68,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// ライト情報の更新
 		g_light.Update();
 
+		g_infoForEdge.Update();
+
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 

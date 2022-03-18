@@ -37,8 +37,10 @@ struct SoundSourceData
 {
     float3 pos;
     int isSound; 
-    float range; 
-    float3 pad;
+    float range;
+    float rate;
+    float currentRate;
+    int pad;
 };
 
 ///////////////////////////////////////////
@@ -57,6 +59,7 @@ cbuffer SoundSourceCb : register(b1)
     SoundSourceData soundSourceData[MAX_DATA];
     int numSoundSource;
 };
+
 
 
 ///////////////////////////////////////////
@@ -110,22 +113,25 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     
     int drawEdge = 0;
     
+    int a = 0;
+    
     // ワールド座標
     float3 worldPos = g_worldCoordinateTexture.Sample(g_sampler, uv);
     
     for (int i = 0; i < numSoundSource ; i++)
     {
-        if (soundSourceData[i].isSound == 1)
+        if (soundSourceData[i].isSound == 1 || soundSourceData[i].rate > 0.00f )
         {
             // 音源からの距離によって輪郭線を描画するか判断
             float dist = length(worldPos - soundSourceData[i].pos);
             if(dist < soundSourceData[i].range)
             {
                 drawEdge = 1;
+                a = i;
             }
         }
     }
-    if(drawEdge == 1)
+    if (drawEdge == 1)
     {
         // 深度値
         // このピクセルの深度値を取得
@@ -152,10 +158,11 @@ float4 PSMain(SPSIn psIn) : SV_Target0
         
         
         // 自身の深度値・法線と近傍8テクセルの深度値の差・法線の差を調べる
-        if (abs(depth - depth2) > 0.000045f || length(normal) >= 0.4f)
+        if (abs(depth - depth2) > 0.000045f || length(normal) >= 0.2f)
         {
-            // 深度値が結構違う場合はピクセルカラーを白にする
-            return float4(1.0f, 1.0f, 1.0f, 1.0f);
+            // 深度値または法線が大きく違う場合はピクセルカラーを影響率の値にする
+            return float4(soundSourceData[a].rate, soundSourceData[a].rate, soundSourceData[a].rate, 1.0f);
+            
         }
     }
     // 普通にテクスチャを

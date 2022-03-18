@@ -33,5 +33,7 @@ private:
 	GameCamera* m_gamecam;
 	SoundSource* m_sound1;
 	SoundSource* m_sound2;
+	float rate;
+	float beforeRate;
 };
 

@@ -155,7 +155,7 @@ namespace nsK2EngineLow {
 		modelInitData.m_fxFilePath = "Assets/shader/edgeExtraction.fx";
 		// カラーバッファのフォーマットを指定する。
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		// 深度値マップを拡張SRVに設定する。
+		// 各種マップを拡張SRVに設定する。
 		modelInitData.m_expandShaderResoruceView[0] = &g_creatingMaps.GetDepthValueMap().GetRenderTargetTexture();
 		modelInitData.m_expandShaderResoruceView[1] = &g_creatingMaps.GetWorldCoordinateMap().GetRenderTargetTexture();
 		modelInitData.m_expandShaderResoruceView[2] = &g_creatingMaps.GetNormalMap().GetRenderTargetTexture();
