@@ -4,13 +4,14 @@
 
 namespace
 {
-	const float CAMPOS_Y = 170.0f;	//視点の高さ
-	const float TOCAMPOS_Z = -77.0f;			//注視点までのZ座標
+	const float CAMPOS_Y = 170.0f;			//視点の高さ
+	const float TOCAMPOS_Z = -77.0f;		//注視点までのZ座標
 
-	const float MOVESPEED = 140.0f;			//歩きの移動速度
-	const float MOVE_RUN = 10.8f;			//走り時にいくら乗算するか
+	const float MOVESPEED = 100.0f;			//歩きの移動速度
+	const float MOVE_RUN = 1.22f;			//走り時にいくら乗算するか
 	const float MOVE_SNEAK = 0.3f;			//しゃがみ時にいくら乗算するか
-	const float MOVE_FRICTION = 30.0f;
+	const float TARGET_UNDER = -0.99f;		//カメラの下限
+	const float TARGET_OVER = 0.75f;		//カメラの上限
 }
 
 GameCamera::GameCamera()
@@ -23,10 +24,6 @@ bool GameCamera::Start()
 {
 	//注視点から視点までのベクトルを設定。
 	m_toCameraPos.Set(0.0f, 0.0f, TOCAMPOS_Z);
-	
-	////////////////////////デバッグカメラ//////////////////////
-	//m_toCameraPos.Set(0.0f, CAMPOS_TARGET_Y, -250.0f);
-	////////////////////////デバッグカメラ//////////////////////
 
 	//プレイヤーのインスタンスを探す。
 	m_player = FindGO<Player>("player");
@@ -37,8 +34,10 @@ bool GameCamera::Start()
 	g_camera3D->SetNear(3.0f);
 	g_camera3D->SetFar(10000.0f);
 
+	
+
 	//キャラコンを初期化する。
-	m_charaCon.Init(1.0f, 1.0f, m_position);
+	m_charaCon.Init(40.0f, 170.0f, m_position);
 
 	return true;
 }
@@ -50,7 +49,8 @@ void GameCamera::Update()
 	ViewPoint();
 	//ステート遷移処理
 	TransitionState();
-
+	g_soundEngine->SetListenerPosition(m_position);
+	g_soundEngine->SetListenerFront(g_camera3D->GetForward());
 	//カメラの更新。
 	g_camera3D->Update();
 }
@@ -60,11 +60,15 @@ void GameCamera::Move()
 	/*if (m_player->IsEnableMove() == false)
 	{
 		return;
+<<<<<<< HEAD
+	}
+=======
 	}*/
 	//x,zの移動速度を0にする。
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
 
+>>>>>>> 657b32b70468c30e3a8371d6a705121b762e4b3b
 	//左スティックの入力量を計算
 	Vector3 stickL;
 	stickL.x = g_pad[0]->GetLStickXF();
@@ -94,6 +98,15 @@ void GameCamera::Move()
 		m_moveSpeed.x *= MOVE_SNEAK;
 		m_moveSpeed.z *= MOVE_SNEAK;
 	}
+	//摩擦
+	m_moveSpeed.x -= m_moveSpeed.x * 0.3f;
+	m_moveSpeed.z -= m_moveSpeed.z * 0.3f;
+	//2ベクトル間の強さが0.001以下だったら
+	if (m_moveSpeed.Length() < 0.001f)
+	{
+		m_moveSpeed.x -= m_moveSpeed.x * 0.3f;
+		m_moveSpeed.z -= m_moveSpeed.z * 0.3f;
+	}
 	
 	//キャラコンを使って座標を移動させる。
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
@@ -120,6 +133,7 @@ void GameCamera::ViewPoint()
 	//パッドの入力を使ってカメラを回す。
 	float x = g_pad[0]->GetRStickXF();
 	float y = g_pad[0]->GetRStickYF();
+
 	//Y軸周りの回転
 	Quaternion qRot;
 	qRot.SetRotationDeg(Vector3::AxisY, 1.3f * x);
@@ -131,17 +145,18 @@ void GameCamera::ViewPoint()
 	axisX.Normalize();
 	qRot.SetRotationDeg(axisX, 1.3f * -y);
 	qRot.Apply(m_toCameraPos);
+	m_rotation = qRot;
 
 	//カメラの回転の上限をチェックする。
 	//注視点から視点までのベクトルを正規化する。
 	Vector3 toPosDir = m_toCameraPos;
 	toPosDir.Normalize();
-	if (toPosDir.y < -0.99f) {
-		//カメラが上向きすぎ。
+	if (toPosDir.y < TARGET_UNDER) {
+		//カメラが下向きすぎ。
 		m_toCameraPos = toCameraPosOld;
 	}
-	else if (toPosDir.y > 0.9f) {
-		//カメラが下向きすぎ。
+	else if (toPosDir.y > TARGET_OVER) {
+		//カメラが上向きすぎ。
 		m_toCameraPos = toCameraPosOld;
 	}
 
@@ -155,10 +170,10 @@ void GameCamera::TransitionState()
 {
 
 	//xかzの移動速度があったら(スティックの入力があったら)。
-	if (IsMoveNow()==true)
+	if (fabsf(m_moveSpeed.x) >= 0.001f && fabsf(m_moveSpeed.z) >= 0.001f)
 	{
 		//Bボタンを押している間は走る。
-		if (g_pad[0]->IsPress(enButtonB))
+		if (g_pad[0]->IsPress(enButtonA))
 		{
 			//走り状態にする。
 			m_moveState = enMoveState_Run;

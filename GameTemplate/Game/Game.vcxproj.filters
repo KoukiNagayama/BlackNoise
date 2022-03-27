@@ -14,7 +14,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="GameCamera.cpp" />
-    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Bell.cpp" />
     <ClCompile Include="GameStart.cpp" />
     <ClCompile Include="BackGround.cpp" />
   </ItemGroup>
@@ -27,7 +27,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Item.h" />
+    <ClInclude Include="Bell.h" />
     <ClInclude Include="GameStart.h" />
     <ClInclude Include="BackGround.h" />
   </ItemGroup>
