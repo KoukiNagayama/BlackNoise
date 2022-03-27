@@ -6,6 +6,16 @@
 #include "sound/SoundEngine.h"
 #include "InfoForEdge.h"
 
+
+namespace {
+	const float EDGE_FADE_IN_DELTA_VALUE = 0.05f;	// エッジがフェードインするときの変位量
+	const float EDGE_FADE_OUT_DELTA_VALUE = 0.05f;	// エッジがフェードアウトするときの変位量
+	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
+	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
+	const float RANGE1 = 200.0f;
+	const float RANGE2 = 800.0f;
+}
+
 Game::Game()
 {
 }
@@ -32,19 +42,16 @@ bool Game::Start()
 	position.x = 5.0f;
 	position.y = 1.0f;
 	position.z = 1.0f;
+
 	Vector3 position2;
 	position2.x = 100.0f;
 	position2.y = 0.0f;
 	position2.z = 0.0f;
-	g_infoForEdge.InitForSound(0, position, 200.0f, 0, rate);
-	g_infoForEdge.InitForSound(1, position2, 1000.0f, 1, rate);
 
-	m_sound1 = NewGO<SoundSource>(0);
-
-
+	g_infoForEdge.InitForSound(0, position, RANGE1, 0, rateByTime);
+	g_infoForEdge.InitForSound(1, position2, RANGE2, 1, rateByTime);
 	m_position.x = 100.0f;
-	beforeRate = 0.00f;
-	g_infoForEdge.SetRate(1,rate);
+	g_infoForEdge.SetRate(1, rateByTime);
 	return true;
 }
 
@@ -66,33 +73,28 @@ void Game::Update()
 		m_sound2->Play(false);
 	}
 
-
 	int check2;
 	if (m_sound2 != nullptr) {
 		if (m_sound2->IsPlaying() == true)
 		{
 			check2 = 1;
-			if (rate < 1.00f) {
-				rate += 0.05f;
+			if (rateByTime < RATE_BY_TIME_MAX_VALUE) {
+				rateByTime += EDGE_FADE_IN_DELTA_VALUE;
 			}
 		}
 		else {
 			check2 = 0;
-			if (rate > 0.00f && check2 == 0) {
-				rate -= 0.05f;
-				if (rate <= 0.00f) {
-					rate = 0.00f;
+			if (rateByTime > RATE_BY_TIME_MIN_VALUE && check2 == 0) {
+				rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
+				if (rateByTime <= RATE_BY_TIME_MIN_VALUE) {
+					rateByTime = RATE_BY_TIME_MIN_VALUE;
 				}
 			}
 		}
 		g_infoForEdge.SetIsSound(1, check2);
-		g_infoForEdge.SetRate(1, rate);
+		g_infoForEdge.SetRate(1, rateByTime);
 	}
 
-
-
-
-	
 
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.SetRotation(m_rotation);

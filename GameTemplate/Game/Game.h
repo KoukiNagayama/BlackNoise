@@ -32,8 +32,7 @@ private:
 	Player*		m_player;
 	GameCamera* m_gamecam;
 	SoundSource* m_sound1;
-	SoundSource* m_sound2;
-	float rate;
-	float beforeRate;
+	SoundSource* m_sound2 = nullptr;
+	float rateByTime;
 };
 

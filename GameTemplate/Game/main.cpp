@@ -59,10 +59,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// シャドウマップへのモデルの描画
 		//g_shadow.RenderToShadowMap(renderContext);
 
-		// 深度値マップのモデル
+		//  深度値マップ、ワールド座標マップ、法線マップの更新
 		g_creatingMaps.Update();
 
-		// 深度値マップへのモデルの描画
+		// 深度値マップ、ワールド座標マップ、法線マップへのモデルの描画
 		g_creatingMaps.RenderToDepthValueMap(renderContext);
 
 		// ライト情報の更新
