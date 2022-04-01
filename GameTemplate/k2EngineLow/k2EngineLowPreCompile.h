@@ -48,7 +48,7 @@ using namespace Microsoft::WRL;
 #include "math/Vector.h"
 #include "math/Matrix.h"
 
-#include "k2EngineLow.h"
+
 #include "graphics/VertexBuffer.h"
 #include "graphics/IndexBuffer.h"
 #include "graphics/IShaderResource.h"
@@ -86,8 +86,6 @@ using namespace Microsoft::WRL;
 #include "FontRender.h"
 #include "CreatingMaps.h"
 #include "InfoForEdge.h"
-#include "MapChipRender.h"
-#include "LevelRender.h"
 
 
 const UINT FRAME_BUFFER_W = 1600;	// フレームバッファの幅。
@@ -122,3 +120,9 @@ static const int MAX_BONE = 512;	// ボーンの最大数。
 #include "graphics/effect/EffectEngine.h"
 #include "sound/SoundSource.h"
 #include "graphics/effect/EffectEmitter.h"
+
+using namespace nsK2EngineLow;
+//#include "LevelRender.h"
+//#include "MapChipRender.h"
+
+#include "k2EngineLow.h"
