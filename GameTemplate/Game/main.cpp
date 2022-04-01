@@ -33,7 +33,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	g_creatingMaps.Init();
 
-	auto game = NewGO<GameStart>(0,"game");
+	auto game = NewGO<Game>(0,"game");
 
 	SpriteInitData spriteInitData;
 	spriteInitData.m_textures[0] = &g_creatingMaps.GetDepthValueMap().GetRenderTargetTexture();

@@ -86,6 +86,8 @@ using namespace Microsoft::WRL;
 #include "FontRender.h"
 #include "CreatingMaps.h"
 #include "InfoForEdge.h"
+#include "MapChipRender.h"
+#include "LevelRender.h"
 
 
 const UINT FRAME_BUFFER_W = 1600;	// フレームバッファの幅。

@@ -34,5 +34,6 @@ private:
 	SoundSource* m_sound1;
 	SoundSource* m_sound2 = nullptr;
 	float rateByTime;
+	float rateByTime2;
 };
 

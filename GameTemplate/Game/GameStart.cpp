@@ -19,7 +19,7 @@ GameStart::~GameStart()
 bool GameStart::Start()
 {
 	Vector3 position = Vector3::Zero;
-	g_infoForEdge.InitForSound(0, position, 200.0f, 1);
+	g_infoForEdge.InitForSound(0, position, 200.0f, 1, 0.00f);
 	//各クラスを生成。
 	m_gamecam = NewGO<GameCamera>(0, "gamecamera");
 	m_player = NewGO<Player>(0, "player");
