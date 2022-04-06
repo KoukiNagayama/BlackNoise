@@ -102,7 +102,14 @@ namespace nsK2EngineLow {
 		{
 			m_scale = scale;
 		}
-
+		/// <summary>
+		/// アニメーションイベントの追加
+		/// </summary>
+		/// <param name="eventListener"></param>
+		void AddAnimationEvent(AnimationEventListener eventListener)
+		{
+			m_animation.AddAnimationEventListener(eventListener);
+		}
 	private:
 		/// <summary>
 		/// モデルの初期化
