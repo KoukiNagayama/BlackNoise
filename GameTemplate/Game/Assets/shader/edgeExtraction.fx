@@ -166,7 +166,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
         }
     }
     // 普通にテクスチャを
-    //return g_texture.Sample(g_sampler, psIn.uv);
+    return g_texture.Sample(g_sampler, psIn.uv);
     // ピクセルカラーを黒にする
-    return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    //return float4(0.0f, 0.0f, 0.0f, 1.0f);
 }

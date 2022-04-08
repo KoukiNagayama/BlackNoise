@@ -9,7 +9,7 @@ public:
 		m_position = position;
 	}
 	void Render(RenderContext& rc);
-
+	void Update();
 private:
 	ModelRender m_modelRender;
 	PhysicsStaticObject m_physicsStaticObject;

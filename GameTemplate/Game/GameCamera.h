@@ -1,4 +1,6 @@
 #pragma once
+#include "sound/SoundSource.h"
+
 
 class Player;
 //ゲーム中のカメラを制御する。
@@ -64,6 +66,12 @@ public:
 	{
 		return fabsf(m_moveSpeed.x) >= 0.001f && fabsf(m_moveSpeed.z) >= 0.001f;
 	}
+
+	const Vector3 GetUp()
+	{
+		return m_up;
+	}
+
 private:
 	/////////////////////////////////////
 	//メンバ関数
@@ -90,8 +98,34 @@ private:
 	/// 注視点処理。
 	/// </summary>
 	void ViewPoint();
-	
-	void PlayAnimation();
+	/// <summary>
+	/// ステート管理
+	/// </summary>
+	void ManageState();
+	/// <summary>
+	/// 待機ステート。
+	/// </summary>
+	void IdleState();
+	/// <summary>
+	/// 歩きステート。
+	/// </summary>
+	void WalkState();
+	/// <summary>
+	/// 走りステート。
+	/// </summary>
+	void RunState();
+	/// <summary>
+	/// しゃがみステート。
+	/// </summary>
+	void SneakState();
+	/// <summary>
+	/// しゃがみ待機ステート。
+	/// </summary>
+	void SneakIdleState();
+
+	void Render(RenderContext& rc);
+
+	void CalculateUP();
 
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 
@@ -109,4 +143,9 @@ private:
 	Vector3 m_target;								//ターゲット。
 	CharacterController m_charaCon;					//キャラクターコントローラー。
 	Quaternion m_rotation;							//回転。
+	SoundSource* m_walkSound;
+	ModelRender m_modelRender;
+	Vector3 m_up;
+	float rate = 0.0f;
+	float beforeRate;
 };

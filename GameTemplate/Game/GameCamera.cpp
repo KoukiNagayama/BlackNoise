@@ -1,6 +1,8 @@
 #include "stdafx.h"
+#include "sound/SoundEngine.h"
 #include "GameCamera.h"
 #include "Player.h"
+#include "InfoForEdge.h"
 
 namespace
 {
@@ -10,8 +12,8 @@ namespace
 	const float MOVESPEED = 100.0f;			//歩きの移動速度
 	const float MOVE_RUN = 1.22f;			//走り時にいくら乗算するか
 	const float MOVE_SNEAK = 0.3f;			//しゃがみ時にいくら乗算するか
-	const float TARGET_UNDER = -0.99f;		//カメラの下限
-	const float TARGET_OVER = 0.75f;		//カメラの上限
+	const float TARGET_UNDER = -0.3f;		//カメラの下限
+	const float TARGET_OVER = 0.35f;		//カメラの上限
 }
 
 GameCamera::GameCamera()
@@ -29,15 +31,24 @@ bool GameCamera::Start()
 	m_player = FindGO<Player>("player");
 
 	m_position = Vector3::Zero;
+	m_modelRender.Init("Assets/modelData/human/playerbox.tkm");
+	m_modelRender.SetPosition(m_position);
 
 	//カメラのニアクリップとファークリップを設定する。
 	g_camera3D->SetNear(3.0f);
 	g_camera3D->SetFar(10000.0f);
 
-	
-
 	//キャラコンを初期化する。
-	m_charaCon.Init(40.0f, 170.0f, m_position);
+	m_charaCon.Init(60.0f, 170.0f, m_position);
+
+	//サウンドを登録。
+	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/human/walk.wav");
+	//サウンドをNewGO
+	m_walkSound = NewGO<SoundSource>(3);
+
+	beforeRate = 0.00f;
+	g_infoForEdge.SetRate(2, rate);
+	g_infoForEdge.InitForSound(2, m_position, 200.0f, 0, rate);
 
 	return true;
 }
@@ -47,12 +58,30 @@ void GameCamera::Update()
 	Move();
 	//注視点の処理
 	ViewPoint();
+
+	CalculateUP();
 	//ステート遷移処理
-	TransitionState();
+	ManageState();
+
+	m_modelRender.SetPosition(m_position);
+	m_modelRender.Update();
+
 	g_soundEngine->SetListenerPosition(m_position);
 	g_soundEngine->SetListenerFront(g_camera3D->GetForward());
 	//カメラの更新。
 	g_camera3D->Update();
+}
+
+void GameCamera::CalculateUP()
+{
+	Vector3 forward;
+	forward = g_camera3D->GetForward();
+	forward.Normalize();
+	Vector3 right;
+	right = g_camera3D->GetRight();
+	right.Normalize();
+	m_up.Cross(forward, right);
+	m_up.Normalize();
 }
 
 void GameCamera::Move()
@@ -60,15 +89,12 @@ void GameCamera::Move()
 	/*if (m_player->IsEnableMove() == false)
 	{
 		return;
-<<<<<<< HEAD
 	}
-=======
 	}*/
 	//x,zの移動速度を0にする。
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
 
->>>>>>> 657b32b70468c30e3a8371d6a705121b762e4b3b
 	//左スティックの入力量を計算
 	Vector3 stickL;
 	stickL.x = g_pad[0]->GetLStickXF();
@@ -91,6 +117,7 @@ void GameCamera::Move()
 	{
 		m_moveSpeed.x *= MOVE_RUN;
 		m_moveSpeed.z *= MOVE_RUN;
+
 	}
 	//しゃがみステートなら速度を0.7倍にする。
 	if (m_moveState == enMoveState_Sneak)
@@ -166,6 +193,59 @@ void GameCamera::ViewPoint()
 	g_camera3D->SetTarget(m_target);
 }
 
+void GameCamera::ManageState()
+{
+	switch (m_moveState)
+	{
+		//待機ステート
+	case enMoveState_Idle:
+		IdleState();
+		break;
+		//歩きステート
+	case enMoveState_Walk:
+		WalkState();
+		break;
+		//走りステート
+	case enMoveState_Run:
+		RunState();
+		break;
+		//しゃがみステート
+	case enMoveState_Sneak:
+		SneakState();
+		break;
+	case enMoveState_SneakIdle:
+		SneakIdleState();
+		break;
+	default:
+		break;
+	}
+}
+
+void GameCamera::IdleState()
+{
+	TransitionState();
+}
+
+void GameCamera::WalkState()
+{
+	TransitionState();
+}
+
+void GameCamera::RunState()
+{
+	TransitionState();
+}
+
+void GameCamera::SneakState()
+{
+	TransitionState();
+}
+
+void GameCamera::SneakIdleState()
+{
+	TransitionState();
+}
+
 void GameCamera::TransitionState()
 {
 
@@ -201,4 +281,9 @@ void GameCamera::TransitionState()
 		//待機状態にする。
 		m_moveState = enMoveState_Idle;
 	}
+}
+
+void GameCamera::Render(RenderContext& rc)
+{
+	m_modelRender.Draw(rc);
 }

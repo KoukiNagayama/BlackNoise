@@ -19,8 +19,7 @@ bool Player::Start()
 	m_position = m_gamecam->GetPosition();
 	m_position.y = 0.0f;
 
-	m_modelRender.Init("Assets/modelData/human/player_ball.tkm");
-	m_modelRender.SetPosition(m_gamecam->GetPosition());
+	
 
 	Vector3 position;
 	position = m_position;

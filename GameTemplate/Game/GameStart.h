@@ -1,4 +1,6 @@
 #pragma once
+#include "sound/SoundSource.h"
+
 class Player;
 class GameCamera;
 class BackGround;

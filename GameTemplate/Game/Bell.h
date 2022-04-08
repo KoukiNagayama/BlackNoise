@@ -72,8 +72,11 @@ private:
 	Player* m_player = nullptr;
 	GameCamera* m_gameCam = nullptr;
 	FontRender m_font;
+	FontRender m_font1;
 
 	float m_timer = 0.0f;
+	float rate = 0.0f;
+	float beforeRate;
 	bool m_isRing = false;
 };
 
