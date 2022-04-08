@@ -17,6 +17,7 @@
     <ClCompile Include="Bell.cpp" />
     <ClCompile Include="GameStart.cpp" />
     <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="Enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -30,6 +31,7 @@
     <ClInclude Include="Bell.h" />
     <ClInclude Include="GameStart.h" />
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="Enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
