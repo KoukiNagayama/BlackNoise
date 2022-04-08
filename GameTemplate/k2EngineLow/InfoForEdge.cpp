@@ -19,7 +19,7 @@ namespace nsK2EngineLow {
 
 	void InfoForEdge::Update()
 	{
-		for (int i = 0; i < m_cbSoundSource.s_numSoundSource; i++)
+	/*	for (int i = 0; i < m_cbSoundSource.s_numSoundSource; i++)
 		{
 			if (m_cbSoundSource.s_soundSourceData[i].s_rate <= 0.0f) {
 				continue;
@@ -27,7 +27,7 @@ namespace nsK2EngineLow {
 			else if (m_cbSoundSource.s_soundSourceData[i].s_currentRate < m_cbSoundSource.s_soundSourceData[i].s_rate) {
 				m_cbSoundSource.s_soundSourceData[i].s_currentRate += 0.05f;
 			}
-		}
+		}*/
 	}
 	CBSoundSource g_cbSoundSource;
 	InfoForEdge	 g_infoForEdge;

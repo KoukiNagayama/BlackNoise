@@ -19,12 +19,20 @@ namespace nsK2EngineLow {
 			int numAnimationClips = 0,
 			bool isShadowReceiver = true,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
-			bool isShadowCaster = true
+			bool isShadowCaster = true,
+			int maxInstance = 0
 		);
 		/// <summary>
 		/// 更新処理
 		/// </summary>
 		void Update();
+		/// <summary>
+		/// インスタンシングデータの更新。
+		/// </summary>
+		/// <param name="pos">座標</param>
+		/// <param name="rot">回転</param>
+		/// <param name="scale">拡大率</param>
+		void UpdateInstancingData(const Vector3& pos, const Quaternion& rot, const Vector3& scale);
 		/// <summary>
 		/// 描画処理
 		/// </summary>
@@ -56,6 +64,21 @@ namespace nsK2EngineLow {
 			return m_animation.IsPlaying();
 		}
 		/// <summary>
+		/// 座標、回転、拡大を全て設定。
+		/// </summary>
+		/// <remark>
+		/// インスタンシング描画が有効の場合は、この設定は無視されます。
+		/// </remark>
+		/// <param name="pos">座標。</param>
+		/// <param name="rotation">回転。</param>
+		/// <param name="scale">拡大。</param>
+		void SetTRS(const Vector3& pos, const Quaternion& rotation, const Vector3& scale)
+		{
+			SetPosition(pos);
+			SetRotation(rotation);
+			SetScale(scale);
+		}
+		/// <summary>
 		/// 座標を設定
 		/// </summary>
 		/// <param name="pos">座標</param>
@@ -79,7 +102,14 @@ namespace nsK2EngineLow {
 		{
 			m_scale = scale;
 		}
-
+		/// <summary>
+		/// アニメーションイベントの追加
+		/// </summary>
+		/// <param name="eventListener"></param>
+		void AddAnimationEvent(AnimationEventListener eventListener)
+		{
+			m_animation.AddAnimationEventListener(eventListener);
+		}
 	private:
 		/// <summary>
 		/// モデルの初期化
@@ -144,7 +174,12 @@ namespace nsK2EngineLow {
 		bool				m_isShadowCaster;					// 影をキャストするか
 		std::vector<Model>	m_modelArray;						// モデル配列
 		Model				m_depthValueMapModel;				// 深度値マップ描画用モデル
-
+		int					m_numInstance = 0;					// インスタンスの数。
+		int					m_maxInstance = 1;					// 最大インスタンス数。
+		int					m_fixNumInstanceOnFrame = 0;		// このフレームに描画するインスタンスの数の確定数。。
+		bool				m_isEnableInstancingDraw = false;	// インスタンシング描画が有効？
+		std::unique_ptr<Matrix[]>	m_worldMatrixArray;			// ワールド行列の配列。
+		StructuredBuffer			m_worldMatrixArraySB;		// ワールド行列の配列のストラクチャードバッファ。
 	};
 }
 

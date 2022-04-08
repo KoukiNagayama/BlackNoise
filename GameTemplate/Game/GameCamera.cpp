@@ -89,12 +89,19 @@ void GameCamera::Move()
 	/*if (m_player->IsEnableMove() == false)
 	{
 		return;
+<<<<<<< HEAD
 	}
+=======
+>>>>>>> e2def8f48cdc1a3a2c1091b2f1e321040a3f5378
 	}*/
 	//x,zの移動速度を0にする。
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e2def8f48cdc1a3a2c1091b2f1e321040a3f5378
 	//左スティックの入力量を計算
 	Vector3 stickL;
 	stickL.x = g_pad[0]->GetLStickXF();

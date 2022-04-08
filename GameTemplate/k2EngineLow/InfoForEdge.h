@@ -6,7 +6,7 @@ namespace nsK2EngineLow {
 	/// <summary>
 	/// 音源データ構造体
 	/// </summary>
-	struct SoundSourceData
+	/*struct SoundSourceData
 	{
 		Vector3		s_position = Vector3::Zero;		// 音源の位置
 		int			s_isSound = 0;					// 音源は鳴っているか
@@ -14,6 +14,14 @@ namespace nsK2EngineLow {
 		float		s_rate;							// 音源の影響率
 		float		s_currentRate = 0.0f;
 		int 		pad;
+	};*/
+	struct SoundSourceData
+	{
+		Vector3		s_position = Vector3::Zero;
+		int			s_isSound = 0;
+		float		s_range = 0.0f;
+		float		s_rate = 0.0f;
+		Vector2		pad;
 	};
 	/// <summary>
 	/// 音源データの定数バッファ用構造体
@@ -96,10 +104,10 @@ namespace nsK2EngineLow {
 			m_cbSoundSource.s_soundSourceData[number].s_rate = rate;
 		}
 
-		void SetCurrentRate(int number, float currentRate)
+		/*void SetCurrentRate(int number, float currentRate)
 		{
 			m_cbSoundSource.s_soundSourceData[number].s_currentRate = currentRate;
-		}
+		}*/
 		/// <summary>
 		/// 更新
 		/// </summary>
