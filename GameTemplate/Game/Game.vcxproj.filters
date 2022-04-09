@@ -17,9 +17,13 @@
     <ClCompile Include="Bell.cpp" />
     <ClCompile Include="GameStart.cpp" />
     <ClCompile Include="BackGround.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="Skey.cpp" />
     <ClCompile Include="Toy.cpp" />
+=======
+    <ClCompile Include="Enemy.cpp" />
+>>>>>>> 3a7dbda104630cbadd67b9ba52c54c7953f00828
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -33,9 +37,13 @@
     <ClInclude Include="Bell.h" />
     <ClInclude Include="GameStart.h" />
     <ClInclude Include="BackGround.h" />
+<<<<<<< HEAD
     <ClInclude Include="Key.h" />
     <ClInclude Include="Skey.h" />
     <ClInclude Include="Toy.h" />
+=======
+    <ClInclude Include="Enemy.h" />
+>>>>>>> 3a7dbda104630cbadd67b9ba52c54c7953f00828
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
