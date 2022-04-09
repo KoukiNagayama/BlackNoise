@@ -29,6 +29,11 @@ public:
 		return m_moveState != enMoveState_Sneak &&
 			m_moveState != enMoveState_SneakIdle;
 	}
+
+	void SetPosition(Vector3& position)
+	{
+		m_position = position;
+	}
 	/// <summary>
 	/// ƒJƒƒ‰‚ÌÀ•W‚Ìæ“¾
 	/// </summary>
@@ -65,11 +70,6 @@ public:
 	bool IsMoveNow() const
 	{
 		return fabsf(m_moveSpeed.x) >= 0.001f && fabsf(m_moveSpeed.z) >= 0.001f;
-	}
-
-	const Vector3 GetUp()
-	{
-		return m_up;
 	}
 
 private:
@@ -125,7 +125,6 @@ private:
 
 	void Render(RenderContext& rc);
 
-	void CalculateUP();
 
 	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
 

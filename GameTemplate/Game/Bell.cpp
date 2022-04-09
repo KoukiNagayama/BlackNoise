@@ -33,6 +33,8 @@ bool Bell::Start()
 	g_soundEngine->ResistWaveFileBank(2, "Assets/sound/item/bell_low.wav");
 	//モデルの初期化。
 	m_modelRender.Init("Assets/modelData/item/bell.tkm");
+	m_modelRender.SetScale({ 0.7f,0.7f,0.7f });
+
 	//サウンドをNewGO
 	m_bellSound = NewGO<SoundSource>(2);
 
@@ -62,10 +64,15 @@ void Bell::Update()
 
 void Bell::Position()
 {
+	Vector3 up, right, forward;
+	right = g_camera3D->GetRight();
+	forward = g_camera3D->GetForward();
+	up.Cross(right, forward);
+	up.Normalize();
 	m_position = g_camera3D->GetPosition();
 	m_position += g_camera3D->GetRight() * 20.0f;
 	m_position += g_camera3D->GetForward() * 20.0f;
-	m_position.y = 145.0f;
+	m_position += up*20.0f;
 	//座標を設定する
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.SetRotation(m_player->GetRotation());

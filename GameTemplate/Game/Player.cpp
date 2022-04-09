@@ -24,7 +24,8 @@ bool Player::Start()
 	Vector3 position;
 	position = m_position;
 	position.y = 0.0f;
-
+	//m_modelRender.Init("Assets/modelData/human/playerbox.tkm");
+	//m_modelRender.SetPosition(m_position);
 	//ƒLƒƒƒ‰ƒRƒ“‚ğ‰Šú‰»‚·‚éB
 	//m_charaCon.Init(10.0f, 45.0f, position);
 

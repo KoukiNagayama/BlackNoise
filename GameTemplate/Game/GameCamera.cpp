@@ -6,13 +6,13 @@
 
 namespace
 {
-	const float CAMPOS_Y = 170.0f;			//視点の高さ
+	const float CAMPOS_Y = 250.0f;			//視点の高さ
 	const float TOCAMPOS_Z = -77.0f;		//注視点までのZ座標
 
-	const float MOVESPEED = 100.0f;			//歩きの移動速度
+	const float MOVESPEED = 700.0f;			//歩きの移動速度
 	const float MOVE_RUN = 1.22f;			//走り時にいくら乗算するか
 	const float MOVE_SNEAK = 0.3f;			//しゃがみ時にいくら乗算するか
-	const float TARGET_UNDER = -0.3f;		//カメラの下限
+	const float TARGET_UNDER = -0.99f;		//カメラの下限
 	const float TARGET_OVER = 0.35f;		//カメラの上限
 }
 
@@ -58,12 +58,13 @@ void GameCamera::Update()
 	Move();
 	//注視点の処理
 	ViewPoint();
-
-	CalculateUP();
 	//ステート遷移処理
 	ManageState();
 
-	m_modelRender.SetPosition(m_position);
+	Vector3 position;
+	position = m_position;
+	position.y = 0.0f;
+	m_modelRender.SetPosition(position);
 	m_modelRender.Update();
 
 	g_soundEngine->SetListenerPosition(m_position);
@@ -72,36 +73,18 @@ void GameCamera::Update()
 	g_camera3D->Update();
 }
 
-void GameCamera::CalculateUP()
-{
-	Vector3 forward;
-	forward = g_camera3D->GetForward();
-	forward.Normalize();
-	Vector3 right;
-	right = g_camera3D->GetRight();
-	right.Normalize();
-	m_up.Cross(forward, right);
-	m_up.Normalize();
-}
-
 void GameCamera::Move()
 {
 	/*if (m_player->IsEnableMove() == false)
 	{
 		return;
-<<<<<<< HEAD
 	}
-=======
->>>>>>> e2def8f48cdc1a3a2c1091b2f1e321040a3f5378
 	}*/
 	//x,zの移動速度を0にする。
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
 
-<<<<<<< HEAD
-=======
 
->>>>>>> e2def8f48cdc1a3a2c1091b2f1e321040a3f5378
 	//左スティックの入力量を計算
 	Vector3 stickL;
 	stickL.x = g_pad[0]->GetLStickXF();
@@ -257,21 +240,19 @@ void GameCamera::TransitionState()
 {
 
 	//xかzの移動速度があったら(スティックの入力があったら)。
-	if (fabsf(m_moveSpeed.x) >= 0.001f && fabsf(m_moveSpeed.z) >= 0.001f)
+	if (fabsf(m_moveSpeed.x) >= 0.01f && fabsf(m_moveSpeed.z) >= 0.01f)
 	{
 		//Bボタンを押している間は走る。
 		if (g_pad[0]->IsPress(enButtonA))
 		{
 			//走り状態にする。
 			m_moveState = enMoveState_Run;
-			return;
 		}
 		//LBボタンを押している間しゃがむ。
 		if (g_pad[0]->IsPress(enButtonLB2))
 		{
 			//しゃがみ状態にする。
 			m_moveState = enMoveState_Sneak;
-			return;
 		}
 		//歩き状態にする。
 		m_moveState = enMoveState_Walk;

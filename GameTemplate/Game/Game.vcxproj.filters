@@ -17,6 +17,9 @@
     <ClCompile Include="Bell.cpp" />
     <ClCompile Include="GameStart.cpp" />
     <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="Key.cpp" />
+    <ClCompile Include="Skey.cpp" />
+    <ClCompile Include="Toy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -30,6 +33,9 @@
     <ClInclude Include="Bell.h" />
     <ClInclude Include="GameStart.h" />
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="Key.h" />
+    <ClInclude Include="Skey.h" />
+    <ClInclude Include="Toy.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
