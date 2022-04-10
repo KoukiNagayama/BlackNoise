@@ -26,15 +26,15 @@ bool GameStart::Start()
 	g_infoForEdge.InitForSound(0, position, 200.0f, 1, 0.00f);
 	//各クラスを生成。
 
-	m_levelRender.Init("Assets/modelData/stage/stage2.tkl", [&](LevelObjectData& objData) {
-		//if (objData.EqualObjectName(L"stage") == true) {
+	m_levelRender.Init("Assets/modelData/stage/stage_2.tkl", [&](LevelObjectData& objData) {
+		if (objData.EqualObjectName(L"stage") == true) {
 
-		//	m_bg = NewGO<BackGround>(0);
-		//	//配置座標、スケール、回転を取得する。
-		//	m_bg->SetPosition(objData.position);
-		//	//trueにすると、レベルの方でモデルが読み込まれない。
-		//	return true;
-		//}
+			m_bg = NewGO<BackGround>(0);
+			//配置座標、スケール、回転を取得する。
+			m_bg->SetPosition(objData.position);
+			//trueにすると、レベルの方でモデルが読み込まれない。
+			return true;
+		}
 		if (objData.EqualObjectName(L"player") == true) {
 
 			m_gamecam = NewGO<GameCamera>(0, "gamecamera");

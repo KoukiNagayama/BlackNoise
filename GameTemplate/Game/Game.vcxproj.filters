@@ -1,49 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="system">
-      <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="system\system.cpp">
-      <Filter>system</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="GameCamera.cpp" />
-    <ClCompile Include="Bell.cpp" />
-    <ClCompile Include="GameStart.cpp" />
     <ClCompile Include="BackGround.cpp" />
-<<<<<<< HEAD
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="GameStart.cpp" />
+    <ClCompile Include="Bell.cpp" />
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="Skey.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="system\system.cpp" />
     <ClCompile Include="Toy.cpp" />
-=======
-    <ClCompile Include="Enemy.cpp" />
->>>>>>> 3a7dbda104630cbadd67b9ba52c54c7953f00828
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="system\system.h">
-      <Filter>system</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="GameCamera.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="Bell.h" />
-    <ClInclude Include="GameStart.h" />
     <ClInclude Include="BackGround.h" />
-<<<<<<< HEAD
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="GameStart.h" />
+    <ClInclude Include="Bell.h" />
     <ClInclude Include="Key.h" />
     <ClInclude Include="Skey.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="system\system.h" />
     <ClInclude Include="Toy.h" />
-=======
-    <ClInclude Include="Enemy.h" />
->>>>>>> 3a7dbda104630cbadd67b9ba52c54c7953f00828
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

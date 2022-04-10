@@ -30,7 +30,7 @@ bool GameCamera::Start()
 	//プレイヤーのインスタンスを探す。
 	m_player = FindGO<Player>("player");
 
-	m_position = Vector3::Zero;
+	//m_position = Vector3::Zero;
 	m_modelRender.Init("Assets/modelData/human/playerbox.tkm");
 	m_modelRender.SetPosition(m_position);
 
