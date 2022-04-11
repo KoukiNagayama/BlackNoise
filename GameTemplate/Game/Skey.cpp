@@ -5,7 +5,6 @@ Skey::Skey()
 	m_modelRender.Init("Assets/modelData/item/key.tkm");
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.Update();
-
 }
 
 Skey::~Skey()
