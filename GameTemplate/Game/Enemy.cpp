@@ -86,7 +86,7 @@ void Enemy::MoveByRoute()
 
 	Vector3 pathPosition = m_path.Move(m_position, 3.0f, m_isEnd);
 
-	if (m_isEnd = false);
+	if (m_isEnd == false);
 	{
 		//Œo˜Hã‚ÌˆÚ“®‘¬“x
 		m_moveSpeed = pathPosition - m_oldPosition;
