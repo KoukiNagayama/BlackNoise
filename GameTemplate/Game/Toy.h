@@ -10,6 +10,11 @@ public:
 	Toy();
 	~Toy();
 	/// <summary>
+	/// ‰Šú‰»ŠÖ”B
+	/// </summary>
+	/// <returns>true</returns>
+	bool Start();
+	/// <summary>
 	/// À•W‚ğİ’è
 	/// </summary>
 	/// <param name="position">À•W</param>

@@ -4,14 +4,21 @@
 
 Toy::Toy()
 {
-	m_modelRender.Init("Assets/modelData/item/key.tkm");
-	m_modelRender.SetPosition(m_position);
-	m_modelRender.Update();
 }
 
 Toy::~Toy()
 {
+	
+}
 
+bool Toy::Start()
+{
+	m_modelRender.Init("Assets/modelData/item/toy.tkm");
+	m_modelRender.SetPosition(m_position);
+	m_modelRender.Update();
+	m_gameCamera = FindGO<GameCamera>("gamecamera");
+
+	return true;
 }
 
 void Toy::Update()
