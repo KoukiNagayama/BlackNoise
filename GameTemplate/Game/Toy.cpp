@@ -16,15 +16,18 @@ Toy::~Toy()
 
 void Toy::Update()
 {
-	// プレイヤーとの距離
-	// カメラの座標
-	m_gameCameraPos = m_gameCamera->GetPosition();
-	m_gameCameraPos.y = 0.0f;
-	// 座標の差
-	Vector3	distToPlayer = m_position - m_gameCameraPos;
-	if (distToPlayer.Length() <= 10.0f) {
-		if (m_toyState == enToyState_usual) {
+	// ステートが通常なら
+	if (m_toyState == enToyState_usual) {
+		// プレイヤーとの距離
+		// カメラの座標
+		m_gameCameraPos = m_gameCamera->GetPosition();
+		m_gameCameraPos.y = 0.0f;
+		// 座標の差
+		Vector3	distToPlayer = m_position - m_gameCameraPos;
+		if (distToPlayer.Length() <= 10.0f) {
+			// モデルを変更
 			m_modelRender.Init("Assets/modelData/item/clash_toy.tkm");
+			// ステートを変更
 			m_toyState = enToyState_collapse;
 		}
 	}
