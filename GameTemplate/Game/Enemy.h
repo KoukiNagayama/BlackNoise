@@ -2,6 +2,7 @@
 #include "AI/PathFinding/PathFinding.h"
 #include "AI/PathFinding/NaviMesh.h"
 #include "AI/PathFinding/Path.h"
+#include <LevelRender.h>
 
 class Player;
 class GameCamera;
@@ -22,6 +23,14 @@ private:
 	{
 		Vector3 position = Vector3::Zero; //à íu
 		int		no = 0;		  //î‘çÜ
+	};
+
+	enum AnimationClips
+	{
+		enAnimation_Normal,
+		enAnimation_Move,
+		enAnimation_Caution,
+		enAnimation_Num
 	};
 
 public:
@@ -56,8 +65,11 @@ public:
 		m_targetPosition = position;
 		m_targetPosition.y = 0.0f;
 	}
-	void SetNextPath();
-
+	void SetEndPath(const int& end)
+	{
+		//m_endPath = end;
+	}
+	void PlayAnimation();
 
 private:
 	ModelRender			   m_enemyRender;
@@ -79,5 +91,8 @@ private:
 	PathPoint			   m_nearestPath;						 //ç≈äÒÇËÇÃÉpÉX
 	Vector3				   m_oldPosition;
 	Vector3				   m_targetPosition;
-	int					   m_pathRan = 0;
+	LevelRender			   m_pathRender;
+	Animation			   m_animation;
+	AnimationClip		   m_animationClips[enAnimation_Num];
+	Player*				   m_player;
 };

@@ -1,22 +1,82 @@
 #include "stdafx.h"
 #include "Enemy.h"
 #include "Player.h"
-#include <time.h>
-#include <stdlib.h>
+
 namespace
 {
-	const float MOVESPEED = 1.4f * 70.0f; //歩行速度
+	const float MOVESPEED = 0.7f * 70.0f; //歩行速度
 	const float RUNSPEED = 1.4f;			//走行速度
 	const float	SEARCHAREA = 1.3f * 400.0f; //索敵範囲
 }
 
 bool Enemy::Start()
 {
-	m_enemyRender.Init("Assets/modelData/unityChan.tkm");
+	m_player = FindGO<Player>("player");
+
+	m_pathRender.Init("Assets/modelData/enemy/EnemyPass001.tkl", [&](LevelObjectData& objData)
+		{
+			if (objData.EqualObjectName(L"Pass0") == true)
+			{
+				SetPath(objData.position, 0);
+				return true;
+			}
+			else if (objData.EqualObjectName(L"Pass1") == true)
+			{
+				SetPath(objData.position, 1);
+				return true;
+			}
+			else if (objData.EqualObjectName(L"Pass2") == true)
+			{
+				SetPath(objData.position, 2);
+				return true;
+			}
+			else if (objData.EqualObjectName(L"Pass3") == true)
+			{
+				SetPath(objData.position, 3);
+				return true;
+			}
+			else if (objData.EqualObjectName(L"Pass4") == true)
+			{
+				SetPath(objData.position, 4);
+				return true;
+			}
+			else if (objData.EqualObjectName(L"Pass5") == true)
+			{
+				SetPath(objData.position, 5);
+				return true;
+			}
+			else if (objData.EqualObjectName(L"Pass6") == true)
+			{
+				SetPath(objData.position, 6);
+				return true;
+			}
+			else if (objData.EqualObjectName(L"Pass7") == true)
+			{
+				SetPath(objData.position, 7);
+				return true;
+			}
+		});
+
+	m_animationClips[enAnimation_Normal].Load("Assets/animData/walk.tka");
+	m_animationClips[enAnimation_Normal].SetLoopFlag(true);
+
+	m_animationClips[enAnimation_Move].Load("Assets/animData/run.tka");
+	m_animationClips[enAnimation_Move].SetLoopFlag(true);
+
+	m_animationClips[enAnimation_Caution].Load("Assets/animData/idle.tka");
+	m_animationClips[enAnimation_Caution].SetLoopFlag(true);
+
+	m_naviMesh.Init("Assets/modelData/enemy/stage2_mesh.tkn");
+
+	m_enemyRender.Init("Assets/modelData/unityChan.tkm", m_animationClips, enAnimation_Num, true, enModelUpAxisY);
+
+	m_position = m_pathList[0].position;
+
+	m_pathPoint = m_pathList[1];
+
+	m_enemyRender.SetPosition(m_position);
 
 	m_characterController.Init(10.0f, 45.0f, m_position);
-
-	m_naviMesh.Init("Assets/modelData/testStage/nvm/test.tkn");
 
 	return true;
 }
@@ -51,6 +111,7 @@ void Enemy::Move()
 		m_moveSpeed *= RUNSPEED;
 	}
 
+	m_moveSpeed *= 0.0f;
 	m_position = m_characterController.Execute(m_moveSpeed, 1.0f / 60.0f);
 
 	m_enemyRender.SetPosition(m_position);
@@ -61,7 +122,6 @@ void Enemy::SelectMove()
 	switch (m_state)
 	{
 	case enNormal:  //徘徊状態
-
 		MoveByRoute();
 		break;
 
@@ -84,7 +144,7 @@ void Enemy::MoveByRoute()
 {
 	m_oldPosition = m_position;
 
-	Vector3 pathPosition = m_path.Move(m_position, 3.0f, m_isEnd);
+	Vector3 pathPosition = m_path.Move(m_position, 2.0f, m_isEnd);
 
 	if (m_isEnd == false);
 	{
@@ -98,27 +158,23 @@ void Enemy::MoveByRoute()
 	//目標に到着
 	if (m_toGoal.Length() < 10.0f)
 	{
-		SetNextPath();
+		if (m_pathPoint.no != m_pathList.size())
+		{
+			m_pathPoint = m_pathList[m_pathPoint.no];
+		}
+		else
+		{
+			m_pathPoint = m_pathList[0];
+		}
+
 		m_isEnd = true;
 	}
 }
 
-void Enemy::SetNextPath()
-{
-	do
-	{
-		m_pathRan = rand() % m_pathList.size();
-	} while (m_pathRan == m_pathPoint.no - 1);
-
-	m_pathPoint = m_pathList[m_pathRan];
-
-	m_goalPosition = m_pathPoint.position;
-
-	SetRoute();
-}
-
 bool Enemy::SearchSound()
 {
+	m_targetPosition = m_player->GetPosition();
+
 	//エネミーからプレイヤー方向へのベクトル
 	Vector3 toPlayer = m_targetPosition - m_position;
 	toPlayer.y = 0.0f;
@@ -166,8 +222,6 @@ void Enemy::ManageState()
 
 		//警戒状態
 	case enCaution:
-		//最寄りのパスを検索
-		SetNearestPath();
 		//帰還状態に移行
 		StateToReturn();
 		break;
@@ -221,6 +275,7 @@ void Enemy::SetNearestPath()
 
 	//最終的に最短のパスを目標に設定
 	m_pathPoint = m_nearestPath;
+	m_goalPosition = m_nearestPath.position;
 }
 
 void Enemy::StateToMove()
@@ -247,11 +302,12 @@ void Enemy::StateToReturn()
 	//警戒状態のまま一定時間が経過
 	if (m_lostTimer <= 0.0f)
 	{
+		//最寄りのパスを検索
+		SetNearestPath();
 		//最寄りのパスまでの経路を設定
-		m_goalPosition = m_nearestPath.position;
 		SetRoute();
 
-		//徘徊状態へ移行
+		//帰還状態へ移行
 		m_state = enReturn;
 	}
 }
@@ -271,11 +327,34 @@ void Enemy::SetRoute()
 	);
 }
 
+void Enemy::PlayAnimation()
+{
+	switch (m_state)
+	{
+	case enNormal:
+		m_enemyRender.PlayAnimation(enAnimation_Normal);
+		break;
+
+	case enMove:
+		m_enemyRender.PlayAnimation(enAnimation_Move);
+		break;
+
+	case enCaution:
+		m_enemyRender.PlayAnimation(enAnimation_Caution);
+		break;
+
+	case enReturn:
+		m_enemyRender.PlayAnimation(enAnimation_Normal);
+		break;
+	}
+}
+
 void Enemy::Update()
 {
 	Move();
 	ManageState();
 	Rotation();
+	PlayAnimation();
 
 	m_enemyRender.Update();
 }
