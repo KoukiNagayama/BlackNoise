@@ -4,6 +4,7 @@ class Key : public IGameObject
 public:
 	Key();
 	~Key();
+	bool Start();
 	void SetPosition(const Vector3& position)
 	{
 		m_position = position;

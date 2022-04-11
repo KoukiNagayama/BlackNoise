@@ -1,4 +1,6 @@
 #pragma once
+#include "sound/SoundSource.h"
+
 class GameCamera;
 class Toy : public IGameObject
 {
@@ -7,8 +9,8 @@ public:
 		enToyState_usual,		// 通常時
 		enToyState_collapse		// 崩壊時
 	};
-	Toy();
-	~Toy();
+	Toy() {};
+	~Toy() {};
 	/// <summary>
 	/// 初期化関数。
 	/// </summary>
@@ -32,10 +34,21 @@ public:
 	/// </summary>
 	void Update();
 private:
+	/// <summary>
+	/// 音を鳴らす
+	/// </summary>
+	void MakeSound();
+	/// <summary>
+	/// 影響率を調べる
+	/// </summary>
+	void CheckRate();
 	ModelRender			m_modelRender;					// モデルレンダー
 	Vector3				m_position;						// 座標
 	GameCamera*			m_gameCamera;					// ゲームカメラ
 	Vector3				m_gameCameraPos;				// ゲームカメラの座標
 	enToyState			m_toyState = enToyState_usual;
+	float				m_rateByTime;
+	SoundSource*		m_sound = nullptr;
+
 };
 
