@@ -10,6 +10,7 @@ namespace
 	const float POSITION = 60.0f;
 	const float TIMER = 3.0f;
 	const float VOLUME = 1.0f;
+	const float RANGE = 600.0f;
 }
 
 Bell::Bell()
@@ -41,7 +42,7 @@ bool Bell::Start()
 	beforeRate = 0.00f;
 	g_infoForEdge.SetRate(2, rate);
 
-	g_infoForEdge.InitForSound(2, m_position, 200.0f, 0, rate);
+	g_infoForEdge.InitForSound(2, m_position, RANGE, 0, rate);
 
 	return true;
 }
