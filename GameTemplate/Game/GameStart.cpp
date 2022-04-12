@@ -91,10 +91,6 @@ bool GameStart::Start()
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
 	m_enemy = NewGO<Enemy>(0, "enemy");
-<<<<<<< HEAD
-=======
-
->>>>>>> 87ac14639c90653cb31494cf61a9911538984907
 	return true;
 }
 
