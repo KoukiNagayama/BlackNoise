@@ -5,7 +5,7 @@
 #include "GameCamera.h"
 #include "sound/SoundEngine.h"
 #include "InfoForEdge.h"
-
+#include "Enemy.h"
 
 namespace {
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.05f;	// エッジがフェードインするときの変位量
@@ -52,6 +52,7 @@ bool Game::Start()
 	g_infoForEdge.InitForSound(1, position2, RANGE2, 1, rateByTime);
 	m_position.x = 100.0f;
 	g_infoForEdge.SetRate(1, rateByTime);
+
 	return true;
 }
 
@@ -130,7 +131,6 @@ void Game::Update()
 	m_modelRender.SetScale(m_scale);
 	m_bgModelRender.Update();
 	m_modelRender.Update();
-
 }
 
 void Game::Render(RenderContext& rc)

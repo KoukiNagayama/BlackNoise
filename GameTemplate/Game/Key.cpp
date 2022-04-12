@@ -2,9 +2,7 @@
 #include "Key.h"
 Key::Key()
 {
-	m_modelRender.Init("Assets/modelData/item/key.tkm");
-	m_modelRender.SetPosition(m_position);
-	m_modelRender.Update();
+
 
 }
 
@@ -13,8 +11,19 @@ Key::~Key()
 
 }
 
+bool Key::Start()
+{
+	m_modelRender.Init("Assets/modelData/item/key.tkm");
+	m_modelRender.SetPosition(m_position);
+	m_modelRender.Update();
+
+	return true;
+}
+
 void Key::Update()
 {
+	m_modelRender.SetPosition(m_position);
+
 	m_modelRender.Update();
 }
 void Key::Render(RenderContext& rc)

@@ -123,7 +123,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     
     int drawEdge = 0;
     
-    int a = 0;
+    int num = 0;
     
     float color = 1.0f;
     
@@ -141,7 +141,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
             if(dist < soundSourceData[i].range)
             {
                 drawEdge = 1;
-                a = i;
+                num = i;
             }
         }
     }
@@ -172,19 +172,20 @@ float4 PSMain(SPSIn psIn) : SV_Target0
         }
         
         // 自身の深度値・法線と近傍8テクセルの深度値の差・法線の差を調べる
-        if (abs(depth - depth2) > 0.000045f || length(normal) >= 0.2f)
+        if (abs(depth - depth2) > 0.000045f || length(normal) >= 0.5f)
         {
             // 音源からピクセルまでの距離
-            float dist = length(worldPos - soundSourceData[a].pos);
+            float dist = length(worldPos - soundSourceData[num].pos);
             // 距離による影響率
-            float rateByDist = 1.0 - pow((dist / soundSourceData[a].range), 2.5f);
+            float rateByDist = 1.0 - pow((dist / soundSourceData[num].range), 2.5f);
             // 輪郭線の色を計算
-            color = 1.0 * soundSourceData[a].rateByTime * rateByDist;
+            color = 1.0 * soundSourceData[num].rateByTime * rateByDist;
             // 深度値または法線が大きく違う場合はピクセルを輪郭線として塗りつぶす
             return float4(color, color, color, 1.0f);
             
         }
     }
+<<<<<<< HEAD
     
    /* for (int i = 0; i < numSoundSource ; i++)
     {
@@ -239,4 +240,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     return g_texture.Sample(g_sampler, psIn.uv);
     // ピクセルカラーを黒にする
     //return float4(0.0f, 0.0f, 0.0f, 1.0f);
+=======
+    // ピクセルを黒色に塗りつぶす
+    return float4(0.0f, 0.0f, 0.0f, 1.0f);
+>>>>>>> a62433f5daeb7ac427daa0af05158f5cbb09f2e8
 }

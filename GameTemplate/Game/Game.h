@@ -1,6 +1,9 @@
 #pragma once
 class Player;
 class GameCamera;
+//’Ç‰Á
+class Enemy;
+//
 #include "sound/SoundSource.h"
 
 class Game : public IGameObject
@@ -35,5 +38,8 @@ private:
 	SoundSource* m_sound2 = nullptr;
 	float rateByTime;
 	float rateByTime2;
+
+
+	Enemy* m_enemy;
 };
 
