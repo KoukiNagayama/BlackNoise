@@ -3,7 +3,7 @@
 #include "GameCamera.h"
 #include "sound/SoundEngine.h"
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 namespace
 {
 	const float LENGTH = 50.0f;

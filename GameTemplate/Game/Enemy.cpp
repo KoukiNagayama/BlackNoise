@@ -4,9 +4,9 @@
 
 namespace
 {
-	const float MOVESPEED = 0.7f * 70.0f; //歩行速度
+	const float MOVESPEED = 1.4f * 210.0f; //歩行速度
 	const float RUNSPEED = 1.4f;			//走行速度
-	const float	SEARCHAREA = 1.3f * 400.0f; //索敵範囲
+	const float	SEARCHAREA = 1.3f * 1000.0f; //索敵範囲
 }
 
 bool Enemy::Start()
@@ -15,44 +15,41 @@ bool Enemy::Start()
 
 	m_pathRender.Init("Assets/modelData/enemy/EnemyPass001.tkl", [&](LevelObjectData& objData)
 		{
-			if (objData.EqualObjectName(L"Pass0") == true)
+			if (objData.ForwardMatchName(L"Pass") == true)
 			{
-				SetPath(objData.position, 0);
-				return true;
-			}
-			else if (objData.EqualObjectName(L"Pass1") == true)
-			{
-				SetPath(objData.position, 1);
-				return true;
-			}
-			else if (objData.EqualObjectName(L"Pass2") == true)
-			{
-				SetPath(objData.position, 2);
-				return true;
-			}
-			else if (objData.EqualObjectName(L"Pass3") == true)
-			{
-				SetPath(objData.position, 3);
-				return true;
-			}
-			else if (objData.EqualObjectName(L"Pass4") == true)
-			{
-				SetPath(objData.position, 4);
-				return true;
-			}
-			else if (objData.EqualObjectName(L"Pass5") == true)
-			{
-				SetPath(objData.position, 5);
-				return true;
-			}
-			else if (objData.EqualObjectName(L"Pass6") == true)
-			{
-				SetPath(objData.position, 6);
-				return true;
-			}
-			else if (objData.EqualObjectName(L"Pass7") == true)
-			{
-				SetPath(objData.position, 7);
+				if (objData.EqualObjectName(L"Pass0") == true)
+				{
+					SetPath(objData.position, 0);
+				}
+				else if (objData.EqualObjectName(L"Pass1") == true)
+				{
+					SetPath(objData.position, 1);
+				}
+				else if (objData.EqualObjectName(L"Pass2") == true)
+				{
+					SetPath(objData.position, 2);
+				}
+				else if (objData.EqualObjectName(L"Pass3") == true)
+				{
+					SetPath(objData.position, 3);
+				}
+				else if (objData.EqualObjectName(L"Pass4") == true)
+				{
+					SetPath(objData.position, 4);
+				}
+				else if (objData.EqualObjectName(L"Pass5") == true)
+				{
+					SetPath(objData.position, 5);
+				}
+				else if (objData.EqualObjectName(L"Pass6") == true)
+				{
+					SetPath(objData.position, 6);
+				}
+				else if (objData.EqualObjectName(L"Pass7") == true)
+				{
+					SetPath(objData.position, 7);
+				}
+
 				return true;
 			}
 		});
@@ -73,10 +70,12 @@ bool Enemy::Start()
 	m_position = m_pathList[0].position;
 
 	m_pathPoint = m_pathList[1];
-
+	m_goalPosition = m_pathPoint.position;
 	m_enemyRender.SetPosition(m_position);
 
 	m_characterController.Init(10.0f, 45.0f, m_position);
+
+	SetRoute();
 
 	return true;
 }
@@ -111,7 +110,6 @@ void Enemy::Move()
 		m_moveSpeed *= RUNSPEED;
 	}
 
-	m_moveSpeed *= 0.0f;
 	m_position = m_characterController.Execute(m_moveSpeed, 1.0f / 60.0f);
 
 	m_enemyRender.SetPosition(m_position);
@@ -144,21 +142,20 @@ void Enemy::MoveByRoute()
 {
 	m_oldPosition = m_position;
 
-	Vector3 pathPosition = m_path.Move(m_position, 2.0f, m_isEnd);
+	Vector3 pathPosition = m_path.Move(m_position, 60.0f, m_isEnd);
 
 	if (m_isEnd == false);
 	{
 		//経路上の移動速度
 		m_moveSpeed = pathPosition - m_oldPosition;
+
+		m_toGoal = m_goalPosition - m_position;
+		m_toGoal.y = 0.0f;
 	}
-
-	m_toGoal = m_goalPosition - m_position;
-	m_toGoal.y = 0.0f;
-
 	//目標に到着
 	if (m_toGoal.Length() < 10.0f)
 	{
-		if (m_pathPoint.no != m_pathList.size())
+		if (m_pathPoint.no != m_maxPath)
 		{
 			m_pathPoint = m_pathList[m_pathPoint.no];
 		}
@@ -167,8 +164,12 @@ void Enemy::MoveByRoute()
 			m_pathPoint = m_pathList[0];
 		}
 
+		m_goalPosition = m_pathPoint.position;
+
 		m_isEnd = true;
+		SetRoute();
 	}
+
 }
 
 bool Enemy::SearchSound()
@@ -183,7 +184,7 @@ bool Enemy::SearchSound()
 	if (toPlayer.Length() < SEARCHAREA)
 	{
 		//音を出す
-		if (g_pad[0]->IsTrigger(enButtonA))
+		if (g_pad[0]->IsTrigger(enButtonB))
 		{
 			//目標地点へのパスを設定
 			m_goalPosition = m_targetPosition;
@@ -248,6 +249,7 @@ void Enemy::StateToNormal()
 	{
 		//徘徊状態に移行
 		m_state = enNormal;
+		m_isEnd = false;
 	}
 }
 
@@ -259,7 +261,7 @@ void Enemy::SetNearestPath()
 	//最短のパスまでの距離
 	float	min = (m_nearestPath.position - m_position).Length();
 
-	for (int i = 1; i < m_pathList.size(); i++)
+	for (int i = 1; i < m_maxPath; i++)
 	{
 		PathPoint path = m_pathList[i];
 		float	length = (path.position - m_position).Length();
@@ -291,6 +293,7 @@ void Enemy::StateToCaution()
 	{
 		//警戒状態に移行
 		m_state = enCaution;
+		m_isEnd = false;
 	}
 }
 
@@ -302,6 +305,7 @@ void Enemy::StateToReturn()
 	//警戒状態のまま一定時間が経過
 	if (m_lostTimer <= 0.0f)
 	{
+		m_lostTimer = 0.0f;
 		//最寄りのパスを検索
 		SetNearestPath();
 		//最寄りのパスまでの経路を設定
