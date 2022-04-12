@@ -39,7 +39,7 @@ bool GameCamera::Start()
 	g_camera3D->SetFar(10000.0f);
 
 	//キャラコンを初期化する。
-	m_charaCon.Init(60.0f, 170.0f, m_position);
+	m_charaCon.Init(50.0f, 170.0f, m_position);
 
 	//サウンドを登録。
 	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/human/walk.wav");

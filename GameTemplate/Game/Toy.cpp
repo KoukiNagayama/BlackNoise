@@ -2,6 +2,11 @@
 #include "Toy.h"
 #include "GameCamera.h"
 
+namespace
+{
+	const float LENGTH = 50.0f;
+}
+
 Toy::Toy()
 {
 }
@@ -29,7 +34,7 @@ void Toy::Update()
 	m_gameCameraPos.y = 0.0f;
 	// ç¿ïWÇÃç∑
 	Vector3	distToPlayer = m_position - m_gameCameraPos;
-	if (distToPlayer.Length() <= 10.0f) {
+	if (distToPlayer.Length() <= LENGTH) {
 		if (m_toyState == enToyState_usual) {
 			m_modelRender.Init("Assets/modelData/item/clash_toy.tkm");
 			m_toyState = enToyState_collapse;

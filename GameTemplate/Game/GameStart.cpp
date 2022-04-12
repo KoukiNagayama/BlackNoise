@@ -43,21 +43,21 @@ bool GameStart::Start()
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
-		if (objData.EqualObjectName(L"key") == true) {
+		//if (objData.EqualObjectName(L"key") == true) {
 
-			m_key = NewGO<Key>(0, "key");
-			//配置座標、スケール、回転を取得する。
-			m_key->SetPosition(objData.position);
-			//trueにすると、レベルの方でモデルが読み込まれない。
-			return true;
-		}
-		if (objData.EqualObjectName(L"skey") == true) {
-			m_skey = NewGO<Skey>(0, "skey");
-			//配置座標、スケール、回転を取得する。
-			m_skey->SetPosition(objData.position);
-			//trueにすると、レベルの方でモデルが読み込まれない。
-			return true;
-		}
+		//	m_key = NewGO<Key>(0, "key");
+		//	//配置座標、スケール、回転を取得する。
+		//	m_key->SetPosition(objData.position);
+		//	//trueにすると、レベルの方でモデルが読み込まれない。
+		//	return true;
+		//}
+		//if (objData.EqualObjectName(L"skey") == true) {
+		//	m_skey = NewGO<Skey>(0, "skey");
+		//	//配置座標、スケール、回転を取得する。
+		//	m_skey->SetPosition(objData.position);
+		//	//trueにすると、レベルの方でモデルが読み込まれない。
+		//	return true;
+		//}
 		//if (objData.EqualObjectName(L"keydoor1") == true) {
 
 		//	m_gamecam = NewGO<GameCamera>(0, "gamecamera");
@@ -86,6 +86,7 @@ bool GameStart::Start()
 
 	//m_bg = NewGO<BackGround> (0, "background");
 	//m_gamecam = NewGO<GameCamera>(0, "gamecamera");
+	m_key = NewGO<Key>(0, "key");
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
 	return true;
