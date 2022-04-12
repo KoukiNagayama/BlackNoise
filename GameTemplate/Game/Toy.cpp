@@ -3,29 +3,15 @@
 #include "GameCamera.h"
 #include "sound/SoundEngine.h"
 
-<<<<<<< HEAD
-namespace
-{
-	const float LENGTH = 50.0f;
-}
-
-Toy::Toy()
-{
-}
-
-Toy::~Toy()
-{
-	
-=======
 namespace {
-	const float DISTANCE = 20.0f;
+	const float DISTANCE = 50.0f;
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.05f;	// エッジがフェードインするときの変位量
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.05f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
 	const float SOUND_RANGE = 400.0f;
->>>>>>> a62433f5daeb7ac427daa0af05158f5cbb09f2e8
 }
+
 
 bool Toy::Start()
 {
@@ -42,16 +28,11 @@ bool Toy::Start()
 
 void Toy::Update()
 {
-<<<<<<< HEAD
 	// プレイヤーとの距離
 	// カメラの座標
 	m_gameCameraPos = m_gameCamera->GetPosition();
 	m_gameCameraPos.y = 0.0f;
-	// 座標の差
-	Vector3	distToPlayer = m_position - m_gameCameraPos;
-	if (distToPlayer.Length() <= LENGTH) {
-		if (m_toyState == enToyState_usual) {
-=======
+
 	// ステートが通常なら
 	if (m_toyState == enToyState_usual) {
 		// プレイヤーとの距離
@@ -62,7 +43,6 @@ void Toy::Update()
 		Vector3	distToPlayer = m_position - m_gameCameraPos;
 		if (distToPlayer.Length() <= DISTANCE) {
 			// モデルを変更
->>>>>>> a62433f5daeb7ac427daa0af05158f5cbb09f2e8
 			m_modelRender.Init("Assets/modelData/item/clash_toy.tkm");
 			// ステートを変更
 			m_toyState = enToyState_collapse;

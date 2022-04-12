@@ -58,9 +58,8 @@ void Bell::Update()
 	ManageState();
 	//アニメーション再生。
 	//PlayAnimation();
-	// 
+	// デバッグ用の文字表示
 	Font();
-	// 
 	//モデルの更新。
 	m_modelRender.Update();
 	//g_infoForEdge.SetIsSound(2, m_bellSound->IsPlaying());
@@ -83,7 +82,7 @@ void Bell::Position()
 	m_modelRender.SetRotation(m_player->GetRotation());
 
 	//ベルの音の座標を少し前に設定する。
-	m_soundPos = m_position;
+	m_soundPos = g_camera3D->GetPosition();
 	m_soundPos += g_camera3D->GetForward() * SOUND_MULTIPLIER;
 
 }

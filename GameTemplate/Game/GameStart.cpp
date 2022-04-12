@@ -7,6 +7,7 @@
 #include "Toy.h"
 #include "Key.h"
 #include "Skey.h"
+#include "Enemy.h"
 #include "InfoForEdge.h"
 
 
@@ -89,6 +90,7 @@ bool GameStart::Start()
 	m_key = NewGO<Key>(0, "key");
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
+	m_enemy = NewGO<Enemy>(0, "enemy");
 	return true;
 }
 
