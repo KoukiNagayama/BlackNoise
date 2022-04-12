@@ -163,7 +163,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
         }
         
         // 自身の深度値・法線と近傍8テクセルの深度値の差・法線の差を調べる
-        if (abs(depth - depth2) > 0.000045f || length(normal) >= 0.5f)
+        if (abs(depth - depth2) > 0.000045f || length(normal) >= 0.35f)
         {
             // 音源からピクセルまでの距離
             float dist = length(worldPos - soundSourceData[num].pos);
@@ -176,8 +176,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
             
         }
     }
+
     // ピクセルを黒色に塗りつぶす
     return float4(0.0f, 0.0f, 0.0f, 1.0f);
-    // モデルのテクスチャカラーを出力する デバッグ用
-    //return tex;
 }

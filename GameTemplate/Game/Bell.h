@@ -66,6 +66,7 @@ private:
 	};
 	ModelRender m_modelRender;
 	Vector3 m_position;
+	Vector3 m_soundPos;
 	EnBellState m_bellState = enBellState_Idle;
 	AnimationClip animationClips[enAnimationClip_Num];		//アニメーションクリップ。
 	SoundSource* m_bellSound;

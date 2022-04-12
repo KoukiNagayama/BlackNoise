@@ -9,8 +9,8 @@ public:
 		enToyState_usual,		// ’Êí
 		enToyState_collapse		// •ö‰ó
 	};
-	Toy() {};
-	~Toy() {};
+	//Toy() {};
+	//~Toy() {};
 	/// <summary>
 	/// ‰Šú‰»ŠÖ”B
 	/// </summary>

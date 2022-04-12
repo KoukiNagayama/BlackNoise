@@ -94,5 +94,6 @@ private:
 	LevelRender			   m_pathRender;
 	Animation			   m_animation;
 	AnimationClip		   m_animationClips[enAnimation_Num];
-	Player*				   m_player;
+	Player* m_player;
+	const int			   m_maxPath = 8;
 };

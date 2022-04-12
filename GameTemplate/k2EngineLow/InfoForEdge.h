@@ -6,15 +6,6 @@ namespace nsK2EngineLow {
 	/// <summary>
 	/// 音源データ構造体
 	/// </summary>
-	/*struct SoundSourceData
-	{
-		Vector3		s_position = Vector3::Zero;		// 音源の位置
-		int			s_isSound = 0;					// 音源は鳴っているか
-		float		s_range = 0.0f;					// 音源の影響範囲
-		float		s_rate;							// 音源の影響率
-		float		s_currentRate = 0.0f;
-		int 		pad;
-	};*/
 	struct SoundSourceData
 	{
 		Vector3		s_position = Vector3::Zero;

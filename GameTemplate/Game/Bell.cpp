@@ -10,12 +10,14 @@ namespace
 	const float POSITION = 60.0f;
 	const float TIMER = 3.0f;
 	const float VOLUME = 1.0f;
-	const float RANGE = 600.0f;
-	const float EDGE_FADE_IN_DELTA_VALUE = 0.05f;	// エッジがフェードインするときの変位量
-	const float EDGE_FADE_OUT_DELTA_VALUE = 0.025f;	// エッジがフェードアウトするときの変位量
+	const float RANGE = 2000.0f;
+	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
+	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
-	const float RANGE1 = 800.0f;
+	const float MODEL_MULTIPLIER = 35.0f;
+	const float MODEL_UP = 25.0f;
+	const float SOUND_MULTIPLIER = 15.0f;
 }
 
 Bell::Bell()
@@ -39,7 +41,7 @@ bool Bell::Start()
 	g_soundEngine->ResistWaveFileBank(2, "Assets/sound/item/bell_low.wav");
 	//モデルの初期化。
 	m_modelRender.Init("Assets/modelData/item/bell.tkm");
-	m_modelRender.SetScale({ 0.7f,0.7f,0.7f });
+	//m_modelRender.SetScale({ 0.7f,0.7f,0.7f });
 
 	//サウンドをNewGO
 	m_bellSound = NewGO<SoundSource>(2);
@@ -47,7 +49,7 @@ bool Bell::Start()
 	beforeRate = 0.00f;
 	g_infoForEdge.SetRate(2, rate);
 
-	g_infoForEdge.InitForSound(2, m_position, RANGE1, 0, rate);
+	g_infoForEdge.InitForSound(2, m_position, RANGE, 0, rate);
 
 	return true;
 }
@@ -60,9 +62,8 @@ void Bell::Update()
 	ManageState();
 	//アニメーション再生。
 	//PlayAnimation();
-	// 
+	// デバッグ用の文字表示
 	Font();
-	// 
 	//モデルの更新。
 	m_modelRender.Update();
 	//g_infoForEdge.SetIsSound(2, m_bellSound->IsPlaying());
@@ -75,13 +76,19 @@ void Bell::Position()
 	forward = g_camera3D->GetForward();
 	up.Cross(right, forward);
 	up.Normalize();
+	//ベルのモデルの座標を計算する。
 	m_position = g_camera3D->GetPosition();
-	m_position += g_camera3D->GetRight() * 20.0f;
-	m_position += g_camera3D->GetForward() * 20.0f;
-	m_position += up*20.0f;
+	m_position += g_camera3D->GetRight() * MODEL_MULTIPLIER;
+	m_position += g_camera3D->GetForward() * MODEL_MULTIPLIER;
+	m_position += up * MODEL_UP;
 	//座標を設定する
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.SetRotation(m_player->GetRotation());
+
+	//ベルの音の座標を少し前に設定する。
+	m_soundPos = g_camera3D->GetPosition();
+	m_soundPos += g_camera3D->GetForward() * SOUND_MULTIPLIER;
+
 }
 
 void Bell::TransitionState()
@@ -118,30 +125,28 @@ void Bell::Ring()
 		m_bellSound->SetPosition(m_position);
 		m_bellSound->SetVolume(VOLUME);
 		m_bellSound->Play(false);
-
-		g_infoForEdge.InitForSound(2, m_position, 400.0f, 0, VOLUME);
 		
 	}
-	int check1;
+	int check;
 	if (m_bellSound != nullptr) {
 		if (m_bellSound->IsPlaying() == true)
 		{
-			check1 = 1;
+			check = 1;
 			if (rate < RATE_BY_TIME_MAX_VALUE) {
 				rate += EDGE_FADE_IN_DELTA_VALUE;
 			}
 		}
 		else {
-			check1 = 0;
-			if (rate > RATE_BY_TIME_MIN_VALUE && check1 == 0) {
+			check = 0;
+			if (rate > RATE_BY_TIME_MIN_VALUE && check == 0) {
 				rate -= EDGE_FADE_OUT_DELTA_VALUE;
 				if (rate <= RATE_BY_TIME_MIN_VALUE) {
 					rate = RATE_BY_TIME_MIN_VALUE;
+					TransitionState();
 				}
 			}
 		}
-		g_infoForEdge.SetIsSound(2, check1);
-		g_infoForEdge.SetRate(2, rate);
+		g_infoForEdge.SetInfoForSound(2, m_soundPos, RANGE, check, rate);
 	}
 
 
@@ -150,7 +155,6 @@ void Bell::Ring()
 	{
 		m_bellSound = NewGO<SoundSource>(2);
 		m_timer = 0.0f;
-		TransitionState();
 	}
 }
 

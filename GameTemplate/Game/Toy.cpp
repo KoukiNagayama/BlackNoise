@@ -2,15 +2,15 @@
 #include "Toy.h"
 #include "GameCamera.h"
 #include "sound/SoundEngine.h"
-
 namespace {
-	const float DISTANCE = 20.0f;
+	const float DISTANCE = 50.0f;
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.05f;	// エッジがフェードインするときの変位量
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.05f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
 	const float SOUND_RANGE = 400.0f;
 }
+
 
 bool Toy::Start()
 {
@@ -27,6 +27,11 @@ bool Toy::Start()
 
 void Toy::Update()
 {
+	// プレイヤーとの距離
+	// カメラの座標
+	m_gameCameraPos = m_gameCamera->GetPosition();
+	m_gameCameraPos.y = 0.0f;
+
 	// ステートが通常なら
 	if (m_toyState == enToyState_usual) {
 		// プレイヤーとの距離
