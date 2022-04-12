@@ -3,6 +3,23 @@
 #include "GameCamera.h"
 #include "sound/SoundEngine.h"
 
+<<<<<<< HEAD
+=======
+//<<<<<<< HEAD
+namespace
+{
+	const float LENGTH = 50.0f;
+}
+
+Toy::Toy()
+{
+}
+
+Toy::~Toy()
+{
+	
+=======
+>>>>>>> 87ac14639c90653cb31494cf61a9911538984907
 namespace {
 	const float DISTANCE = 50.0f;
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.05f;	// エッジがフェードインするときの変位量
