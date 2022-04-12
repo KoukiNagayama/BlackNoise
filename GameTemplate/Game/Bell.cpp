@@ -11,6 +11,11 @@ namespace
 	const float TIMER = 3.0f;
 	const float VOLUME = 1.0f;
 	const float RANGE = 600.0f;
+	const float EDGE_FADE_IN_DELTA_VALUE = 0.05f;	// エッジがフェードインするときの変位量
+	const float EDGE_FADE_OUT_DELTA_VALUE = 0.025f;	// エッジがフェードアウトするときの変位量
+	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
+	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
+	const float RANGE1 = 800.0f;
 }
 
 Bell::Bell()
@@ -42,7 +47,7 @@ bool Bell::Start()
 	beforeRate = 0.00f;
 	g_infoForEdge.SetRate(2, rate);
 
-	g_infoForEdge.InitForSound(2, m_position, RANGE, 0, rate);
+	g_infoForEdge.InitForSound(2, m_position, RANGE1, 0, rate);
 
 	return true;
 }
@@ -117,25 +122,25 @@ void Bell::Ring()
 		g_infoForEdge.InitForSound(2, m_position, 400.0f, 0, VOLUME);
 		
 	}
-	int check2;
+	int check1;
 	if (m_bellSound != nullptr) {
 		if (m_bellSound->IsPlaying() == true)
 		{
-			check2 = 1;
-			if (rate < 1.00f) {
-				rate += 0.05f;
+			check1 = 1;
+			if (rate < RATE_BY_TIME_MAX_VALUE) {
+				rate += EDGE_FADE_IN_DELTA_VALUE;
 			}
 		}
 		else {
-			check2 = 0;
-			if (rate > 0.00f && check2 == 0) {
-				rate -= 0.05f;
-				if (rate <= 0.00f) {
-					rate = 0.00f;
+			check1 = 0;
+			if (rate > RATE_BY_TIME_MIN_VALUE && check1 == 0) {
+				rate -= EDGE_FADE_OUT_DELTA_VALUE;
+				if (rate <= RATE_BY_TIME_MIN_VALUE) {
+					rate = RATE_BY_TIME_MIN_VALUE;
 				}
 			}
 		}
-		g_infoForEdge.SetIsSound(2, check2);
+		g_infoForEdge.SetIsSound(2, check1);
 		g_infoForEdge.SetRate(2, rate);
 	}
 

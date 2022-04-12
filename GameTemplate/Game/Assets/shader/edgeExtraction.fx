@@ -32,18 +32,7 @@ struct SPSIn
     float3 biNormal : BINORMAL;                             
 };
 
-// 音源
-/*
-struct SoundSourceData
-{
-    float3 pos;
-    int isSound; 
-    float range;
-    float rate;
-    float currentRate;
-    int pad;
-};*/
-
+// 音源データ
 struct SoundSourceData
 {
     float3 pos;
@@ -108,6 +97,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     // 正規化スクリーン座標系からUV座標系に変換する
     float2 uv = ( psIn.posInProj.xy / psIn.posInProj.w ) * float2( 0.5f, -0.5f ) + 0.5f;
 
+    float4 tex = g_texture.Sample(g_sampler, psIn.uv);
+    
     // 近傍8テクセルへのUVオフセット
     float2 uvOffset[8] =
     {
@@ -187,4 +178,6 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     }
     // ピクセルを黒色に塗りつぶす
     return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    // モデルのテクスチャカラーを出力する デバッグ用
+    //return tex;
 }
