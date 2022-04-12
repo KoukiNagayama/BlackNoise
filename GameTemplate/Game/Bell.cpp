@@ -13,7 +13,11 @@ namespace
 	const float MODEL_MULTIPLIER = 35.0f;
 	const float MODEL_UP = 25.0f;
 	const float SOUND_MULTIPLIER = 15.0f;
-	const float RANGE = 1000.0f;
+	const float RANGE = 2000.0f;
+	const float RATE_MAX = 1.00f;
+	const float RATE_MIN = 0.00f;
+	const float RATE_UP = 0.07f;
+	const float RATE_DOWN = 0.01f;
 }
 
 Bell::Bell()
@@ -130,16 +134,17 @@ void Bell::Ring()
 		if (m_bellSound->IsPlaying() == true)
 		{
 			check2 = 1;
-			if (rate < 1.00f) {
-				rate += 0.05f;
+			if (rate < RATE_MAX) {
+				rate += RATE_UP;
 			}
 		}
 		else {
 			check2 = 0;
-			if (rate > 0.00f && check2 == 0) {
-				rate -= 0.05f;
-				if (rate <= 0.00f) {
-					rate = 0.00f;
+			if (rate > RATE_MIN && check2 == 0) {
+				rate -= RATE_DOWN;
+				if (rate <= RATE_MIN) {
+					rate = RATE_MIN;
+					TransitionState();
 				}
 			}
 		}
@@ -153,7 +158,6 @@ void Bell::Ring()
 	{
 		m_bellSound = NewGO<SoundSource>(2);
 		m_timer = 0.0f;
-		TransitionState();
 	}
 }
 
