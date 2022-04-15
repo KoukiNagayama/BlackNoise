@@ -229,7 +229,9 @@
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameStart.cpp" />
     <ClCompile Include="Bell.cpp" />
+    <ClCompile Include="Gramophone.cpp" />
     <ClCompile Include="Key.cpp" />
+    <ClCompile Include="Record.cpp" />
     <ClCompile Include="Skey.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -248,7 +250,9 @@
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameStart.h" />
     <ClInclude Include="Bell.h" />
+    <ClInclude Include="Gramophone.h" />
     <ClInclude Include="Key.h" />
+    <ClInclude Include="Record.h" />
     <ClInclude Include="Skey.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="resource.h" />

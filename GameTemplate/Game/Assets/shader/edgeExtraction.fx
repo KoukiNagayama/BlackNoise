@@ -112,13 +112,14 @@ float4 PSMain(SPSIn psIn) : SV_Target0
         float2(-1.0f / 1600.0f, -1.0f / 900.0f ) //左下
     };
     
+    // 輪郭線を描画するか
     int drawEdge = 0;
-    
+    // 配列の番号
     int num = 0;
-    
+    // 色の最大値
     float color = 1.0f;
     
-    //float rate;
+    int b[MAX_DATA];
     
     // ワールド座標
     float3 worldPos = g_worldCoordinateTexture.Sample(g_sampler, uv);
@@ -133,6 +134,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
             {
                 drawEdge = 1;
                 num = i;
+                //drawEdge++;
+                //b[drawEdge - 1] = i;
             }
         }
     }
@@ -173,10 +176,14 @@ float4 PSMain(SPSIn psIn) : SV_Target0
             color = 1.0 * soundSourceData[num].rateByTime * rateByDist;
             // 深度値または法線が大きく違う場合はピクセルを輪郭線として塗りつぶす
             return float4(color, color, color, 1.0f);
+            // 赤色
+            //return float4(color, 0.0f, 0.0f, 1.0f);
             
         }
     }
 
     // ピクセルを黒色に塗りつぶす
     return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    // デバッグ用 
+    //return tex;
 }

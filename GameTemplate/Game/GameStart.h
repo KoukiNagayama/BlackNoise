@@ -10,6 +10,7 @@ class Toy;
 class Key;
 class Skey;
 class Enemy;
+class Gramophone;
 
 class GameStart : public IGameObject
 {
@@ -29,5 +30,6 @@ private:
 	Key* m_key;
 	Skey* m_skey;
 	Enemy* m_enemy;
+	Gramophone* m_gramophone;
 };
 

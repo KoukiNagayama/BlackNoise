@@ -19,9 +19,8 @@ bool Toy::Start()
 	m_modelRender.Update();
 	m_gameCamera = FindGO<GameCamera>("gamecamera");
 
-	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/toy/toy.wav");
-	g_infoForEdge.InitForSound(3, m_position, SOUND_RANGE, 0, m_rateByTime);
-	g_infoForEdge.SetRate(3, m_rateByTime);
+	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/toy/toy.wav");
+	g_infoForEdge.InitForSound(1, m_position, SOUND_RANGE, 0, m_rateByTime);
 	return true;
 }
 
@@ -57,8 +56,8 @@ void Toy::Update()
 
 void Toy::MakeSound()
 {
-	m_sound = NewGO<SoundSource>(3);
-	m_sound->Init(3);
+	m_sound = NewGO<SoundSource>(1);
+	m_sound->Init(1);
 	m_sound->SetVolume(1.0f);
 	m_sound->Play(false);
 }
@@ -83,8 +82,8 @@ void Toy::CheckRate()
 				}
 			}
 		}
-		g_infoForEdge.SetIsSound(3, check1);
-		g_infoForEdge.SetRate(3, m_rateByTime);
+		g_infoForEdge.SetIsSound(1, check1);
+		g_infoForEdge.SetRate(1, m_rateByTime);
 	}
 }
 void Toy::Render(RenderContext& rc)
