@@ -10,6 +10,7 @@
 #include "Enemy.h"
 #include "InfoForEdge.h"
 #include "Enemy.h"
+#include "Gramophone.h"
 
 GameStart::GameStart()
 {
@@ -24,7 +25,7 @@ bool GameStart::Start()
 {
 	Vector3 position = Vector3::Zero;
 	//g_infoForEdge.InitForSound(0, position, 200.0f, 0);
-	g_infoForEdge.InitForSound(0, position, 200.0f, 1, 0.00f);
+	//g_infoForEdge.InitForSound(0, position, 200.0f, 1, 0.00f);
 	//各クラスを生成。
 
 	m_levelRender.Init("Assets/modelData/stage/stage_2.tkl", [&](LevelObjectData& objData) {
@@ -91,6 +92,7 @@ bool GameStart::Start()
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
 	//m_enemy = NewGO<Enemy>(0, "enemy");
+	m_gramophone = NewGO<Gramophone>(0, "gramophone");
 	return true;
 }
 

@@ -38,18 +38,15 @@ bool Bell::Start()
 	m_player = FindGO<Player>("player");
 	m_gameCam = FindGO<GameCamera>("gamecamera");
 	//サウンドを登録。
-	g_soundEngine->ResistWaveFileBank(2, "Assets/sound/item/bell_low.wav");
+	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/item/bell_low.wav");
 	//モデルの初期化。
 	m_modelRender.Init("Assets/modelData/item/bell.tkm");
 	//m_modelRender.SetScale({ 0.7f,0.7f,0.7f });
 
 	//サウンドをNewGO
-	m_bellSound = NewGO<SoundSource>(2);
+	m_bellSound = NewGO<SoundSource>(0);
 
-	beforeRate = 0.00f;
-	g_infoForEdge.SetRate(2, rate);
-
-	g_infoForEdge.InitForSound(2, m_position, RANGE, 0, rate);
+	g_infoForEdge.InitForSound(0, m_position, RANGE, 0, rate);
 
 	return true;
 }
@@ -121,7 +118,7 @@ void Bell::ManageState()
 void Bell::Ring()
 {
 	if (m_timer >= TIMER) {
-		m_bellSound->Init(2);
+		m_bellSound->Init(0);
 		m_bellSound->SetPosition(m_position);
 		m_bellSound->SetVolume(VOLUME);
 		m_bellSound->Play(false);
@@ -146,14 +143,14 @@ void Bell::Ring()
 				}
 			}
 		}
-		g_infoForEdge.SetInfoForSound(2, m_soundPos, RANGE, check, rate);
+		g_infoForEdge.SetInfoForSound(0, m_soundPos, RANGE, check, rate);
 	}
 
 
 	m_timer -= g_gameTime->GetFrameDeltaTime();
 	if (m_timer <= 0.0f)
 	{
-		m_bellSound = NewGO<SoundSource>(2);
+		m_bellSound = NewGO<SoundSource>(0);
 		m_timer = 0.0f;
 	}
 }
