@@ -6,7 +6,7 @@
 
 namespace
 {
-	const float RANGE = 1000.0f;					// 影響範囲
+	const float RANGE = 900.0f;					// 影響範囲
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
@@ -16,27 +16,55 @@ namespace
 }
 bool Gramophone::Start()
 {
-	m_modelRender.Init("Assets/modelData/item/toy.tkm");
-	m_position = Vector3::Zero;
-	m_scale = Vector3::One;
+	// 初期化
+	Init(m_number);
+
+	// ゲームカメラ
+	m_gameCamera = FindGO<GameCamera>("gamecamera");
+
+	return true;
+}
+
+void Gramophone::Init(int num)
+{
+	if (num == 1) {
+		// 初期から演奏中
+		m_gramophoneState = enGramophoneState_Idle;
+		m_modelRender.Init("Assets/modelData/item/record_off.tkm");
+		// サウンドを登録
+		g_soundEngine->ResistWaveFileBank(2, "Assets/sound/record/record5.wav");
+		g_infoForEdge.InitForSound(2, m_position, RANGE, 0, m_rateByTime);
+	}
+
+	else if (num == 2) {
+		// 初期は待機状態
+		m_gramophoneState = enGramophoneState_Idle;
+		m_modelRender.Init("Assets/modelData/item/record_off.tkm");
+		// サウンドを登録
+		g_soundEngine->ResistWaveFileBank(3, "Assets/sound/record/record6.wav");
+		g_infoForEdge.InitForSound(3, m_position, RANGE, 0, m_rateByTime);
+	}
+	
+	else if (num == 3) {
+		m_gramophoneState = enGramophoneState_Play;
+		m_modelRender.Init("Assets/modelData/item/record_on.tkm");
+		// サウンドを登録
+		g_soundEngine->ResistWaveFileBank(4, "Assets/sound/record/record7.wav");
+		g_infoForEdge.InitForSound(4, m_position, RANGE, 0, m_rateByTime);
+	}
+
+	// モデルの座標、回転、拡大を設定
 	m_modelRender.SetTRS(m_position, m_rotation, m_scale);
 
-	//サウンドを登録。
-	g_soundEngine->ResistWaveFileBank(2, "Assets/sound/record/record5.wav");
-	g_infoForEdge.InitForSound(2, m_position, RANGE, 0, m_rateByTime1);
-
-	m_gameCamera = FindGO<GameCamera>("gamecamera");
-	return true;
 }
 
 void Gramophone::Update()
 {
 	m_gameCamera = FindGO<GameCamera>("gamecamera");
 
-
+	// ステート管理
 	ManegeState();
 
-	Font();
 	m_modelRender.Update();
 }
 
@@ -60,29 +88,60 @@ void Gramophone::ManegeState()
 
 void Gramophone::IdleState()
 {
-	if (m_gramophoneState == enGramophoneState_Idle) {
+
+	////////////////test////////////////////////
+	Vector3 gameCameraPos = m_gameCamera->GetPosition();
+	gameCameraPos.y = m_position.y;
+
+	//プレイヤーと蓄音機の距離
+	Vector3 diff = m_position - gameCameraPos;
+	
+	if (diff.Length() <= 100.0f) {
 		m_gramophoneState = enGramophoneState_Play;
+		m_modelRender.Init("Assets/modelData/item/record_on.tkm");
 	}
+	////////////////test////////////////////////
 }
 
 void Gramophone::PlayState()
 {
-	if (m_soundSource == nullptr) {
+	if (m_number == 1 && m_soundSource1 == nullptr
+		|| m_number == 2 && m_soundSource2 == nullptr
+		|| m_number == 3 && m_soundSource3 == nullptr) 
+	{
 		MakeSound();
 	}
 
+
 	VolumeControl();
+
+	ChangeRate(m_number);
 }
 
 void Gramophone::MakeSound()
 {
-	m_soundSource = NewGO<SoundSource>(2);
-	m_soundSource->Init(2);
-	m_soundSource->Play(true);
-	g_infoForEdge.SetIsSound(2, 1);
+	if (m_number == 1) {
+		m_soundSource1 = NewGO<SoundSource>(2);
+		m_soundSource1->Init(2);
+		m_soundSource1->Play(true);
+		g_infoForEdge.SetIsSound(2, 1);
+	}
+	else if(m_number == 2){
+		m_soundSource2 = NewGO<SoundSource>(3);
+		m_soundSource2->Init(3);
+		m_soundSource2->Play(true);
+		g_infoForEdge.SetIsSound(3, 1);
+	}
+	else if (m_number == 3) {
+		m_soundSource3 = NewGO<SoundSource>(4);
+		m_soundSource3->Init(4);
+		m_soundSource3->Play(true);
+		g_infoForEdge.SetIsSound(4, 1);
+	}
+
 }
 
-float Gramophone::SoundLevelByDistance()
+float Gramophone::SoundLevelByDistance(float range)
 {
 	Vector3 gameCameraPos = m_gameCamera->GetPosition();
 	gameCameraPos.y = m_position.y;
@@ -90,8 +149,8 @@ float Gramophone::SoundLevelByDistance()
 	//プレイヤーと蓄音機の距離
 	Vector3 diff = m_position - gameCameraPos;
 	
-	// 音の大きさを計算
-	float soundLevel = MAXIMUM_VOLUME - (diff.Length() / RANGE * MAXIMUM_VOLUME);
+	// 音の大きさ
+	float soundLevel = MAXIMUM_VOLUME - (diff.Length() / range * MAXIMUM_VOLUME);
 	// 最小音量より小さくなったら固定する
 	if (soundLevel <= MINIMUM_VOLUME) {
 		soundLevel = MINIMUM_VOLUME;
@@ -102,23 +161,106 @@ float Gramophone::SoundLevelByDistance()
 
 void Gramophone::VolumeControl()
 {
-	m_soundSource->SetVolume(SoundLevelByDistance());
+	if (m_number == 1) {
+		m_soundSource1->SetVolume(SoundLevelByDistance(RANGE));
+	}
+	else if (m_number == 2) {
+		m_soundSource2->SetVolume(SoundLevelByDistance(RANGE));
+	}
+	else if (m_number == 3) {
+		m_soundSource3->SetVolume(SoundLevelByDistance(RANGE));
+	}
+
+}
+
+void Gramophone::ChangeRate(int num)
+{
+	int check;
+
+	// 番号が1なら
+	if (num == 1) {
+		if (m_soundSource1 != nullptr) {
+			// 音源が再生中
+			if (m_soundSource1->IsPlaying() == true)
+			{
+				check = 1;
+				// 影響率を増やす
+				if (m_rateByTime < RATE_BY_TIME_MAX_VALUE) {
+					m_rateByTime += EDGE_FADE_IN_DELTA_VALUE;
+				}
+			}
+			// 音源が再生されていない時
+			else {
+				check = 0;
+				// 影響率を減らす
+				if (m_rateByTime > RATE_BY_TIME_MIN_VALUE && check == 0) {
+					m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
+					// 
+					if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
+						m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+					}
+				}
+			}
+			g_infoForEdge.SetIsSound(2, check);
+			g_infoForEdge.SetRate(2, m_rateByTime);
+		}
+	}
+	// 番号が2なら
+	else if (num == 2) {
+		if (m_soundSource2 != nullptr) {
+			// 音源が再生中
+			if (m_soundSource2->IsPlaying() == true)
+			{
+				check = 1;
+				// 影響率を増やす
+				if (m_rateByTime < RATE_BY_TIME_MAX_VALUE) {
+					m_rateByTime += EDGE_FADE_IN_DELTA_VALUE;
+				}
+			}
+			// 音源が再生されていない時
+			else {
+				check = 0;
+				// 影響率を減らす
+				if (m_rateByTime > RATE_BY_TIME_MIN_VALUE && check == 0) {
+					m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
+					if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
+						m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+					}
+				}
+			}
+			g_infoForEdge.SetIsSound(3, check);
+			g_infoForEdge.SetRate(3, m_rateByTime);
+		}
+	}
+	// 番号が3なら
+	else if (num == 3) {
+		if (m_soundSource3 != nullptr) {
+			if (m_soundSource3->IsPlaying() == true)
+			{
+				check = 1;
+				if (m_rateByTime < RATE_BY_TIME_MAX_VALUE) {
+					m_rateByTime += EDGE_FADE_IN_DELTA_VALUE;
+				}
+			}
+			else {
+				check = 0;
+				if (m_rateByTime > RATE_BY_TIME_MIN_VALUE && check == 0) {
+					m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
+					if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
+						m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+					}
+				}
+			}
+			g_infoForEdge.SetIsSound(4, check);
+			g_infoForEdge.SetRate(4, m_rateByTime);
+		}
+	}
 }
 
 void Gramophone::Render(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);
-	m_font.Draw(rc);
+	//m_font.Draw(rc);
 }
 
-void Gramophone::Font()
-{
-	wchar_t wcsbuf[256];
-	swprintf_s(wcsbuf, 256, L"soundLevel:%.3f", SoundLevelByDistance());
-	//表示するテキストを設定。
-	m_font.SetText(wcsbuf);
-	//フォントの位置を設定。
-	m_font.SetPosition(Vector3(360.0f, 400.0f, 0.0f));
-	//フォントの大きさを設定。
-	m_font.SetScale(1.0f);
-}
+

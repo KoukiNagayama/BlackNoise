@@ -11,6 +11,7 @@ class Key;
 class Skey;
 class Enemy;
 class Gramophone;
+class Record;
 
 class GameStart : public IGameObject
 {
@@ -30,6 +31,8 @@ private:
 	Key* m_key;
 	Skey* m_skey;
 	Enemy* m_enemy;
-	Gramophone* m_gramophone;
+	//Record*	m_record;
+	std::vector<Gramophone*>	m_gramophone;
+	std::vector<Record*>		m_record;
 };
 

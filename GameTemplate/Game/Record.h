@@ -32,11 +32,20 @@ public:
 	{
 		m_rotation = rotation;
 	}
+	/// <summary>
+	/// オブジェクトの番号を設定
+	/// </summary>
+	/// <param name="number">オブジェクトの番号</param>
+	void SetNumber(const int& number)
+	{
+		m_number = number;
+	}
 private:
-	Vector3					m_position;				// 座標
-	Vector3					m_scale;		// 拡大率
-	Quaternion				m_rotation;				// 回転
-	ModelRender				m_modelRender;			// モデルレンダー
+	Vector3					m_position;							// 座標
+	Vector3					m_scale = Vector3::Zero;			// 拡大率
+	Quaternion				m_rotation = Quaternion::Identity;	// 回転
+	ModelRender				m_modelRender;						// モデルレンダー
+	int						m_number;
 
 };
 

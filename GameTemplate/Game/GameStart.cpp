@@ -11,6 +11,7 @@
 #include "InfoForEdge.h"
 #include "Enemy.h"
 #include "Gramophone.h"
+#include "Record.h"
 
 GameStart::GameStart()
 {
@@ -28,8 +29,8 @@ bool GameStart::Start()
 	//g_infoForEdge.InitForSound(0, position, 200.0f, 1, 0.00f);
 	//各クラスを生成。
 
-	m_levelRender.Init("Assets/modelData/stage/stage_2.tkl", [&](LevelObjectData& objData) {
-		if (objData.EqualObjectName(L"stage") == true) {
+	m_levelRender.Init("Assets/modelData/stage/level.tkl", [&](LevelObjectData& objData) {
+		if (objData.EqualObjectName(L"Floor2") == true) {
 
 			m_bg = NewGO<BackGround>(0);
 			//配置座標、スケール、回転を取得する。
@@ -84,6 +85,24 @@ bool GameStart::Start()
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
+		/*if (objData.EqualObjectName(L"gramophone@1") == true) {
+			m_gramophone1 = NewGO<Gramophone>(0, "gramophone");
+			m_gramophone1->SetPosition(objData.position);
+			m_gramophone1->SetScale(objData.scale);
+			m_gramophone1->SetRotation(objData.rotation);
+			m_gramophone1->SetNumber(objData.number);
+			return true;
+		}*/
+		if (objData.ForwardMatchName(L"gramophone") == true)
+		{
+			auto gramophone = NewGO<Gramophone>(0, "gramophone");
+			gramophone->SetPosition(objData.position);
+			gramophone->SetScale(objData.scale);
+			gramophone->SetRotation(objData.rotation);
+			gramophone->SetNumber(objData.number);
+			m_gramophone.push_back(gramophone);
+			return true;
+		}
 	});
 
 	//m_bg = NewGO<BackGround> (0, "background");
@@ -92,7 +111,7 @@ bool GameStart::Start()
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
 	//m_enemy = NewGO<Enemy>(0, "enemy");
-	m_gramophone = NewGO<Gramophone>(0, "gramophone");
+	
 	return true;
 }
 

@@ -47,8 +47,8 @@ bool GameCamera::Start()
 	m_walkSound = NewGO<SoundSource>(3);
 
 	beforeRate = 0.00f;
-	g_infoForEdge.SetRate(2, rate);
-	g_infoForEdge.InitForSound(2, m_position, 200.0f, 0, rate);
+	g_infoForEdge.SetRate(5, rate);
+	g_infoForEdge.InitForSound(5, m_position, 200.0f, 0, rate);
 
 	return true;
 }

@@ -1,5 +1,5 @@
 /*!
- * @brief エッジ検出
+ * @brief 輪郭線描画
  */
 
 ////////////////////////////////////////////////
@@ -166,7 +166,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
         }
         
         // 自身の深度値・法線と近傍8テクセルの深度値の差・法線の差を調べる
-        if (abs(depth - depth2) > 0.000045f || length(normal) >= 0.35f)
+        if (abs(depth - depth2) > 0.0000455f || length(normal) >= 0.4f)
         {
             // 音源からピクセルまでの距離
             float dist = length(worldPos - soundSourceData[num].pos);
