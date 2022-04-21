@@ -42,6 +42,7 @@ private:
 	/// 影響率を調べる
 	/// </summary>
 	void CheckRate();
+private:
 	ModelRender			m_modelRender;					// モデルレンダー
 	Vector3				m_position;						// 座標
 	GameCamera*			m_gameCamera;					// ゲームカメラ

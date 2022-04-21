@@ -1,5 +1,7 @@
 #pragma once
 class Gramophone;
+class GameCamera;
+class Item;
 class Record : public IGameObject
 {
 public:
@@ -46,6 +48,9 @@ private:
 	Quaternion				m_rotation = Quaternion::Identity;	// ‰ñ“]
 	ModelRender				m_modelRender;						// ƒ‚ƒfƒ‹ƒŒƒ“ƒ_[
 	int						m_number;
+	GameCamera*				m_gameCamera;
+	Vector3					m_gameCameraPos;
+	Item*					m_item;
 
 };
 
