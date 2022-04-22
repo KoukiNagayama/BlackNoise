@@ -153,7 +153,8 @@ namespace nsK2EngineLow {
 		// tkmファイルのファイルパスを指定する。
 		modelInitData.m_tkmFilePath = filePath;
 		// シェーダーファイルのファイルパスを指定する。
-		modelInitData.m_fxFilePath = "Assets/shader/edgeExtraction.fx";
+		//modelInitData.m_fxFilePath = "Assets/shader/edgeExtraction.fx";
+		modelInitData.m_fxFilePath = "Assets/shader/edge.fx";
 		// カラーバッファのフォーマットを指定する。
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		// 各種マップを拡張SRVに設定する。
