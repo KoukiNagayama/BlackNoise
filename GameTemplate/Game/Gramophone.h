@@ -1,5 +1,7 @@
 #pragma once
 #include "sound/SoundSource.h"
+
+class Item;
 class GameCamera;
 class Gramophone : public IGameObject
 {
@@ -97,5 +99,7 @@ private:
 	SoundSource*			m_soundSource3 = nullptr;					// 音源3
 	GameCamera*				m_gameCamera;								// ゲームカメラ
 	int						m_number;									// オブジェクトの番号
+	Item*					m_item;
+	int						m_recordNum;
 };
 

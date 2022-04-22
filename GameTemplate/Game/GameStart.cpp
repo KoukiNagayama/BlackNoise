@@ -12,6 +12,7 @@
 #include "Enemy.h"
 #include "Gramophone.h"
 #include "Record.h"
+#include "Item.h"
 
 GameStart::GameStart()
 {
@@ -77,7 +78,7 @@ bool GameStart::Start()
 		//	//trueにすると、レベルの方でモデルが読み込まれない。
 		//	return true;
 		//}
-		if (objData.EqualObjectName(L"toy") == true) {
+		if (objData.EqualObjectName(L"crashtoy") == true) {
 
 			m_toy = NewGO<Toy>(0, "toy");
 			//配置座標、スケール、回転を取得する。
@@ -103,6 +104,16 @@ bool GameStart::Start()
 			m_gramophone.push_back(gramophone);
 			return true;
 		}
+		if (objData.ForwardMatchName(L"record") == true)
+		{
+			auto record = NewGO<Record>(0, "record");
+			//record->SetPosition(objData.position);
+			record->SetScale(objData.scale);
+			record->SetRotation(objData.rotation);
+			record->SetNumber(objData.number);
+			m_record.push_back(record);
+			return true;
+		}
 	});
 
 	//m_bg = NewGO<BackGround> (0, "background");
@@ -110,7 +121,12 @@ bool GameStart::Start()
 	m_key = NewGO<Key>(0, "key");
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
+<<<<<<< HEAD
 	m_enemy = NewGO<Enemy>(0, "enemy");
+=======
+	//m_enemy = NewGO<Enemy>(0, "enemy");
+	m_item = NewGO<Item>(0, "item");
+>>>>>>> abc699560aed292404e3e670cb41645ff6ddcd90
 	
 	return true;
 }

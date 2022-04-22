@@ -29,7 +29,7 @@ struct SPSIn
     float2 uv : TEXCOORD0;
     float4 posInProj : TEXCOORD1;
     float3 tangent : TANGENT;
-    float3 biNormal : BINORMAL;                             
+    float3 biNormal : BINORMAL;
 };
 
 // 音源データ
@@ -64,10 +64,10 @@ cbuffer SoundSourceCb : register(b1)
 ///////////////////////////////////////////
 // シェーダーリソース
 ///////////////////////////////////////////
-Texture2D<float4> g_texture : register(t0);                 // モデルテクスチャ
-Texture2D<float4> g_depthValueTexture : register(t10);      // 深度テクスチャ
+Texture2D<float4> g_texture : register(t0); // モデルテクスチャ
+Texture2D<float4> g_depthValueTexture : register(t10); // 深度テクスチャ
 Texture2D<float4> g_worldCoordinateTexture : register(t11); // ワールド座標テクスチャ
-Texture2D<float4> g_normalTexture : register(t12);          // 法線テクスチャ
+Texture2D<float4> g_normalTexture : register(t12); // 法線テクスチャ
 
 ///////////////////////////////////////////
 // サンプラーステート
@@ -95,21 +95,21 @@ SPSIn VSMain(SVSIn vsIn)
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
     // 正規化スクリーン座標系からUV座標系に変換する
-    float2 uv = ( psIn.posInProj.xy / psIn.posInProj.w ) * float2( 0.5f, -0.5f ) + 0.5f;
+    float2 uv = (psIn.posInProj.xy / psIn.posInProj.w) * float2(0.5f, -0.5f) + 0.5f;
 
     float4 tex = g_texture.Sample(g_sampler, psIn.uv);
     
     // 近傍8テクセルへのUVオフセット
     float2 uvOffset[8] =
     {
-        float2( 0.0f, 1.0f / 900.0f ), //上
-        float2( 0.0f, -1.0f / 900.0f ), //下
-        float2( 1.0f / 1600.0f, 0.0f ), //右
-        float2(-1.0f / 1600.0f, 0.0f ), //左
-        float2( 1.0f / 1600.0f, 1.0f / 900.0f ), //右上
-        float2(-1.0f / 1600.0f, 1.0f / 900.0f ), //左上
-        float2( 1.0f / 1600.0f, -1.0f / 900.0f ), //右下
-        float2(-1.0f / 1600.0f, -1.0f / 900.0f ) //左下
+        float2(0.0f, 1.0f / 900.0f), //上
+        float2(0.0f, -1.0f / 900.0f), //下
+        float2(1.0f / 1600.0f, 0.0f), //右
+        float2(-1.0f / 1600.0f, 0.0f), //左
+        float2(1.0f / 1600.0f, 1.0f / 900.0f), //右上
+        float2(-1.0f / 1600.0f, 1.0f / 900.0f), //左上
+        float2(1.0f / 1600.0f, -1.0f / 900.0f), //右下
+        float2(-1.0f / 1600.0f, -1.0f / 900.0f) //左下
     };
     
     // 輪郭線を描画するか
@@ -119,32 +119,29 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     // 色の最大値
     float color = 1.0f;
     
-    int b[MAX_DATA];
-    for (int i = 0; i < MAX_DATA; i++)
-    {
-        b[i] = 0;
-    }
+    // 同じピクセルに被っている輪郭線の範囲用配列
+    int edgeArray[3];
+    // 計算後の色の最大値
+    float maxColor = 0.0000f;
     
     // ワールド座標
-        float3 worldPos = g_worldCoordinateTexture.Sample(g_sampler, uv);
+    float3 worldPos = g_worldCoordinateTexture.Sample(g_sampler, uv);
 
-    for (int i = 0; i < numSoundSource ; i++)
+    for (int i = 0; i < numSoundSource; i++)
     {
         if (soundSourceData[i].isSound == 1 || soundSourceData[i].rateByTime > 0.00f)
         {
             // 音源からの距離によって輪郭線を描画するか判断
             float dist = length(worldPos - soundSourceData[i].pos);
-            if(dist < soundSourceData[i].range)
+            if (dist < soundSourceData[i].range)
             {
-                drawEdge = 1;
-                num = i;
-                //drawEdge++;
-                //b[drawEdge - 1] = i;
+                drawEdge++;
+                edgeArray[drawEdge - 1] = i;
             }
         }
     }
     
-    if(drawEdge == 1)
+   /* if (drawEdge == 1)
     {
         // 深度値
         // このピクセルの深度値を取得
@@ -184,8 +181,54 @@ float4 PSMain(SPSIn psIn) : SV_Target0
             //return float4(color, 0.0f, 0.0f, 1.0f);
             
         }
-    }
+    }*/
+    if(drawEdge >= 1)
+    {   
+        // 深度値
+        // このピクセルの深度値を取得
+        float depth = g_depthValueTexture.Sample(g_sampler, uv).x;
+  
+        // 近傍8テクセルの深度値の平均値を計算する
+        float depth2 = 0.0f;
+        for (int i = 0; i < 8; i++)
+        {
+            depth2 += g_depthValueTexture.Sample(g_sampler, uv + uvOffset[i]).x;
+        }
+        depth2 /= 8.0f;
+        
+        
+        // 法線
+        // このピクセルの法線を取得
+        float3 normal = g_normalTexture.Sample(g_sampler, uv).xyz * -8.0f;
+        
+        // 近傍8テクセルの法線の平均値を計算する
+        for (i = 0; i < 8; i++)
+        {
+            normal += g_normalTexture.Sample(g_sampler, uv + uvOffset[i]).xyz;
+        }
+        
+        // 自身の深度値・法線と近傍8テクセルの深度値の差・法線の差を調べる
+        if (abs(depth - depth2) > 0.0000455f || length(normal) >= 0.4f)
+        {
+            for (int i = 0; i < drawEdge; i++)
+            {
+                // 音源からピクセルまでの距離
+                float dist = length(worldPos - soundSourceData[edgeArray[i]].pos);
+                // 距離による影響率
+                float rateByDist = 1.0 - pow((dist / soundSourceData[edgeArray[i]].range), 2.5f);
+                // 輪郭線の色を計算
+                color = 1.0 * soundSourceData[edgeArray[i]].rateByTime * rateByDist;
+                
+                if (color > maxColor)
+                {
+                    maxColor = color;
+                }
+            }
 
+            // 深度値または法線が大きく違う場合はピクセルを輪郭線として塗りつぶす
+            return float4(maxColor, maxColor, maxColor, 1.0f);   
+        }
+    }
     // ピクセルを黒色に塗りつぶす
     return float4(0.0f, 0.0f, 0.0f, 1.0f);
     // デバッグ用 

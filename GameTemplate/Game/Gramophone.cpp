@@ -3,6 +3,7 @@
 #include "InfoForEdge.h"
 #include "GameCamera.h"
 #include "sound/SoundEngine.h"
+#include "Item.h"
 
 namespace
 {
@@ -21,6 +22,8 @@ bool Gramophone::Start()
 
 	// ゲームカメラ
 	m_gameCamera = FindGO<GameCamera>("gamecamera");
+
+	m_item = FindGO<Item>("item");
 
 	return true;
 }
@@ -62,6 +65,8 @@ void Gramophone::Update()
 {
 	m_gameCamera = FindGO<GameCamera>("gamecamera");
 
+	m_item = FindGO<Item>("item");
+
 	// ステート管理
 	ManegeState();
 
@@ -89,18 +94,21 @@ void Gramophone::ManegeState()
 void Gramophone::IdleState()
 {
 
-	////////////////test////////////////////////
 	Vector3 gameCameraPos = m_gameCamera->GetPosition();
 	gameCameraPos.y = m_position.y;
 
 	//プレイヤーと蓄音機の距離
 	Vector3 diff = m_position - gameCameraPos;
 	
-	if (diff.Length() <= 100.0f) {
-		m_gramophoneState = enGramophoneState_Play;
-		m_modelRender.Init("Assets/modelData/item/record_on.tkm");
+	// 範囲内でAボタンを押したら
+	if (diff.Length() <= 100.0f && g_pad[0]->IsTrigger(enButtonA)) {
+		m_recordNum = m_item->GetHaveRecord();
+		if(m_recordNum == 1 || m_recordNum == 2){
+			m_item->IsUseRecord(m_recordNum);
+			m_gramophoneState = enGramophoneState_Play;
+			m_modelRender.Init("Assets/modelData/item/record_on.tkm");
+		}
 	}
-	////////////////test////////////////////////
 }
 
 void Gramophone::PlayState()
@@ -122,13 +130,23 @@ void Gramophone::MakeSound()
 {
 	if (m_number == 1) {
 		m_soundSource1 = NewGO<SoundSource>(2);
-		m_soundSource1->Init(2);
+		if (m_recordNum == 1) {
+			m_soundSource1->Init(2);
+		}
+		else if (m_recordNum == 2) {
+			m_soundSource1->Init(3);
+		}
 		m_soundSource1->Play(true);
 		g_infoForEdge.SetIsSound(2, 1);
 	}
 	else if(m_number == 2){
 		m_soundSource2 = NewGO<SoundSource>(3);
-		m_soundSource2->Init(3);
+		if (m_recordNum == 1) {
+			m_soundSource2->Init(2);
+		}
+		else if (m_recordNum == 2) {
+			m_soundSource2->Init(3);
+		}
 		m_soundSource2->Play(true);
 		g_infoForEdge.SetIsSound(3, 1);
 	}
@@ -170,7 +188,6 @@ void Gramophone::VolumeControl()
 	else if (m_number == 3) {
 		m_soundSource3->SetVolume(SoundLevelByDistance(RANGE));
 	}
-
 }
 
 void Gramophone::ChangeRate(int num)

@@ -16,6 +16,7 @@
     <ClCompile Include="Toy.cpp" />
     <ClCompile Include="Record.cpp" />
     <ClCompile Include="Gramophone.cpp" />
+    <ClCompile Include="Item.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
@@ -33,6 +34,7 @@
     <ClInclude Include="Toy.h" />
     <ClInclude Include="Record.h" />
     <ClInclude Include="Gramophone.h" />
+    <ClInclude Include="Item.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

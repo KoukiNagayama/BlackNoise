@@ -16,7 +16,7 @@ bool Toy::Start()
 {
 	m_modelRender.Init("Assets/modelData/item/toy.tkm");
 	m_modelRender.SetPosition(m_position);
-	m_modelRender.Update();
+	//m_modelRender.Update();
 	m_gameCamera = FindGO<GameCamera>("gamecamera");
 
 	g_soundEngine->ResistWaveFileBank(1, "Assets/sound/toy/toy.wav");
@@ -26,17 +26,12 @@ bool Toy::Start()
 
 void Toy::Update()
 {
-	// プレイヤーとの距離
-	// カメラの座標
-	m_gameCameraPos = m_gameCamera->GetPosition();
-	m_gameCameraPos.y = 0.0f;
-
 	// ステートが通常なら
 	if (m_toyState == enToyState_usual) {
 		// プレイヤーとの距離
 		// カメラの座標
 		m_gameCameraPos = m_gameCamera->GetPosition();
-		m_gameCameraPos.y = 0.0f;
+		m_gameCameraPos.y = m_position.y;
 		// 座標の差
 		Vector3	distToPlayer = m_position - m_gameCameraPos;
 		if (distToPlayer.Length() <= DISTANCE) {
