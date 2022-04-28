@@ -14,7 +14,7 @@ public:
 	};
 
 	Gramophone() {};
-	~Gramophone() {};
+	~Gramophone() ;
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);

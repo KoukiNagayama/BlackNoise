@@ -12,10 +12,11 @@ bool Item::Start()
 
 void Item::Update()
 {
+	//アイテムを持っていない時
 	if (m_pendingItem == enNoItem) {
 		return;
 	}
-
+	//アイテムの判別
 	Identification();
 }
 
@@ -46,6 +47,8 @@ void Item::Identification()
 	case enRecord2:
 		m_itemList[ArrayFreeSpace] = enRecord2;
 		break;
+	case enHammer:
+		m_itemList[ArrayFreeSpace] = enHammer;
 	default:
 		break;
 	}

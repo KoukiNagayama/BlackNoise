@@ -12,7 +12,7 @@ namespace
 	const float VOLUME = 1.0f;
 	const float RANGE = 800.0f;
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
-	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
+	const float EDGE_FADE_OUT_DELTA_VALUE = 0.00f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
 	const float MODEL_MULTIPLIER = 35.0f;
@@ -25,6 +25,7 @@ Bell::Bell()
 }
 Bell::~Bell()
 {
+	DeleteGO(m_bellSound);
 }
 
 bool Bell::Start()
