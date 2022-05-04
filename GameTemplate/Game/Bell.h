@@ -54,7 +54,9 @@ public:
 	/// アニメーション再生。
 	/// </summary>
 	void PlayAnimation();
-
+	/// <summary>
+	/// デバッグ用文字表示
+	/// </summary>
 	void Font();
 
 private:

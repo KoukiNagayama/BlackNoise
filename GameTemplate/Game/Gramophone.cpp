@@ -15,6 +15,19 @@ namespace
 	const float MAXIMUM_VOLUME = 2.00f;				// ç≈ëÂâπó 
 	const float MINIMUM_VOLUME = 0.00f;				// ç≈è¨âπó 
 }
+Gramophone::~Gramophone()
+{
+	for (int i = 2; i <= 4; i++)
+	{
+		g_infoForEdge.SetIsSound(i, 0);
+		g_infoForEdge.SetRate(i, 0.00f);
+	}
+	DeleteGO(m_soundSource1);
+	DeleteGO(m_soundSource2);
+	DeleteGO(m_soundSource3);
+
+	//g_infoForEdge.SetIsSound(4, 0);
+}
 bool Gramophone::Start()
 {
 	// èâä˙âª

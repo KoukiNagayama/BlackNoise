@@ -7,7 +7,7 @@ public:
 		enNoItem,				// アイテム未所持
 		enRecord1,				// レコード1
 		enRecord2,				// レコード2
-		enHummer				// ハンマー
+		enHammer				// ハンマー
 	};
 
 	Item() {};
@@ -31,9 +31,9 @@ public:
 	/// <summary>
 	/// 保留アイテム枠にハンマーを設定
 	/// </summary>
-	void SetHummerToPendingItem()
+	void SetHammerToPendingItem()
 	{
-		m_pendingItem = enHummer;
+		m_pendingItem = enHammer;
 	}
 
 	/// <summary>

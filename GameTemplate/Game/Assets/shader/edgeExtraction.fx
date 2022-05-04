@@ -187,7 +187,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     }
 
     // ピクセルを黒色に塗りつぶす
-    return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    //return float4(0.0f, 0.0f, 0.0f, 1.0f);
     // デバッグ用 
-    //return tex;
+    return tex;
 }

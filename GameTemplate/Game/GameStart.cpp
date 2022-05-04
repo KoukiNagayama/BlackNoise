@@ -5,14 +5,21 @@
 #include "BackGround.h"
 #include "Bell.h"
 #include "Toy.h"
-#include "Key.h"
-#include "Skey.h"
 #include "Enemy.h"
 #include "InfoForEdge.h"
 #include "Enemy.h"
 #include "Gramophone.h"
 #include "Record.h"
 #include "Item.h"
+#include "Door.h"
+#include "BrokenDoor.h"
+#include "Hammer.h"
+#include "GroundFloor.h"
+
+namespace
+{
+	const float DISTANCE = 100.0f;
+}
 
 GameStart::GameStart()
 {
@@ -20,7 +27,25 @@ GameStart::GameStart()
 
 GameStart::~GameStart()
 {
-
+	DeleteGO(m_bg);
+	DeleteGO(m_gamecam);
+	DeleteGO(m_bell);
+	DeleteGO(m_toy);
+	//DeleteGO(m_brokendoor);
+	DeleteGO(m_hammer);
+	//DeleteGO(m_enemy); 
+	for (auto door : m_door)
+	{
+		DeleteGO(door);
+	}
+	for (auto gramophone : m_gramophone)
+	{
+		DeleteGO(gramophone);
+	}
+	for (auto record : m_record)
+	{
+		DeleteGO(record);
+	}
 }
 
 bool GameStart::Start()
@@ -30,8 +55,9 @@ bool GameStart::Start()
 	//g_infoForEdge.InitForSound(0, position, 200.0f, 1, 0.00f);
 	//各クラスを生成。
 
-	m_levelRender.Init("Assets/modelData/stage/level.tkl", [&](LevelObjectData& objData) {
-		if (objData.EqualObjectName(L"Floor2") == true) {
+	m_levelRender.Init("Assets/modelData/stage/stage2.tkl", [&](LevelObjectData& objData) {
+		//ステージ
+		if (objData.EqualObjectName(L"floor2") == true) {
 
 			m_bg = NewGO<BackGround>(0);
 			//配置座標、スケール、回転を取得する。
@@ -39,6 +65,7 @@ bool GameStart::Start()
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
+		//プレイヤー(カメラ)
 		if (objData.EqualObjectName(L"player") == true) {
 
 			m_gamecam = NewGO<GameCamera>(0, "gamecamera");
@@ -47,37 +74,7 @@ bool GameStart::Start()
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
-		//if (objData.EqualObjectName(L"key") == true) {
-
-		//	m_key = NewGO<Key>(0, "key");
-		//	//配置座標、スケール、回転を取得する。
-		//	m_key->SetPosition(objData.position);
-		//	//trueにすると、レベルの方でモデルが読み込まれない。
-		//	return true;
-		//}
-		//if (objData.EqualObjectName(L"skey") == true) {
-		//	m_skey = NewGO<Skey>(0, "skey");
-		//	//配置座標、スケール、回転を取得する。
-		//	m_skey->SetPosition(objData.position);
-		//	//trueにすると、レベルの方でモデルが読み込まれない。
-		//	return true;
-		//}
-		//if (objData.EqualObjectName(L"keydoor1") == true) {
-
-		//	m_gamecam = NewGO<GameCamera>(0, "gamecamera");
-		//	//配置座標、スケール、回転を取得する。
-		//	m_gamecam->SetPosition(objData.position);
-		//	//trueにすると、レベルの方でモデルが読み込まれない。
-		//	return true;
-		//}
-		//if (objData.EqualObjectName(L"keydoor2") == true) {
-
-		//	m_gamecam = NewGO<GameCamera>(0, "gamecamera");
-		//	//配置座標、スケール、回転を取得する。
-		//	m_gamecam->SetPosition(objData.position);
-		//	//trueにすると、レベルの方でモデルが読み込まれない。
-		//	return true;
-		//}
+		//つみき
 		if (objData.EqualObjectName(L"crashtoy") == true) {
 
 			m_toy = NewGO<Toy>(0, "toy");
@@ -86,14 +83,7 @@ bool GameStart::Start()
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
-		/*if (objData.EqualObjectName(L"gramophone@1") == true) {
-			m_gramophone1 = NewGO<Gramophone>(0, "gramophone");
-			m_gramophone1->SetPosition(objData.position);
-			m_gramophone1->SetScale(objData.scale);
-			m_gramophone1->SetRotation(objData.rotation);
-			m_gramophone1->SetNumber(objData.number);
-			return true;
-		}*/
+		//蓄音機
 		if (objData.ForwardMatchName(L"gramophone") == true)
 		{
 			auto gramophone = NewGO<Gramophone>(0, "gramophone");
@@ -104,6 +94,8 @@ bool GameStart::Start()
 			m_gramophone.push_back(gramophone);
 			return true;
 		}
+
+		//レコード
 		if (objData.ForwardMatchName(L"record") == true)
 		{
 			auto record = NewGO<Record>(0, "record");
@@ -114,11 +106,43 @@ bool GameStart::Start()
 			m_record.push_back(record);
 			return true;
 		}
-	});
+		if(objData.ForwardMatchName(L"door") == true)
+		{
+			auto door = NewGO<Door>(0, "door");
+			door->SetPosition(objData.position);
+			door->SetScale(objData.scale);
+			door->SetRotation(objData.rotation);
+			m_door.push_back(door);
+			return true;
+		}
+		if (objData.ForwardMatchName(L"brokendoor") == true)
+		{
+			/*m_brokendoor = NewGO<BrokenDoor>(0, "brokendoor");
+			m_brokendoor->SetPosition(objData.position);
+			m_brokendoor->SetRotation(objData.rotation);*/
+			return true;
+		}
+		if (objData.ForwardMatchName(L"hammer") == true)
+		{
+			m_hammer = NewGO<Hammer>(0, "hammer");
+			m_hammer->SetPosition(objData.position);
+			return true;
+		}
+		if (objData.ForwardMatchName(L"hammer") == true)
+		{
+			m_hammer = NewGO<Hammer>(0, "hammer");
+			m_hammer->SetPosition(objData.position);
+			return true;
+		}
+		if (objData.ForwardMatchName(L"switchfloor") == true)
+		{
+			m_switchPos = objData.position;
+			return true;
+		}
 
-	//m_bg = NewGO<BackGround> (0, "background");
-	//m_gamecam = NewGO<GameCamera>(0, "gamecamera");
-	m_key = NewGO<Key>(0, "key");
+		return false;
+	});
+	//m_door = NewGO<Door>(0, "door");
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
 	//m_enemy = NewGO<Enemy>(0, "enemy");
@@ -129,9 +153,22 @@ bool GameStart::Start()
 
 void GameStart::Update()
 {
-	//g_infoForEdge.SetIsSound(1, true);
+	SwitchFirstFloor();
 }
 
-void GameStart::Render(RenderContext& rc)
+void GameStart::SwitchFirstFloor()
 {
+	Vector3 cameraPos = m_gamecam->GetPosition();
+	cameraPos.y = m_switchPos.y;
+
+	Vector3 disToPlayer = cameraPos - m_switchPos;
+	//プレイヤーとの距離が100.0fだったら。
+	if (disToPlayer.Length() <= DISTANCE)
+	{
+		//ゲームスタートクラスを削除
+		DeleteGO(this);
+		//一階の表示
+		m_groundfloor = NewGO<GroundFloor>(0, "groundfloor");
+	}
 }
+
