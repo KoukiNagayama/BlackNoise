@@ -33,7 +33,7 @@ void Gramophone::Init(int num)
 	if (num == 1) {
 		// ‰Šú‚©‚ç‰‰‘t’†
 		m_gramophoneState = enGramophoneState_Idle;
-		m_modelRender.Init("Assets/modelData/item/record_off.tkm");
+		m_modelRender.Init("Assets/modelData/item/record_off.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);;
 		// ƒTƒEƒ“ƒh‚ð“o˜^
 		g_soundEngine->ResistWaveFileBank(2, "Assets/sound/record/record5.wav");
 		g_infoForEdge.InitForSound(2, m_position, RANGE, 0, m_rateByTime);
@@ -42,7 +42,7 @@ void Gramophone::Init(int num)
 	else if (num == 2) {
 		// ‰Šú‚Í‘Ò‹@ó‘Ô
 		m_gramophoneState = enGramophoneState_Idle;
-		m_modelRender.Init("Assets/modelData/item/record_off.tkm");
+		m_modelRender.Init("Assets/modelData/item/record_off.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);;
 		// ƒTƒEƒ“ƒh‚ð“o˜^
 		g_soundEngine->ResistWaveFileBank(3, "Assets/sound/record/record6.wav");
 		g_infoForEdge.InitForSound(3, m_position, RANGE, 0, m_rateByTime);
@@ -50,7 +50,7 @@ void Gramophone::Init(int num)
 	
 	else if (num == 3) {
 		m_gramophoneState = enGramophoneState_Play;
-		m_modelRender.Init("Assets/modelData/item/record_on.tkm");
+		m_modelRender.Init("Assets/modelData/item/record_on.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);;
 		// ƒTƒEƒ“ƒh‚ð“o˜^
 		g_soundEngine->ResistWaveFileBank(4, "Assets/sound/record/record7.wav");
 		g_infoForEdge.InitForSound(4, m_position, RANGE, 0, m_rateByTime);

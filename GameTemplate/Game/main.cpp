@@ -7,6 +7,8 @@
 #include "Bloom.h"
 #include "Shadow.h"
 #include "CreatingMaps.h"
+#include "Title.h"
+#include "ForwardRendering.h"
 
 
 // K2EngineLowのグローバルアクセスポイント。
@@ -27,7 +29,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D->SetTarget({ 0.0f, 70.0f, 0.0f });
 	
 	// ライト情報の初期化
-	g_light.Init();
+	//g_light.Init();
 	
 	//g_shadow.Init();
 
@@ -35,17 +37,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	auto game = NewGO<GameStart>(0,"gamestart");
 
-	SpriteInitData spriteInitData;
-	spriteInitData.m_textures[0] = &g_creatingMaps.GetDepthValueMap().GetRenderTargetTexture();
-	spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
-	spriteInitData.m_width = 256;
-	spriteInitData.m_height = 256;
-
-	Sprite sprite;
-	sprite.Init(spriteInitData);
-
+	//auto title = NewGO<Title>(0, "title");
 
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
+
+	RenderTarget mainRenderTarget;
+	mainRenderTarget.Create(
+		g_graphicsEngine->GetFrameBufferWidth(),
+		g_graphicsEngine->GetFrameBufferHeight(),
+		1,
+		1,
+		DXGI_FORMAT_R16G16B16A16_FLOAT,
+		DXGI_FORMAT_UNKNOWN
+	);
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -60,16 +64,20 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// シャドウマップへのモデルの描画
 		//g_shadow.RenderToShadowMap(renderContext);
 
-		//  深度値マップ、ワールド座標マップ、法線マップの更新
+		//  深度値マップ、ワールド座標、法線マップの更新
 		g_creatingMaps.Update();
 
-		// 深度値マップ、ワールド座標マップ、法線マップへのモデルの描画
+		// 深度値マップ、ワールド座標、法線マップへのモデルの描画
 		g_creatingMaps.RenderToDepthValueMap(renderContext);
 
 		// ライト情報の更新
-		g_light.Update();
+		//g_light.Update();
 
+		// 輪郭線情報の更新
 		g_infoForEdge.Update();
+
+		// フォワードレンダリングによる描画
+		g_forwardRendering.Render(renderContext);
 
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();

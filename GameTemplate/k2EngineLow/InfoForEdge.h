@@ -12,7 +12,8 @@ namespace nsK2EngineLow {
 		int			s_isSound = 0;
 		float		s_range = 0.0f;
 		float		s_rate = 0.0f;
-		Vector2		pad;
+		int			s_color = 0;
+		float		pad;
 	};
 	/// <summary>
 	/// 音源データの定数バッファ用構造体
@@ -21,6 +22,7 @@ namespace nsK2EngineLow {
 	{
 		SoundSourceData s_soundSourceData[SOUND_MAX_SIZE];		// 音源データ配列
 		int				s_numSoundSource = 0;					// 音源の個数
+		float			s_colorRatio = 0.0f;
 	};
 
 
@@ -41,7 +43,7 @@ namespace nsK2EngineLow {
 		/// <param name="range">音源の影響範囲</param>
 		/// <param name="isSound">初めから音が鳴っているか</param>
 		/// <param name="rate">音源の影響率 0.00f～1.00f</param>
-		void InitForSound(int number, Vector3 position, float range, int isSound, float rate);
+		void InitForSound(int number, Vector3 position, float range, int isSound, float rate, int color = 0);
 		/// <summary>
 		/// 音源の座標と影響範囲と音が鳴っているかを設定。                    
 		/// 複数の項目で値の変動がある場合は使用する。
@@ -113,6 +115,8 @@ namespace nsK2EngineLow {
 		}
 	private:
 		CBSoundSource   m_cbSoundSource;
+		float			m_colorRatio = 1.0f;
+		int				m_sizeChenge = 0;
 	};
 	extern InfoForEdge	 g_infoForEdge;
 }

@@ -17,6 +17,9 @@
     <ClCompile Include="Record.cpp" />
     <ClCompile Include="Gramophone.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="TitleCamera.cpp" />
+    <ClCompile Include="TitleText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
@@ -35,6 +38,9 @@
     <ClInclude Include="Record.h" />
     <ClInclude Include="Gramophone.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="Title.h" />
+    <ClInclude Include="TitleCamera.h" />
+    <ClInclude Include="TitleText.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

@@ -237,6 +237,7 @@
     <ClCompile Include="InfoForEdge.cpp" />
     <ClCompile Include="MapChipRender.cpp" />
     <ClCompile Include="LevelRender.cpp" />
+    <ClCompile Include="ForwardRendering.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="k2EngineLowPreCompile.h" />
@@ -523,6 +524,7 @@
     <ClInclude Include="InfoForEdge.h" />
     <ClInclude Include="MapChipRender.h" />
     <ClInclude Include="LevelRender.h" />
+    <ClInclude Include="ForwardRendering.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="graphics">

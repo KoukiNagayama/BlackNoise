@@ -48,6 +48,7 @@ float4 PSSamplingLuminance(PSInput In) : SV_Target0
     float4 color = mainRenderTargetTexture.Sample(Sampler, In.uv);
     //サンプリングしたカラーの明るさを計算。
     float t = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+    //float t = dot(color.xyz, float3(0.7154f, 0.7154f, 0.7154f));
     //clip関数は引数の値がマイナスになると、以降の処理をスキップする。
     //なので、マイナスになるとピクセルカラーは出力されない。
     clip(t - 1.0f);
