@@ -9,6 +9,7 @@
 #include "CreatingMaps.h"
 #include "Title.h"
 #include "ForwardRendering.h"
+#include "MainRenderTarget.h"
 
 
 // K2EngineLowのグローバルアクセスポイント。
@@ -41,15 +42,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
 
-	RenderTarget mainRenderTarget;
-	mainRenderTarget.Create(
-		g_graphicsEngine->GetFrameBufferWidth(),
-		g_graphicsEngine->GetFrameBufferHeight(),
-		1,
-		1,
-		DXGI_FORMAT_R16G16B16A16_FLOAT,
-		DXGI_FORMAT_UNKNOWN
-	);
+	g_mainRenderTarget.Init();
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -57,6 +50,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		
 		// フレームの開始時に呼び出す必要がある処理を実行
 		g_k2EngineLow->BeginFrame();
+
+		renderContext.ClearRenderTargetView(g_mainRenderTarget.GetMainRenderTarget());
 
 		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
@@ -82,12 +77,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 
-
-		//sprite.Update({ FRAME_BUFFER_W / -2.0f, FRAME_BUFFER_H / 2.0f,  0.0f }, g_quatIdentity, g_vec3One, { 0.0f, 1.0f });
-		//sprite.Draw(renderContext);
-
+		// メインレンダリングターゲットをフレームバッフコピー
+		g_mainRenderTarget.CopyMainRenderTargetToFrameBuffer(renderContext);
+		
 		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();
+
 
 		// フレームの終了時に呼び出す必要がある処理を実行。
 		g_k2EngineLow->EndFrame();

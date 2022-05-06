@@ -8,6 +8,7 @@
 #include "sound/SoundSource.h"
 #include "InfoForEdge.h"
 #include "ForwardRendering.h"
+#include "MainRenderTarget.h"
 
 namespace nsK2EngineLow {
 	ModelRender::ModelRender()
@@ -299,7 +300,13 @@ namespace nsK2EngineLow {
 
 	void ModelRender::Draw(RenderContext& rc)
 	{
+		rc.WaitUntilToPossibleSetRenderTarget(g_mainRenderTarget.GetMainRenderTarget());
+		rc.SetRenderTarget(
+			g_mainRenderTarget.GetMainRenderTarget().GetRTVCpuDescriptorHandle(),
+			g_mainRenderTarget.GetMainRenderTarget().GetDSVCpuDescriptorHandle()
+		);
 		m_model.Draw(rc);
+		rc.WaitUntilFinishDrawingToRenderTarget(g_mainRenderTarget.GetMainRenderTarget());
 	}
 }
 

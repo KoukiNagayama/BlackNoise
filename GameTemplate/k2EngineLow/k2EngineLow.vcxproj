@@ -317,6 +317,7 @@
     <ClCompile Include="level3D\TklFile.cpp" />
     <ClCompile Include="LevelRender.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="MainRenderTarget.cpp" />
     <ClCompile Include="MapChipRender.cpp" />
     <ClCompile Include="math\Matrix.cpp" />
     <ClCompile Include="math\Vector.cpp" />
@@ -417,6 +418,7 @@
     <ClInclude Include="level3D\TklFile.h" />
     <ClInclude Include="LevelRender.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="MainRenderTarget.h" />
     <ClInclude Include="MapChipRender.h" />
     <ClInclude Include="math\Math.h" />
     <ClInclude Include="math\Matrix.h" />
