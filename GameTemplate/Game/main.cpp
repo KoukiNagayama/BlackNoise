@@ -40,9 +40,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//auto title = NewGO<Title>(0, "title");
 
+	// レンダリングコンテキスト
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
 
 	g_mainRenderTarget.Init();
+
+	// ブルームを初期化
+	g_bloom.InitBloom(g_mainRenderTarget.GetMainRenderTarget());
+
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -51,7 +56,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// フレームの開始時に呼び出す必要がある処理を実行
 		g_k2EngineLow->BeginFrame();
 
-		renderContext.ClearRenderTargetView(g_mainRenderTarget.GetMainRenderTarget());
 
 		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
@@ -77,11 +81,17 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 
+		// ブルームの描画
+		g_bloom.Render(renderContext, g_mainRenderTarget.GetMainRenderTarget());
+
 		// メインレンダリングターゲットをフレームバッフコピー
 		g_mainRenderTarget.CopyMainRenderTargetToFrameBuffer(renderContext);
 		
 		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();
+
+		// メインレンダリングターゲットをクリア
+		renderContext.ClearRenderTargetView(g_mainRenderTarget.GetMainRenderTarget());
 
 
 		// フレームの終了時に呼び出す必要がある処理を実行。
