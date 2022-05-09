@@ -31,6 +31,7 @@ bool GroundFloor::Start()
 			m_bgRender.Init("Assets/modelData/stage1/floor1.tkm");
 			//配置座標、スケール、回転を取得する。
 			m_bgRender.SetPosition(objData.position);
+			m_physicsStaticObject.CreateFromModel(m_bgRender.GetModel(), m_bgRender.GetModel().GetWorldMatrix());
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}

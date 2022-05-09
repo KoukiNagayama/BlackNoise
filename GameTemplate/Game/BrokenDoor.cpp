@@ -146,7 +146,7 @@ void BrokenDoor::BeforeState()
 		
 		//ステートをクローズ状態にする
 		m_doorState = enDoorState_CloseIdle;
-
+		ReleasePhysicsObject();
 	}
 }
 
@@ -157,24 +157,24 @@ void BrokenDoor::CloseIdleState()
 
 void BrokenDoor::CloseState()
 {
-	ReleasePhysicsObject();
+	//ReleasePhysicsObject();
 	//クローズアニメーションが終了したら。
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		//当たり判定を作成する。
-		CreatePhysicsObject();
+		//CreatePhysicsObject();
 		//クローズ終わりステートに遷移する。
 		m_doorState = enDoorState_CloseIdle;
 	}
 }
 void BrokenDoor::OpenState()
 {
-	ReleasePhysicsObject();
+	//ReleasePhysicsObject();
 	//クローズアニメーションが終了したら。
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		//当たり判定を作成する。
-		CreatePhysicsObject();
+		//CreatePhysicsObject();
 		//クローズ終わりステートに遷移する。
 		m_doorState = enDoorState_OpenIdle;
 	}

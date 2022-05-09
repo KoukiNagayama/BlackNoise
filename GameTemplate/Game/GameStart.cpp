@@ -102,7 +102,7 @@ bool GameStart::Start()
 		if (objData.ForwardMatchName(L"record") == true)
 		{
 			auto record = NewGO<Record>(0, "record");
-			//record->SetPosition(objData.position);
+			record->SetPosition(objData.position);
 			record->SetScale(objData.scale);
 			record->SetRotation(objData.rotation);
 			record->SetNumber(objData.number);
@@ -120,9 +120,9 @@ bool GameStart::Start()
 		}
 		if (objData.ForwardMatchName(L"brokendoor") == true)
 		{
-			/*m_brokendoor = NewGO<BrokenDoor>(0, "brokendoor");
+			m_brokendoor = NewGO<BrokenDoor>(0, "brokendoor");
 			m_brokendoor->SetPosition(objData.position);
-			m_brokendoor->SetRotation(objData.rotation);*/
+			m_brokendoor->SetRotation(objData.rotation);
 			return true;
 		}
 		if (objData.ForwardMatchName(L"hammer") == true)
@@ -165,7 +165,7 @@ bool GameStart::Start()
 	});
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
-	//m_enemy = NewGO<Enemy>(0, "enemy");
+	m_enemy = NewGO<Enemy>(0, "enemy");
 	m_item = NewGO<Item>(0, "item");
 	
 	return true;
