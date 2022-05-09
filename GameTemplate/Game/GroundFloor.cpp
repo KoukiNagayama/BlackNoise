@@ -16,6 +16,7 @@ namespace
 
 GroundFloor::~GroundFloor()
 {
+	DeleteGO(m_gamecam);
 	DeleteGO(m_player);
 	DeleteGO(m_bell);
 }

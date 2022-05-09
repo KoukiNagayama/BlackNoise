@@ -15,6 +15,8 @@ class Door;
 class BrokenDoor;
 class Hammer;
 class GroundFloor;
+class FloorGimmick;
+class Crowbar;
 
 class GameStart : public IGameObject
 {
@@ -39,12 +41,14 @@ private:
 	//Door* m_door;
 	BrokenDoor* m_brokendoor = nullptr;
 	Hammer* m_hammer = nullptr;
-	//Record*	m_record;
 	std::vector<Door*>			m_door;
 	std::vector<Gramophone*>	m_gramophone;
 	std::vector<Record*>		m_record;
-	Item* m_item;
+	Item* m_item = nullptr;;
 	GroundFloor* m_groundfloor = nullptr;
+	FloorGimmick* m_floorgimmick = nullptr;
+	Crowbar* m_crowbar = nullptr;
+
 	Vector3 m_switchPos;
 };
 
