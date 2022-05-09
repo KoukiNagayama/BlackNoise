@@ -1,5 +1,5 @@
 /*!
- * @brief 輪郭線描画
+ * @brief フォワードレンダリング輪郭線描画
  */
 
 ////////////////////////////////////////////////
@@ -126,6 +126,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     // 計算後の色の値の最大値格納用
     float maxColor = 0.0000f;
     
+    int colorNum = 0;
+    
     // ワールド座標
     float3 worldPos = g_worldCoordinateTexture.Sample(g_sampler, uv);
 
@@ -144,8 +146,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     }
     
     // ここから輪郭線描画
-    if(drawEdge >= 1)
-    {   
+    if (drawEdge >= 1)
+    {
         // 深度値
         // このピクセルの深度値を取得
         float depth = g_depthValueTexture.Sample(g_sampler, uv).x;
@@ -187,7 +189,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
                 }
             }
             // ピクセルを輪郭線として塗りつぶす
-            return float4(maxColor, maxColor, maxColor, 1.0f);
+            // 赤色
+            return float4(maxColor * colorRatio, maxColor * colorRatio * 0.5f, 0.0f, 1.0f);
         }
 
     }

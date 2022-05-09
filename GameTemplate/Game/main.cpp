@@ -7,6 +7,9 @@
 #include "Bloom.h"
 #include "Shadow.h"
 #include "CreatingMaps.h"
+#include "Title.h"
+#include "ForwardRendering.h"
+#include "MainRenderTarget.h"
 
 
 // K2EngineLowのグローバルアクセスポイント。
@@ -27,7 +30,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_camera3D->SetTarget({ 0.0f, 70.0f, 0.0f });
 	
 	// ライト情報の初期化
-	g_light.Init();
+	//g_light.Init();
 	
 	//g_shadow.Init();
 
@@ -35,17 +38,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	auto game = NewGO<GameStart>(0,"gamestart");
 
-	SpriteInitData spriteInitData;
-	spriteInitData.m_textures[0] = &g_creatingMaps.GetDepthValueMap().GetRenderTargetTexture();
-	spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
-	spriteInitData.m_width = 256;
-	spriteInitData.m_height = 256;
+	//auto title = NewGO<Title>(0, "title");
 
-	Sprite sprite;
-	sprite.Init(spriteInitData);
-
-
+	// レンダリングコンテキスト
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
+
+	g_mainRenderTarget.Init();
+
+	// ブルームを初期化
+	g_bloom.InitBloom(g_mainRenderTarget.GetMainRenderTarget());
+
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -54,32 +56,43 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		// フレームの開始時に呼び出す必要がある処理を実行
 		g_k2EngineLow->BeginFrame();
 
+
 		// ゲームオブジェクトマネージャーの更新処理を呼び出す。
 		g_k2EngineLow->ExecuteUpdate();
 
 		// シャドウマップへのモデルの描画
 		//g_shadow.RenderToShadowMap(renderContext);
 
-		//  深度値マップ、ワールド座標マップ、法線マップの更新
+		//  深度値マップ、ワールド座標、法線マップの更新
 		g_creatingMaps.Update();
 
-		// 深度値マップ、ワールド座標マップ、法線マップへのモデルの描画
+		// 深度値マップ、ワールド座標、法線マップへのモデルの描画
 		g_creatingMaps.RenderToDepthValueMap(renderContext);
 
 		// ライト情報の更新
-		g_light.Update();
+		//g_light.Update();
 
+		// 輪郭線情報の更新
 		g_infoForEdge.Update();
+
+		// フォワードレンダリングによる描画
+		g_forwardRendering.Render(renderContext);
 
 		// ゲームオブジェクトマネージャーの描画処理を呼び出す。
 		g_k2EngineLow->ExecuteRender();
 
+		// ブルームの描画
+		g_bloom.Render(renderContext, g_mainRenderTarget.GetMainRenderTarget());
 
-		//sprite.Update({ FRAME_BUFFER_W / -2.0f, FRAME_BUFFER_H / 2.0f,  0.0f }, g_quatIdentity, g_vec3One, { 0.0f, 1.0f });
-		//sprite.Draw(renderContext);
-
+		// メインレンダリングターゲットをフレームバッフコピー
+		g_mainRenderTarget.CopyMainRenderTargetToFrameBuffer(renderContext);
+		
 		// デバッグ描画処理を実行する。
 		g_k2EngineLow->DebubDrawWorld();
+
+		// メインレンダリングターゲットをクリア
+		renderContext.ClearRenderTargetView(g_mainRenderTarget.GetMainRenderTarget());
+
 
 		// フレームの終了時に呼び出す必要がある処理を実行。
 		g_k2EngineLow->EndFrame();

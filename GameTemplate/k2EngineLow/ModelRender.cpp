@@ -7,6 +7,8 @@
 #include "CreatingMaps.h"
 #include "sound/SoundSource.h"
 #include "InfoForEdge.h"
+#include "ForwardRendering.h"
+#include "MainRenderTarget.h"
 
 namespace nsK2EngineLow {
 	ModelRender::ModelRender()
@@ -25,7 +27,8 @@ namespace nsK2EngineLow {
 		bool isShadowReceiver,
 		EnModelUpAxis enModelUpAxis,
 		bool isShadowCaster,
-		int maxInstance
+		int maxInstance,
+		int outlineType
 	)
 	{
 		// アニメーションを代入(アニメーションの有無判定のため)
@@ -38,11 +41,18 @@ namespace nsK2EngineLow {
 			// シャドウマップ描画用モデルの初期化
 			InitModelOnShadowMap(filePath);
 		}*/
+		if (outlineType == 0) {
+			// モデルの初期化
+			//InitModel(filePath, enModelUpAxis, isShadowReceiver);
+			InitModelWithContours(filePath, enModelUpAxis);
+		}
+		else if (outlineType != 0) {
+			InitForwardRenderingModel(filePath, outlineType, enModelUpAxis);
+		}
 		// 深度値マップ描画用モデルの初期化
 		InitModelOnDepthValueMap(filePath);
-		// モデルの初期化
-		//InitModel(filePath, enModelUpAxis, isShadowReceiver);
-		InitModelWithContours(filePath, enModelUpAxis);
+
+
 		// 影をキャストするか
 		m_isShadowCaster = isShadowCaster;
 	}
@@ -154,7 +164,7 @@ namespace nsK2EngineLow {
 		modelInitData.m_tkmFilePath = filePath;
 		// シェーダーファイルのファイルパスを指定する。
 		//modelInitData.m_fxFilePath = "Assets/shader/edgeExtraction.fx";
-		modelInitData.m_fxFilePath = "Assets/shader/edge.fx";
+		 modelInitData.m_fxFilePath = "Assets/shader/edge.fx";
 		// カラーバッファのフォーマットを指定する。
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		// 各種マップを拡張SRVに設定する。
@@ -163,10 +173,36 @@ namespace nsK2EngineLow {
 		modelInitData.m_expandShaderResoruceView[2] = &g_creatingMaps.GetNormalMap().GetRenderTargetTexture();
 		// モデルの上方向を指定する。
 		modelInitData.m_modelUpAxis = enModelUpAxis;
-		//
+		// 音源データを定数バッファとして設定する
 		modelInitData.m_expandConstantBuffer = (void *)&g_infoForEdge.GetSoundSourceData();
 		modelInitData.m_expandConstantBufferSize = sizeof(g_infoForEdge.GetSoundSourceData());
 		// 作成した初期化データをもとにモデルを初期化する。
+		m_model.Init(modelInitData);
+	}
+
+	void ModelRender::InitForwardRenderingModel(const char* filePath,
+		int outlineType,
+		EnModelUpAxis enModelUpAxis
+	)
+	{
+		ModelInitData modelInitData;
+		// tkmファイルパスを指定する。
+		modelInitData.m_tkmFilePath = filePath;
+		// シェーダーファイルパスを指定する。
+		if (outlineType == 1) {
+			modelInitData.m_fxFilePath = "Assets/shader/edgeFRorange.fx";
+		}
+		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		// 各種マップを拡張SRVに設定する。
+		modelInitData.m_expandShaderResoruceView[0] = &g_creatingMaps.GetDepthValueMap().GetRenderTargetTexture();
+		modelInitData.m_expandShaderResoruceView[1] = &g_creatingMaps.GetWorldCoordinateMap().GetRenderTargetTexture();
+		modelInitData.m_expandShaderResoruceView[2] = &g_creatingMaps.GetNormalMap().GetRenderTargetTexture();
+		// モデルの上方向を指定する。
+		modelInitData.m_modelUpAxis = enModelUpAxis;
+		// 音源データを定数バッファとして設定する
+		modelInitData.m_expandConstantBuffer = (void*)&g_infoForEdge.GetSoundSourceData();
+		modelInitData.m_expandConstantBufferSize = sizeof(g_infoForEdge.GetSoundSourceData());
+		// 初期化情報をもとにモデルを初期化
 		m_model.Init(modelInitData);
 	}
 	
@@ -259,12 +295,18 @@ namespace nsK2EngineLow {
 		}
 
 		g_creatingMaps.SetModel(&m_depthValueMapModel);
-
+		g_forwardRendering.SetModel(&m_model);
 	}
 
 	void ModelRender::Draw(RenderContext& rc)
 	{
+		rc.WaitUntilToPossibleSetRenderTarget(g_mainRenderTarget.GetMainRenderTarget());
+		rc.SetRenderTarget(
+			g_mainRenderTarget.GetMainRenderTarget().GetRTVCpuDescriptorHandle(),
+			g_mainRenderTarget.GetMainRenderTarget().GetDSVCpuDescriptorHandle()
+		);
 		m_model.Draw(rc);
+		rc.WaitUntilFinishDrawingToRenderTarget(g_mainRenderTarget.GetMainRenderTarget());
 	}
 }
 

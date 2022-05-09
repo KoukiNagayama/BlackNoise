@@ -2,6 +2,7 @@
 class Gramophone;
 class GameCamera;
 class Item;
+
 class Record : public IGameObject
 {
 public:

@@ -14,13 +14,15 @@ namespace nsK2EngineLow {
 		/// <param name="isShadowReceiver">影を受けるかどうか</param>
 		/// <param name="enModelUpAxis">モデルの上方向</param>
 		/// <param name="isShadowCaster">影をキャストするか</param>
+		/// <param name="outlineType">輪郭線の種類 0:通常 1:アイテム 2:エネミー</param>
 		void Init(const char* filePath,
 			AnimationClip* animationClips = nullptr,
 			int numAnimationClips = 0,
 			bool isShadowReceiver = true,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ,
 			bool isShadowCaster = true,
-			int maxInstance = 0
+			int maxInstance = 0,
+			int outlineType = 0
 		);
 		/// <summary>
 		/// 更新処理
@@ -128,6 +130,15 @@ namespace nsK2EngineLow {
 		/// <param name="enModelUpAxis">モデルの上方向</param>
 		void InitModelWithContours(const char* filePath,
 			EnModelUpAxis enModelUpAxis = enModelUpAxisZ
+		);
+		/// <summary>
+		/// フォワードレンダリング用のモデルの初期化
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <param name="enModelUpAxis"></param>
+		void InitForwardRenderingModel(const char* filePath,
+			int outlineType,
+			EnModelUpAxis enModelUpAxis = enModelUpAxisZ		
 		);
 		/// <summary>
 		/// スケルトンの初期化

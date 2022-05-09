@@ -20,8 +20,8 @@ namespace nsK2EngineLow {
 			mainRenderTarget.GetHeight(),
 			1,
 			1,
-			DXGI_FORMAT_R32G32B32A32_FLOAT, 
-			DXGI_FORMAT_D32_FLOAT
+			mainRenderTarget.GetColorBufferFormat(),
+			DXGI_FORMAT_UNKNOWN
 		);
 	}
 	void Bloom::InitSprite(RenderTarget& mainRenderTarget)
@@ -40,7 +40,7 @@ namespace nsK2EngineLow {
 		// テクスチャはメインレンダリングターゲットのカラーバッファ。
 		luminanceSpriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
 		// 描き込むレンダリングターゲットのフォーマットを指定する。
-		luminanceSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		luminanceSpriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
 		// 作成した初期化データをもとにスプライトを初期化
 		m_luminanceSprite.Init(luminanceSpriteInitData);
 
@@ -76,10 +76,10 @@ namespace nsK2EngineLow {
 
 		// ただし、加算合成で描画するので、アルファブレンディングモードを加算にする
 		finalspriteInitData.m_alphaBlendMode = AlphaBlendMode_Add;
-		finalspriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		finalspriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
 
 		m_finalSprite.Init(finalspriteInitData);
-
+/*
 		SpriteInitData spriteInitData;
 		//テクスチャはmainRenderTargetのカラーバッファ。
 		spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
@@ -89,6 +89,7 @@ namespace nsK2EngineLow {
 		spriteInitData.m_fxFilePath = "Assets/shader/2D.fx";
 		//初期化オブジェクトを使って、スプライトを初期化する。
 		m_copyToFrameBufferSprite.Init(spriteInitData);
+		*/
 	}
 
 	
@@ -144,11 +145,11 @@ namespace nsK2EngineLow {
 		// レンダリングターゲットへの書き込み終了待ち
 		rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 		// レンダリングターゲットの絵をフレームバッファにコピー
-		rc.SetRenderTarget(
+		/*rc.SetRenderTarget(
 			g_graphicsEngine->GetCurrentFrameBuffuerRTV(),
 			g_graphicsEngine->GetCurrentFrameBuffuerDSV()
 		);
-		m_copyToFrameBufferSprite.Draw(rc);
+		m_copyToFrameBufferSprite.Draw(rc);*/
 	}
 
 	void Bloom::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
