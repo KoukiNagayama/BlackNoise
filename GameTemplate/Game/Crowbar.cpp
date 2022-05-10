@@ -33,8 +33,11 @@ void Crowbar::Update()
 	//E‚¦‚é”ÍˆÍ‚¾‚Á‚½‚ç
 	if (disToPlayer.Length() <= DISTANCE)
 	{
-		m_item->SetCrowbarToPendingItem();
-		DeleteGO(this);
+		if (g_pad[0]->IsTrigger(enButtonA))
+		{
+			m_item->SetCrowbarToPendingItem();
+			DeleteGO(this);
+		}
 	}
 	m_modelRender.Update();
 }

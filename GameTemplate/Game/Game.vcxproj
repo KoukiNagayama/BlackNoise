@@ -254,6 +254,7 @@
     <ClCompile Include="TitleCamera.cpp" />
     <ClCompile Include="TitleText.cpp" />
     <ClCompile Include="Toy.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
@@ -282,6 +283,7 @@
     <ClInclude Include="TitleCamera.h" />
     <ClInclude Include="TitleText.h" />
     <ClInclude Include="Toy.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

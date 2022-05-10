@@ -1,4 +1,5 @@
 #pragma once
+#include "sound/SoundSource.h"
 class GameCamera;
 class BrokenDoor : public IGameObject
 {
@@ -103,6 +104,14 @@ private:
 	/// ドアを壊せるか
 	/// </summary>
 	bool CanBreakDoor();
+	/// <summary>
+	/// 破壊音の生成
+	/// </summary>
+	void MakeSound();
+	/// <summary>
+	/// 影響率を調べる
+	/// </summary>
+	void CheckRate();
 
 	/////変数/////
 	enum EnAnimationClip {					//アニメーション。
@@ -117,9 +126,11 @@ private:
 	ModelRender					m_modelRender;							//モデル
 	Quaternion					m_rotation;								//回転
 	PhysicsStaticObject			m_physicsStaticObject;					//フィジクススタティックオブジェクト。	
-	Vector3						m_position = Vector3::Zero;								//座標
+	Vector3						m_position = Vector3::Zero;				//座標
 	EnBreakDoorState			m_doorState = enDoorState_Before;		//ステート
 	GameCamera*					m_gamecam = nullptr;					//ゲームカメラ
 	bool						m_haveHammer = false;					//ハンマーを持っているか
+	SoundSource*				m_sound;								//ドアを壊す音
+	float						m_rateByTime;
 };
 

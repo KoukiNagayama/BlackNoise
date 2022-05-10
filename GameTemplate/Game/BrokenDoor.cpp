@@ -1,10 +1,15 @@
 #include "stdafx.h"
 #include "BrokenDoor.h"
 #include "GameCamera.h"
+#include "sound/SoundEngine.h"
 
-namespace
-{
-	const float DISTANCE = 70.0f;		//ドアとの距離
+namespace {
+	const float DISTANCE = 70.0f;					//ドアとの距離
+	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
+	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
+	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
+	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
+	const float SOUND_RANGE = 900.0f;				//影響する範囲
 }
 
 bool BrokenDoor::Start()
@@ -32,6 +37,10 @@ bool BrokenDoor::Start()
 	m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 	//ゲームカメラ
 	m_gamecam = FindGO<GameCamera>("gamecamera");
+	//破壊音の読み込み
+	g_soundEngine->ResistWaveFileBank(9, "Assets/sound/door/door_break.wav");
+	//輪郭線描写の初期化
+	g_infoForEdge.InitForSound(9, m_position, SOUND_RANGE, 0, m_rateByTime);
 
 	return true;
 }
@@ -44,10 +53,45 @@ void BrokenDoor::Update()
 	PlayAnimation();
 	//ドアから近いか
 	NearDoor();
+	//影響率
+	CheckRate();
 	//モデル更新
 	m_modelRender.Update();
 }
 
+void BrokenDoor::MakeSound()
+{
+	m_sound = NewGO<SoundSource>(9);
+	m_sound->Init(9);
+	m_sound->SetVolume(1.0f);
+	m_sound->Play(false);
+}
+
+void BrokenDoor::CheckRate()
+{
+	int check1;
+	if (m_sound != nullptr) {
+		if (m_sound->IsPlaying() == true)
+		{
+			check1 = 1;
+			if (m_rateByTime < RATE_BY_TIME_MAX_VALUE) {
+				m_rateByTime += EDGE_FADE_IN_DELTA_VALUE;
+			}
+		}
+		else {
+			check1 = 0;
+			if (m_rateByTime > RATE_BY_TIME_MIN_VALUE && check1 == 0) {
+				m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
+				if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
+					m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+				}
+			}
+		}
+		/*g_infoForEdge.SetIsSound(9, check1);
+		g_infoForEdge.SetRate(9, m_rateByTime);*/
+		g_infoForEdge.SetInfoForSound(9, m_position, SOUND_RANGE, check1, m_rateByTime);
+	}
+}
 bool BrokenDoor::NearDoor()
 {
 	Vector3 disToPlayer = m_position - m_gamecam->GetYaxisZeroPosition();
@@ -143,9 +187,11 @@ void BrokenDoor::BeforeState()
 		m_modelRender.Init("Assets/modelData/stage/brokendoor_low.tkm", m_animationClips, enAnimationClip_Num);
 
 		//音を出す
+		MakeSound();
 		
 		//ステートをクローズ状態にする
 		m_doorState = enDoorState_CloseIdle;
+		
 		ReleasePhysicsObject();
 	}
 }

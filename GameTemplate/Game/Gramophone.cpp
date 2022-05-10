@@ -17,7 +17,7 @@ namespace
 }
 Gramophone::~Gramophone()
 {
-	for (int i = 2; i <= 4; i++)
+	for (int i = 1; i <= 3; i++)
 	{
 		g_infoForEdge.SetIsSound(i, 0);
 		g_infoForEdge.SetRate(i, 0.00f);
@@ -26,7 +26,6 @@ Gramophone::~Gramophone()
 	DeleteGO(m_soundSource2);
 	DeleteGO(m_soundSource3);
 
-	//g_infoForEdge.SetIsSound(4, 0);
 }
 bool Gramophone::Start()
 {
@@ -44,11 +43,11 @@ bool Gramophone::Start()
 void Gramophone::Init(int num)
 {
 	if (num == 1) {
-		// èâä˙Ç©ÇÁââëtíÜ
+		// èâä˙ÇÕë“ã@èÛë‘
 		m_gramophoneState = enGramophoneState_Idle;
 		m_modelRender.Init("Assets/modelData/item/record_off.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);;
 		// ÉTÉEÉìÉhÇìoò^
-		g_soundEngine->ResistWaveFileBank(2, "Assets/sound/record/record5.wav");
+		g_soundEngine->ResistWaveFileBank(2, "Assets/sound/record/record3.wav");
 		g_infoForEdge.InitForSound(2, m_position, RANGE, 0, m_rateByTime);
 	}
 
@@ -57,16 +56,17 @@ void Gramophone::Init(int num)
 		m_gramophoneState = enGramophoneState_Idle;
 		m_modelRender.Init("Assets/modelData/item/record_off.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);;
 		// ÉTÉEÉìÉhÇìoò^
-		g_soundEngine->ResistWaveFileBank(3, "Assets/sound/record/record6.wav");
+		g_soundEngine->ResistWaveFileBank(3, "Assets/sound/record/record4.wav");
 		g_infoForEdge.InitForSound(3, m_position, RANGE, 0, m_rateByTime);
 	}
 	
 	else if (num == 3) {
+		// èâä˙Ç©ÇÁââëtíÜ
 		m_gramophoneState = enGramophoneState_Play;
 		m_modelRender.Init("Assets/modelData/item/record_on.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);;
 		// ÉTÉEÉìÉhÇìoò^
-		g_soundEngine->ResistWaveFileBank(4, "Assets/sound/record/record7.wav");
-		g_infoForEdge.InitForSound(4, m_position, RANGE, 0, m_rateByTime);
+		g_soundEngine->ResistWaveFileBank(1, "Assets/sound/record/record7.wav");
+		g_infoForEdge.InitForSound(1, m_position, RANGE, 0, m_rateByTime);
 	}
 
 	// ÉÇÉfÉãÇÃç¿ïWÅAâÒì]ÅAägëÂÇê›íË
@@ -164,10 +164,10 @@ void Gramophone::MakeSound()
 		g_infoForEdge.SetIsSound(3, 1);
 	}
 	else if (m_number == 3) {
-		m_soundSource3 = NewGO<SoundSource>(4);
-		m_soundSource3->Init(4);
+		m_soundSource3 = NewGO<SoundSource>(1);
+		m_soundSource3->Init(1);
 		m_soundSource3->Play(true);
-		g_infoForEdge.SetIsSound(4, 1);
+		g_infoForEdge.SetIsSound(1, 1);
 	}
 
 }
@@ -281,8 +281,8 @@ void Gramophone::ChangeRate(int num)
 					}
 				}
 			}
-			g_infoForEdge.SetIsSound(4, check);
-			g_infoForEdge.SetRate(4, m_rateByTime);
+			g_infoForEdge.SetIsSound(1, check);
+			g_infoForEdge.SetRate(1, m_rateByTime);
 		}
 	}
 }
