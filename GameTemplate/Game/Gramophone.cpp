@@ -45,7 +45,7 @@ void Gramophone::Init(int num)
 	if (num == 1) {
 		// ‰Šú‚Í‘Ò‹@ó‘Ô
 		m_gramophoneState = enGramophoneState_Idle;
-		m_modelRender.Init("Assets/modelData/item/record_off.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);;
+		m_modelRender.Init("Assets/modelData/item/record_off.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);
 		// ƒTƒEƒ“ƒh‚ð“o˜^
 		g_soundEngine->ResistWaveFileBank(2, "Assets/sound/record/record3.wav");
 		g_infoForEdge.InitForSound(2, m_position, RANGE, 0, m_rateByTime);

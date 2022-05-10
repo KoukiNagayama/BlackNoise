@@ -11,7 +11,7 @@ namespace
 bool Crowbar::Start()
 {
 	//モデルの読み込み
-	m_modelRender.Init("Assets/modelData/item/crowbar.tkm");
+	m_modelRender.Init("Assets/modelData/item/crowbar.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);
 	//座標の設定
 	m_modelRender.SetTRS(m_position, m_rotation, m_scale);
 	//モデルの更新

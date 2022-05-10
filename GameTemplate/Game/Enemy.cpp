@@ -51,7 +51,7 @@ void Enemy::InitEnemy()
 
 	m_naviMesh.Init("Assets/modelData/enemy/stage2_mesh.tkn");
 
-	m_enemyRender.Init("Assets/modelData/enemy/enemy.tkm", m_animationClips, enAnimation_Num, true);
+	m_enemyRender.Init("Assets/modelData/enemy/enemy.tkm", m_animationClips, enAnimation_Num, true,enModelUpAxisZ, false, 0, 2);
 	m_enemyRender.SetScale(Vector3::One * 5.0f);
 
 	m_position = m_pathList[0].position;
