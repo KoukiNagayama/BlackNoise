@@ -6,7 +6,7 @@
 namespace {
 	const float DISTANCE = 70.0f;					//ドアとの距離
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
-	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
+	const float EDGE_FADE_OUT_DELTA_VALUE = 0.005f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
 	const float SOUND_RANGE = 900.0f;				//影響する範囲
@@ -40,7 +40,7 @@ bool BrokenDoor::Start()
 	//破壊音の読み込み
 	g_soundEngine->ResistWaveFileBank(9, "Assets/sound/door/door_break.wav");
 	//輪郭線描写の初期化
-	g_infoForEdge.InitForSound(9, m_position, SOUND_RANGE, 0, m_rateByTime);
+	g_infoForEdge.InitForSound(5, m_position, SOUND_RANGE, 0, m_rateByTime);
 
 	return true;
 }
@@ -87,9 +87,7 @@ void BrokenDoor::CheckRate()
 				}
 			}
 		}
-		/*g_infoForEdge.SetIsSound(9, check1);
-		g_infoForEdge.SetRate(9, m_rateByTime);*/
-		g_infoForEdge.SetInfoForSound(9, m_position, SOUND_RANGE, check1, m_rateByTime);
+		g_infoForEdge.SetInfoForSound(5, m_position, SOUND_RANGE, check1, m_rateByTime);
 	}
 }
 bool BrokenDoor::NearDoor()

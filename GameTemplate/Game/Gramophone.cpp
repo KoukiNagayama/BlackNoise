@@ -66,7 +66,7 @@ void Gramophone::Init(int num)
 		m_modelRender.Init("Assets/modelData/item/record_on.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);;
 		// サウンドを登録
 		g_soundEngine->ResistWaveFileBank(1, "Assets/sound/record/record7.wav");
-		g_infoForEdge.InitForSound(1, m_position, RANGE, 0, m_rateByTime);
+		g_infoForEdge.InitForSound(4, m_position, RANGE, 0, m_rateByTime);
 	}
 
 	// モデルの座標、回転、拡大を設定
@@ -167,7 +167,7 @@ void Gramophone::MakeSound()
 		m_soundSource3 = NewGO<SoundSource>(1);
 		m_soundSource3->Init(1);
 		m_soundSource3->Play(true);
-		g_infoForEdge.SetIsSound(1, 1);
+		g_infoForEdge.SetIsSound(4, 1);
 	}
 
 }
@@ -281,8 +281,8 @@ void Gramophone::ChangeRate(int num)
 					}
 				}
 			}
-			g_infoForEdge.SetIsSound(1, check);
-			g_infoForEdge.SetRate(1, m_rateByTime);
+			g_infoForEdge.SetIsSound(4, check);
+			g_infoForEdge.SetRate(4, m_rateByTime);
 		}
 	}
 }
