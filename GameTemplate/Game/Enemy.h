@@ -17,8 +17,8 @@ public:
 		enMove,	   //”­Œ©
 		enCaution, //Œx‰ú
 		enReturn,   //‹AŠÒ
-		enAttack,
-		enScream
+		enAttack,	//UŒ‚
+		enScream	//™ôšK
 	};
 
 private:

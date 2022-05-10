@@ -66,10 +66,10 @@ void Enemy::InitEnemy()
 
 void Enemy::SetSound()
 {
-	g_soundEngine->ResistWaveFileBank(4, "Assets/music_sample/enemy/SE/Heart_Beat/heart_beat_caution.wav");
-	g_soundEngine->ResistWaveFileBank(5, "Assets/music_sample/enemy/SE/Heart_Beat/heart_beat_warning.wav");
-	g_soundEngine->ResistWaveFileBank(6, "Assets/music_sample/enemy/SE/Heart_Beat/heart_beat_danger.wav");
-	g_soundEngine->ResistWaveFileBank(7, "Assets/music_sample/enemy/SE/Scream/scream.wav");
+	g_soundEngine->ResistWaveFileBank(4, "Assets/sound/enemy/heart_beat/heart_beat_caution.wav");
+	g_soundEngine->ResistWaveFileBank(5, "Assets/sound/enemy/heart_beat/Heart_Beat/heart_beat_warning.wav");
+	g_soundEngine->ResistWaveFileBank(6, "Assets/sound/enemy/heart_beat/Heart_Beat/heart_beat_danger.wav");
+	g_soundEngine->ResistWaveFileBank(7, "Assets/sound/enemy/scream/scream.wav");
 }
 
 void Enemy::SetAnimationClips()
