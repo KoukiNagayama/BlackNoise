@@ -156,11 +156,13 @@ private:
 	/// <param name="rc">レンダーコンテキスト</param>
 	void Render(RenderContext& rc);
 	/// <summary>
-	/// アニメーションイベント
+	/// 影響率を調べる
 	/// </summary>
-	/// <param name="clipName">アニメーションの名前</param>
-	/// <param name="eventName">アニメーションキーの名前</param>
-	void OnAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
+	void CheckRate();
+	/// <summary>
+	/// 音を鳴らす
+	/// </summary>
+	void MakeSound();
 
 
 	/////////////////////////////////////
@@ -177,9 +179,9 @@ private:
 	Vector3 m_target;								//ターゲット。
 	CharacterController m_charaCon;					//キャラクターコントローラー。
 	Quaternion m_rotation;							//回転。
-	SoundSource* m_walkSound;
+	SoundSource* m_sound;
 	ModelRender m_modelRender;
 	Vector3 m_up;
-	float rate = 0.0f;
+	float m_rateByTime;
 	float beforeRate;
 };

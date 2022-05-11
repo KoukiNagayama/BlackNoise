@@ -12,8 +12,14 @@ namespace
 	const float MOVESPEED = 1300.0f;		//歩きの移動速度
 	const float MOVE_RUN = 1.22f;			//走り時にいくら乗算するか
 	const float MOVE_SNEAK = 0.3f;			//しゃがみ時にいくら乗算するか
-	const float TARGET_UNDER = -0.99f;		//カメラの下限
+	const float TARGET_UNDER = -0.7f;		//カメラの下限
 	const float TARGET_OVER = 0.35f;		//カメラの上限
+	const float EDGE_FADE_IN_DELTA_VALUE = 0.05f;	// エッジがフェードインするときの変位量
+	const float EDGE_FADE_OUT_DELTA_VALUE = 0.05f;	// エッジがフェードアウトするときの変位量
+	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
+	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
+	const float SOUND_RANGE = 180.0f;				//影響範囲
+	const float VOLUME = 0.7f;						//ボリューム
 }
 
 GameCamera::GameCamera()
@@ -42,13 +48,15 @@ bool GameCamera::Start()
 	m_charaCon.Init(50.0f, 170.0f, m_position);
 
 	//サウンドを登録。
-	g_soundEngine->ResistWaveFileBank(3, "Assets/sound/human/walk.wav");
+	g_soundEngine->ResistWaveFileBank(11, "Assets/sound/human/walk.wav");
 	//サウンドをNewGO
-	m_walkSound = NewGO<SoundSource>(3);
+	m_sound = NewGO<SoundSource>(11);
+	m_sound->Init(11);
+	m_sound->SetVolume(VOLUME);
 
 	beforeRate = 0.00f;
-	g_infoForEdge.SetRate(5, rate);
-	g_infoForEdge.InitForSound(5, m_position, 200.0f, 0, rate);
+	//g_infoForEdge.SetRate(6, m_rateByTime);
+	g_infoForEdge.InitForSound(6, m_position, 200.0f, 0, m_rateByTime);
 
 	return true;
 }
@@ -60,6 +68,8 @@ void GameCamera::Update()
 	ViewPoint();
 	//ステート遷移処理
 	ManageState();
+	//影響率を調べる
+	CheckRate();
 
 	Vector3 position;
 	position = m_position;
@@ -213,11 +223,13 @@ void GameCamera::ManageState()
 
 void GameCamera::IdleState()
 {
+	m_sound->Pause();
 	TransitionState();
 }
 
 void GameCamera::WalkState()
 {
+	m_sound->Play(true);
 	TransitionState();
 }
 
@@ -268,6 +280,30 @@ void GameCamera::TransitionState()
 		}
 		//待機状態にする。
 		m_moveState = enMoveState_Idle;
+	}
+}
+
+void GameCamera::CheckRate()
+{
+	int check1;
+	if (m_sound != nullptr) {
+		if (m_moveState == enMoveState_Walk)
+		{
+			check1 = 1;
+			if (m_rateByTime < RATE_BY_TIME_MAX_VALUE) {
+				m_rateByTime += EDGE_FADE_IN_DELTA_VALUE;
+			}
+		}
+		else {
+			check1 = 0;
+			if (m_rateByTime > RATE_BY_TIME_MIN_VALUE && check1 == 0) {
+				m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
+				if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
+					m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+				}
+			}
+		}
+		g_infoForEdge.SetInfoForSound(6, GetYaxisZeroPosition(), SOUND_RANGE, check1, m_rateByTime);
 	}
 }
 
