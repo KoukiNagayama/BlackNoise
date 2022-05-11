@@ -47,8 +47,9 @@ void Item::Identification()
 	case enRecord2:
 		m_itemList[ArrayFreeSpace] = enRecord2;
 		break;
-	case enHammer:
-		m_itemList[ArrayFreeSpace] = enHammer;
+	case enCrowbar:
+		m_itemList[ArrayFreeSpace] = enCrowbar;
+		break;
 	default:
 		break;
 	}

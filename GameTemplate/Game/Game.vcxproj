@@ -226,8 +226,10 @@
   <ItemGroup>
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="BrokenDoor.cpp" />
+    <ClCompile Include="Crowbar.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="FloorGimmick.cpp" />
     <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GroundFloor.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -252,12 +254,15 @@
     <ClCompile Include="TitleCamera.cpp" />
     <ClCompile Include="TitleText.cpp" />
     <ClCompile Include="Toy.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="BrokenDoor.h" />
+    <ClInclude Include="Crowbar.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="FloorGimmick.h" />
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GroundFloor.h" />
     <ClInclude Include="Game.h" />
@@ -278,6 +283,7 @@
     <ClInclude Include="TitleCamera.h" />
     <ClInclude Include="TitleText.h" />
     <ClInclude Include="Toy.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

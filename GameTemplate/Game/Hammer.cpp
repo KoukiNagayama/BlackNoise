@@ -11,7 +11,7 @@ namespace
 bool Hammer::Start()
 {
 	//モデルの読み込み
-	m_modelRender.Init("Assets/modelData/item/hammer.tkm");
+	m_modelRender.Init("Assets/modelData/item/hammer.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);
 	//座標の設定
 	m_modelRender.SetPosition(m_position);
 	//モデルの更新

@@ -7,7 +7,7 @@ public:
 		enNoItem,				// アイテム未所持
 		enRecord1,				// レコード1
 		enRecord2,				// レコード2
-		enHammer				// ハンマー
+		enCrowbar				// バール
 	};
 
 	Item() {};
@@ -31,9 +31,9 @@ public:
 	/// <summary>
 	/// 保留アイテム枠にハンマーを設定
 	/// </summary>
-	void SetHammerToPendingItem()
+	void SetCrowbarToPendingItem()
 	{
-		m_pendingItem = enHammer;
+		m_pendingItem = enCrowbar;
 	}
 
 	/// <summary>
@@ -54,13 +54,40 @@ public:
 			}
 		}
 	}
-
+	/// <summary>
+	/// レコードを使ったか
+	/// </summary>
+	/// <param name="recordNum">レコードの番号</param>
 	void IsUseRecord(const int recordNum)
 	{
 		for (int i = 0; i < 5; i++) {
 			if (m_itemList[i] == recordNum) {
 				m_itemList[i] = 0;
 			}
+		}
+	}
+
+	/// <summary>
+	/// バールを持っているか
+	/// </summary>
+	/// <returns>持っているとき->true</returns>
+	const bool GetHaveCrowbar() const
+	{
+		for (int i = 0; i < 5; i++) {
+			if (m_itemList[i] == enCrowbar) {
+				return true;
+			}
+		}
+	}
+	/// <summary>
+	/// アイテムを使い終わった
+	/// </summary>
+	/// <returns></returns>
+	void ItemReset() 
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			m_itemList[i] = 0;
 		}
 	}
 private:

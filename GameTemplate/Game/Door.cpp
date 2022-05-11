@@ -42,7 +42,7 @@ bool Door::Start()
 	//モデルの更新。
 	m_modelRender.Update();
 	//当たり判定を作成する。
-	m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
+	//m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 
 	m_gamecam = FindGO<GameCamera>("gamecamera");
 
@@ -142,7 +142,7 @@ void Door::OpenState()
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		//当たり判定を開放する。
-		ReleasePhysicsObject();
+		//ReleasePhysicsObject();
 		//オープン終わりステートに遷移する。
 		m_doorState = enDoorState_OpenIdle;
 	}
@@ -158,7 +158,7 @@ void Door::CloseState()
 	if (m_modelRender.IsPlayingAnimation() == false)
 	{
 		//当たり判定を作成する。
-		CreatePhysicsObject();
+		//CreatePhysicsObject();
 		//クローズ終わりステートに遷移する。
 		m_doorState = enDoorState_CloseIdle;
 	}

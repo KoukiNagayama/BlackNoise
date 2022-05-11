@@ -1,18 +1,97 @@
 #include "stdafx.h"
 #include "Enemy.h"
 #include "Player.h"
+#include <sound/SoundEngine.h>
 
 namespace
 {
 	const float MOVESPEED = 1.4f * 210.0f; //歩行速度
 	const float RUNSPEED = 1.4f;			//走行速度
-	const float	SEARCHAREA = 1.3f * 1000.0f; //索敵範囲
+	const float	SEARCHAREA = 1.3f * 2000.0f; //索敵範囲
 }
+
+struct SweepResultWall : public btCollisionWorld::ConvexResultCallback
+{
+	bool isHit = false;
+
+	virtual btScalar addSingleResult(
+		btCollisionWorld::LocalConvexResult& convexResult,
+		bool normalInWorldSpace)
+	{
+		if (convexResult.m_hitCollisionObject->getUserIndex() != enCollisionAttr_Wall)
+		{
+			return 0.0f;
+		}
+
+		isHit = true;
+		return 0.0f;
+	}
+};
 
 bool Enemy::Start()
 {
 	m_player = FindGO<Player>("player");
 
+	SetPathLevel();
+
+	SetSound();
+
+	SetAnimationClips();
+
+	InitEnemy();
+
+	SetRoute();
+
+	return true;
+}
+
+void Enemy::InitEnemy()
+{
+	m_sphereCollider.Create(1.0f);
+
+	m_naviMesh.Init("Assets/modelData/enemy/stage2_mesh.tkn");
+
+	m_enemyRender.Init("Assets/modelData/enemy/enemy.tkm", m_animationClips, enAnimation_Num, true,enModelUpAxisZ, false, 0, 2);
+	m_enemyRender.SetScale(Vector3::One * 5.0f);
+
+	m_position = m_pathList[0].position;
+
+	m_pathPoint = m_pathList[1];
+
+	m_goalPosition = m_pathPoint.position;
+	m_enemyRender.SetPosition(m_position);
+
+	m_characterController.Init(10.0f, 45.0f, m_position);
+}
+
+void Enemy::SetSound()
+{
+	g_soundEngine->ResistWaveFileBank(4, "Assets/sound/enemy/heart_beat/heart_beat_caution.wav");
+	g_soundEngine->ResistWaveFileBank(5, "Assets/sound/enemy/heart_beat/Heart_Beat/heart_beat_warning.wav");
+	g_soundEngine->ResistWaveFileBank(6, "Assets/sound/enemy/heart_beat/Heart_Beat/heart_beat_danger.wav");
+	g_soundEngine->ResistWaveFileBank(7, "Assets/sound/enemy/scream/scream.wav");
+}
+
+void Enemy::SetAnimationClips()
+{
+	m_animationClips[enAnimation_Normal].Load("Assets/animData/enemy/walk.tka");
+	m_animationClips[enAnimation_Normal].SetLoopFlag(true);
+
+	m_animationClips[enAnimation_Move].Load("Assets/animData/enemy/run.tka");
+	m_animationClips[enAnimation_Move].SetLoopFlag(true);
+
+	m_animationClips[enAnimation_Caution].Load("Assets/animData/enemy/lookaround.tka");
+	m_animationClips[enAnimation_Caution].SetLoopFlag(true);
+
+	m_animationClips[enAnimation_Attack].Load("Assets/animData/enemy/attack.tka");
+	m_animationClips[enAnimation_Attack].SetLoopFlag(false);
+
+	m_animationClips[enAnimation_Scream].Load("Assets/animData/enemy/lookaround.tka");
+	m_animationClips[enAnimation_Scream].SetLoopFlag(false);
+}
+
+void Enemy::SetPathLevel()
+{
 	m_pathRender.Init("Assets/modelData/enemy/EnemyPass001.tkl", [&](LevelObjectData& objData)
 		{
 			if (objData.ForwardMatchName(L"Pass") == true)
@@ -53,49 +132,56 @@ bool Enemy::Start()
 				return true;
 			}
 		});
-
-	m_animationClips[enAnimation_Normal].Load("Assets/animData/walk.tka");
-	m_animationClips[enAnimation_Normal].SetLoopFlag(true);
-
-	m_animationClips[enAnimation_Move].Load("Assets/animData/run.tka");
-	m_animationClips[enAnimation_Move].SetLoopFlag(true);
-
-	m_animationClips[enAnimation_Caution].Load("Assets/animData/idle.tka");
-	m_animationClips[enAnimation_Caution].SetLoopFlag(true);
-
-	m_naviMesh.Init("Assets/modelData/enemy/stage2_mesh.tkn");
-
-	m_enemyRender.Init("Assets/modelData/unityChan.tkm", m_animationClips, enAnimation_Num, true, enModelUpAxisY);
-
-	m_position = m_pathList[0].position;
-
-	m_pathPoint = m_pathList[1];
-	m_goalPosition = m_pathPoint.position;
-	m_enemyRender.SetPosition(m_position);
-
-	m_characterController.Init(10.0f, 45.0f, m_position);
-
-	SetRoute();
-
-	return true;
 }
 
 void Enemy::Rotation()
 {
 	if (fabsf(m_moveSpeed.x) < 0.1f && fabsf(m_moveSpeed.z) < 0.1f)
 	{
+		/*
+		if (m_state == enCaution)
+		{
+			if (angle > 90.0f || angle < -90.0f)
+			{
+				if (angle > 90.0f)
+				{
+					angle = 90.0f;
+				}
+				else if (angle < -90.0f)
+				{
+					angle = -90.0f;
+				}
+
+				change *= -1.0f;
+			}
+
+			angle += change;// *g_gameTime->GetFrameDeltaTime();
+
+			m_rotation.AddRotationDegY(change);
+			m_enemyRender.SetRotation(m_rotation);
+		}
+		*/
 		return;
 	}
 
 	float angle = atan2(-m_moveSpeed.x, m_moveSpeed.z);
+	if (m_state == enAttack)
+	{
+		angle = atan2(-m_toPlayer.x, m_toPlayer.z);
+	}
 
 	m_rotation.SetRotationY(-angle);
-
 	m_enemyRender.SetRotation(m_rotation);
+	m_rotation.Apply(m_forward);
+
 }
 
 void Enemy::Move()
 {
+	m_toPlayer = m_player->GetPosition();
+	m_toPlayer -= m_position;
+	m_toPlayer.y = 0.0f;
+
 	//ステートによってどう移動するかを決定する
 	SelectMove();
 
@@ -109,10 +195,39 @@ void Enemy::Move()
 	{
 		m_moveSpeed *= RUNSPEED;
 	}
-
+	else if (m_state == enNormal)
+	{
+		ChangeSpeed();
+	}
 	m_position = m_characterController.Execute(m_moveSpeed, 1.0f / 60.0f);
 
 	m_enemyRender.SetPosition(m_position);
+}
+
+void Enemy::ChangeSpeed()
+{
+	float lower = 0.3f;
+
+	if (m_toGoal.Length() < 100.0f)
+	{
+		m_disSpeed -= 0.05f;
+
+		if (m_disSpeed < lower)
+		{
+			m_disSpeed = lower;
+		}
+	}
+	else
+	{
+		m_disSpeed += 0.05f;
+
+		if (m_disSpeed > 1.0f)
+		{
+			m_disSpeed = 1.0f;
+		}
+	}
+
+	m_moveSpeed *= m_disSpeed;
 }
 
 void Enemy::SelectMove()
@@ -124,6 +239,11 @@ void Enemy::SelectMove()
 		break;
 
 	case enMove:	   //発見状態
+		if (m_lostTimer > 0.0f)
+		{
+			SetRoute();
+		}
+
 		MoveByRoute(); //音の発生地点へ経路探索
 		break;
 
@@ -133,6 +253,14 @@ void Enemy::SelectMove()
 
 	case enReturn:
 		MoveByRoute();
+		break;
+
+	case enAttack:
+		m_moveSpeed = Vector3::Zero;
+		break;
+
+	case enScream:
+		m_moveSpeed = Vector3::Zero;
 		break;
 	}
 }
@@ -152,8 +280,16 @@ void Enemy::MoveByRoute()
 		m_toGoal = m_goalPosition - m_position;
 		m_toGoal.y = 0.0f;
 	}
+
+	ChangePath();
+
+	//m_isEnd = true;
+}
+
+void Enemy::ChangePath()
+{
 	//目標に到着
-	if (m_toGoal.Length() < 10.0f)
+	if (m_toGoal.Length() < 1.0f)
 	{
 		if (m_pathPoint.no != m_maxPath)
 		{
@@ -166,33 +302,87 @@ void Enemy::MoveByRoute()
 
 		m_goalPosition = m_pathPoint.position;
 
-		m_isEnd = true;
 		SetRoute();
-	}
 
+		m_isEnd = false;
+	}
 }
 
 bool Enemy::SearchSound()
 {
-	m_targetPosition = m_player->GetPosition();
-
-	//エネミーからプレイヤー方向へのベクトル
-	Vector3 toPlayer = m_targetPosition - m_position;
-	toPlayer.y = 0.0f;
-
-	//プレイヤーが索敵範囲内
-	if (toPlayer.Length() < SEARCHAREA)
+	if (press == true)
 	{
-		//音を出す
-		if (g_pad[0]->IsTrigger(enButtonB))
+		if (m_state != enScream)
 		{
-			//目標地点へのパスを設定
-			m_goalPosition = m_targetPosition;
-			SetRoute();
+			press = false;
+		}
+		/*	time += g_gameTime->GetFrameDeltaTime();
 
-			//プレイヤーを発見
+			if (time > 3.0f)
+			{
+				time = 0.0f;
+
+				press = false;
+			}*/
+	}
+
+	InitSound(m_player->GetPosition(), press);
+
+	//音を出す
+	if (g_pad[0]->IsTrigger(enButtonB))
+	{
+		//プレイヤーが索敵範囲内
+		if (m_toPlayer.Length() < SEARCHAREA)
+		{
+			if (press == false)
+			{
+				//m_goalPosition = m_player->GetPosition();
+
+				press = true;
+
+				UpAlertLevel();
+			}
+
 			return true;
 		}
+		else
+		{
+			press = true;
+
+			return false;
+		}
+	}
+}
+
+bool Enemy::SearchPlayer()
+{
+	player = m_toPlayer;
+	player.Normalize();
+
+	//m_forward.Normalize();
+
+	toPlayerAngle = Dot(player, m_forward);
+
+	//toPlayerAngle = player.x * m_forward.x;
+	//toPlayerAngle += player.y * m_forward.y;
+	//toPlayerAngle += player.z * m_forward.z;
+
+	////目標地点へのパスを設定
+	//m_goalPosition = m_toPlayer + m_position;
+	//SetRoute();
+
+	if (fabsf(acosf(toPlayerAngle)) <= m_searchAngle)
+	{
+		return true;
+
+		/*	if (FindPlayer() == true)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}*/
 	}
 	else
 	{
@@ -200,25 +390,141 @@ bool Enemy::SearchSound()
 	}
 }
 
+bool Enemy::FindPlayer()
+{
+	Vector3 player = m_player->GetPosition();
+
+	btTransform start, end;
+	start.setIdentity();
+	end.setIdentity();
+
+	const float vertical = 70.0f;
+
+	start.setOrigin(btVector3(m_position.x, m_position.y + vertical, m_position.z));
+	end.setOrigin(btVector3(player.x, player.y + vertical, player.z));
+
+	SweepResultWall callback;
+
+	PhysicsWorld::GetInstance()->ConvexSweepTest((const btConvexShape*)m_sphereCollider.GetBody(), start, end, callback);
+
+	if (callback.isHit == true)
+	{
+		return false;//見つけていない
+	}
+	else
+	{
+		return true;//見つけた
+	}
+}
+void Enemy::InitSound(Vector3 target, bool button)
+{
+	const float alertRange = 1.5f;
+	Vector3 toTarget = target - m_position;
+
+	if (target.Length() < SEARCHAREA * alertRange)
+	{
+		if (m_alert == false)
+		{
+			if (button == true)
+			{
+				m_heartSE = NewGO<SoundSource>(0, "heart");
+				m_heartSE->Init(m_alertLevel + 3);
+				m_heartSE->SetVolume(1.0f);
+				m_heartSE->Play(true);
+
+				m_alert = true;
+			}
+		}
+		else
+		{
+			if (button == true)
+			{
+				DeleteGO(m_heartSE);
+
+				m_heartSE = NewGO<SoundSource>(0, "heart");
+				m_heartSE->Init(m_alertLevel + 3);
+				m_heartSE->Play(true);
+			}
+		}
+		/*
+		else
+		{
+			if (button == true)
+			{
+				DeleteGO(m_heartSE);
+				m_alert = false;
+			}
+		}
+		*/
+	}
+	else
+	{
+		if (m_alert == true)
+		{
+			DeleteGO(m_heartSE);
+			m_alert = false;
+		}
+	}
+}
+
 void Enemy::ManageState()
 {
-	//プレイヤーを発見
-	if (SearchSound() == true)
+	if (m_state == enAttack)
 	{
-		m_isEnd = false;
+		if (m_enemyRender.IsPlayingAnimation() == true)
+		{
+			return;
+		}
+	}
 
-		//発見状態に移行
-		StateToMove();
+	if (m_alertLevel == enAlert_Danger)
+	{
+		if (m_toPlayer.Length() <= SEARCHAREA)
+		{
+			StateToMove();
+		}
+	}
 
-		return;
+	SwitchState();
+}
+
+void Enemy::SwitchState()
+{
+	if (m_state != enMove)
+	{
+		m_searchAngle = (Math::PI / 180.0f) * 30.0f;
 	}
 
 	switch (m_state)
 	{
+	case enNormal:
+		if (m_alertLevel > enAlert_Safe)
+		{
+			DownAlertLevel();
+		}
+
+		if (SearchSound() == true)
+		{
+			if (m_alertLevel < enAlert_Danger)
+			{
+				StateToScream();
+			}
+		}
+
+		break;
+
 		//発見状態
 	case enMove:
-		//警戒状態に移行
+
+		m_searchAngle = (Math::PI / 180.0f) * 30.0f;
+
+		if (m_toPlayer.Length() <= m_attackRange)
+		{
+			StateToAttack();
+		}
+
 		StateToCaution();
+
 		break;
 
 		//警戒状態
@@ -232,18 +538,30 @@ void Enemy::ManageState()
 		//徘徊状態
 		StateToNormal();
 		break;
-	}
 
-	//警戒状態でない
-	if (m_state != enCaution)
-	{
-		//探索時間をリセット
-		m_lostTimer = 5.0f;
+	case enAttack:
+		StateToCaution();
+		break;
+
+	case enScream:
+		StateToNormal();
+		break;
 	}
 }
 
 void Enemy::StateToNormal()
 {
+	if (m_state == enScream)
+	{
+		if (m_screamSE->IsPlaying() == false)
+		{
+			//SetRoute();
+			DeleteGO(m_screamSE);
+
+			m_state = enNormal;
+		}
+	}
+
 	//目標地点に到着
 	if (m_isEnd == true)
 	{
@@ -258,54 +576,103 @@ void Enemy::SetNearestPath()
 	//現在位置から最短のパスの位置
 	m_nearestPath = m_pathList[0];
 
-	//最短のパスまでの距離
-	float	min = (m_nearestPath.position - m_position).Length();
-
-	for (int i = 1; i < m_maxPath; i++)
-	{
-		PathPoint path = m_pathList[i];
-		float	length = (path.position - m_position).Length();
-
-		//現時点で最短のパスより近いパスがあれば
-		if (min > length)
-		{
-			//最短のパスの位置と距離を更新
-			min = length;
-			m_nearestPath = path;
-		}
-	}
+	SearchNearestPath();
 
 	//最終的に最短のパスを目標に設定
 	m_pathPoint = m_nearestPath;
 	m_goalPosition = m_nearestPath.position;
 }
 
+void Enemy::SearchNearestPath()
+{
+	Vector3 toPath = m_nearestPath.position - m_position;
+	//最短のパスまでの距離
+	float	min = toPath.Length();
+	toPath.Normalize();
+	float nearDot = Dot(m_forward, toPath);
+
+	for (int i = 1; i < m_maxPath; i++)
+	{
+		PathPoint path = m_pathList[i];
+		toPath = m_pathList[i].position - m_position;
+		float	length = toPath.Length();
+
+		//現時点で最短のパスより近いパスがあれば
+		if (min > length)
+		{
+			float dot = Dot(toPath, m_forward);
+
+			if (fabsf(acosf(dot)) > fabsf(acosf(nearDot)))
+			{
+				//最短のパスの位置と距離を更新
+				min = length;
+				m_nearestPath = path;
+				nearDot = dot;
+			}
+		}
+	}
+}
+
 void Enemy::StateToMove()
 {
 	//発見状態に移行
+	m_isEnd = false;
+
 	m_state = enMove;
 }
 
 void Enemy::StateToCaution()
 {
-	//目標地点に到着
-	if (m_isEnd == true)
+	if (m_state == enAttack)
 	{
-		//警戒状態に移行
-		m_state = enCaution;
-		m_isEnd = false;
+		if (m_enemyRender.IsPlayingAnimation() == false)
+		{
+			m_state = enCaution;
+
+			return;
+		}
 	}
+
+	if (m_toPlayer.Length() > SEARCHAREA * 0.5f)
+	{
+		if (SearchPlayer() == false)
+		{
+			m_lostTimer -= 1.0f * g_gameTime->GetFrameDeltaTime();
+
+			if (m_lostTimer < 0.0f)
+			{
+				if (m_isEnd == true)
+				{
+					m_isEnd = false;
+
+					m_lostTimer = m_defaultLostTimer;
+
+					m_state = enCaution;
+				}
+			}
+		}
+	}
+
+	//目標地点に到着
+	//if (m_isEnd == true)
+	//{
+	//	//警戒状態に移行
+	//	m_isEnd = false;
+	//	m_state = enCaution;
+	//}
 }
 
 void Enemy::StateToReturn()
 {
 	//帰還状態に移行するまでのカウントダウン
-	m_lostTimer -= 0.5f * g_gameTime->GetFrameDeltaTime();
+	m_lostTimer -= 2.0f * g_gameTime->GetFrameDeltaTime();
 
 	//警戒状態のまま一定時間が経過
 	if (m_lostTimer <= 0.0f)
 	{
-		m_lostTimer = 0.0f;
+		m_lostTimer = m_defaultLostTimer;
+
+		DownAlertLevel();
 		//最寄りのパスを検索
 		SetNearestPath();
 		//最寄りのパスまでの経路を設定
@@ -316,9 +683,50 @@ void Enemy::StateToReturn()
 	}
 }
 
+void Enemy::StateToAttack()
+{
+
+	if (SearchPlayer() == true)
+	{
+		m_state = enAttack;
+	}
+
+	/*const float attackRange = 300.0f;
+
+	if (m_alertLevel == enAlert_Danger)
+	{
+		if (SearchPlayer() == true)
+		{
+			if (m_toPlayer.Length() <= attackRange)
+			{
+				m_state = enAttack;
+			}
+		}
+	}*/
+
+}
+
+void Enemy::StateToScream()
+{
+	m_screamSE = NewGO<SoundSource>(0, "scream");
+	m_screamSE->Init(7);
+	m_screamSE->SetVolume(0.5f);
+	m_screamSE->Play(false);
+
+	m_state = enScream;
+}
+
 //経路探索の経路を設定
 void Enemy::SetRoute()
 {
+	if (m_state == enMove)
+	{
+		if (m_lostTimer > 0.0f)//m_toPlayer.Length() > m_attackRange||m_lostTimer>0.0f)
+		{
+			m_goalPosition = m_player->GetPosition();
+		}
+	}
+
 	m_pathFinding.Execute
 	(
 		m_path,
@@ -350,6 +758,62 @@ void Enemy::PlayAnimation()
 	case enReturn:
 		m_enemyRender.PlayAnimation(enAnimation_Normal);
 		break;
+
+	case enAttack:
+		m_enemyRender.PlayAnimation(enAnimation_Attack);
+		break;
+
+	case enScream:
+		m_enemyRender.PlayAnimation(enAnimation_Scream);
+		break;
+	}
+}
+
+void Enemy::UpAlertLevel()
+{
+	//if (m_alertLevel < enAlert_Danger)
+	//{
+	//	m_alertLevel++;
+	//}
+
+	if (SearchPlayer() == true)
+	{
+		m_alertLevel = enAlert_Danger;
+	}
+	else
+	{
+		if (m_alertLevel < enAlert_Danger)
+		{
+			m_alertLevel++;
+		}
+	}
+}
+
+void Enemy::DownAlertLevel()
+{
+	if (m_state != enNormal)
+	{
+		if (m_state != enScream)
+		{
+			if (m_alertLevel > enAlert_Safe)
+			{
+				m_alertLevel--;
+			}
+		}
+	}
+	else
+	{
+		if (m_alertLevel > enAlert_Safe)
+		{
+			m_lostTimer -= 1.0f * g_gameTime->GetFrameDeltaTime();
+
+			if (m_lostTimer < 0.0f)
+			{
+				m_lostTimer = m_defaultLostTimer;
+
+				m_alertLevel--;
+			}
+		}
 	}
 }
 
@@ -361,9 +825,16 @@ void Enemy::Update()
 	PlayAnimation();
 
 	m_enemyRender.Update();
+
+	wchar_t wcsbuf[256];
+	swprintf_s(wcsbuf, 256, L"alert:%d", m_alertLevel);
+	m_level.SetText(wcsbuf);
+	m_level.SetPosition({ 500.0f,300.0f,0.0f });
 }
 
 void Enemy::Render(RenderContext& rc)
 {
 	m_enemyRender.Draw(rc);
+
+	m_level.Draw(rc);
 }

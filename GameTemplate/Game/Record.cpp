@@ -5,7 +5,7 @@
 
 namespace
 {
-	const float DISTANCE = 75.0f;		// プレイヤーがレコードを取得する距離
+	const float DISTANCE = 160.0f;		// プレイヤーがレコードを取得する距離
 }
 bool Record::Start()
 {
@@ -15,12 +15,14 @@ bool Record::Start()
 
 	m_item = FindGO<Item>("item");
 
-	if (m_number == 1) {
-		m_position = Vector3(300.0f, 100.0f, 0.0f);
-	}
-	else if (m_number == 2) {
-		m_position = Vector3(0.0f, 50.0f, 0.0f);
-	}
+	//if (m_number == 1) {
+	//	m_position = Vector3(300.0f, 100.0f, 0.0f);
+	//}
+	//else if (m_number == 2) {
+	//	m_position = Vector3(0.0f, 50.0f, 0.0f);
+	//}
+
+
 
 	m_modelRender.SetTRS(m_position, m_rotation, m_scale);
 	

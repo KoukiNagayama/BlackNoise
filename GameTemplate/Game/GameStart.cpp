@@ -15,6 +15,8 @@
 #include "BrokenDoor.h"
 #include "Hammer.h"
 #include "GroundFloor.h"
+#include "Crowbar.h"
+#include "FloorGimmick.h"
 
 namespace
 {
@@ -46,6 +48,7 @@ GameStart::~GameStart()
 	{
 		DeleteGO(record);
 	}
+	DeleteGO(m_floorgimmick);
 }
 
 bool GameStart::Start()
@@ -99,7 +102,7 @@ bool GameStart::Start()
 		if (objData.ForwardMatchName(L"record") == true)
 		{
 			auto record = NewGO<Record>(0, "record");
-			//record->SetPosition(objData.position);
+			record->SetPosition(objData.position);
 			record->SetScale(objData.scale);
 			record->SetRotation(objData.rotation);
 			record->SetNumber(objData.number);
@@ -117,9 +120,9 @@ bool GameStart::Start()
 		}
 		if (objData.ForwardMatchName(L"brokendoor") == true)
 		{
-			/*m_brokendoor = NewGO<BrokenDoor>(0, "brokendoor");
+			m_brokendoor = NewGO<BrokenDoor>(0, "brokendoor");
 			m_brokendoor->SetPosition(objData.position);
-			m_brokendoor->SetRotation(objData.rotation);*/
+			m_brokendoor->SetRotation(objData.rotation);
 			return true;
 		}
 		if (objData.ForwardMatchName(L"hammer") == true)
@@ -139,10 +142,27 @@ bool GameStart::Start()
 			m_switchPos = objData.position;
 			return true;
 		}
+		if (objData.ForwardMatchName(L"gimmick") == true)
+		{
+			m_floorgimmick = NewGO<FloorGimmick>(0, "floorgimmick");
+			m_floorgimmick->SetPosition(objData.position);
+			m_floorgimmick->SetScale(objData.scale);
+			m_floorgimmick->SetRotation(objData.rotation);
+
+			return true;
+		}
+		if (objData.ForwardMatchName(L"crowbar") == true)
+		{
+			m_crowbar = NewGO<Crowbar>(0, "crowbar");
+			m_crowbar->SetPosition(objData.position);
+			m_crowbar->SetScale(objData.scale);
+			m_crowbar->SetRotation(objData.rotation);
+
+			return true;
+		}
 
 		return false;
 	});
-	//m_door = NewGO<Door>(0, "door");
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
 	m_enemy = NewGO<Enemy>(0, "enemy");

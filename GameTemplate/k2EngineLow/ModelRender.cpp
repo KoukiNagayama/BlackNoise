@@ -192,6 +192,9 @@ namespace nsK2EngineLow {
 		if (outlineType == 1) {	
 			modelInitData.m_fxFilePath = "Assets/shader/edgeFRorange.fx";
 		}
+		else if (outlineType == 2) {
+			modelInitData.m_fxFilePath = "Assets/shader/edgeFRred.fx";
+		}
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		// 各種マップを拡張SRVに設定する。
 		modelInitData.m_expandShaderResoruceView[0] = &g_creatingMaps.GetDepthValueMap().GetRenderTargetTexture();
