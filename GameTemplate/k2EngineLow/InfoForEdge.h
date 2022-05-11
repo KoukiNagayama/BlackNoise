@@ -106,6 +106,10 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void Update();
 		/// <summary>
+		/// 音源データの登録情報を全てクリアする
+		/// </summary>
+		void Clear();
+		/// <summary>
 		///	音源データ用定数バッファ構造体を取得
 		/// </summary>
 		/// <returns>音源データ用定数バッファ構造体</returns>

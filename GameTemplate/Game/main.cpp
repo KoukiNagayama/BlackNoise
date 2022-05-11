@@ -36,9 +36,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	g_creatingMaps.Init();
 
-	auto game = NewGO<GameStart>(0,"gamestart");
+	//auto game = NewGO<GameStart>(0,"gamestart");
 
-	//auto title = NewGO<Title>(0, "title");
+	auto title = NewGO<Title>(0, "title");
 
 	// レンダリングコンテキスト
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
@@ -46,7 +46,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_mainRenderTarget.Init();
 
 	// ブルームを初期化
-	g_bloom.InitBloom(g_mainRenderTarget.GetMainRenderTarget());
+	//g_bloom.InitBloom(g_mainRenderTarget.GetMainRenderTarget());
 
 
 	// ここからゲームループ。
@@ -82,7 +82,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_k2EngineLow->ExecuteRender();
 
 		// ブルームの描画
-		g_bloom.Render(renderContext, g_mainRenderTarget.GetMainRenderTarget());
+		//g_bloom.Render(renderContext, g_mainRenderTarget.GetMainRenderTarget());
 
 		// メインレンダリングターゲットをフレームバッフコピー
 		g_mainRenderTarget.CopyMainRenderTargetToFrameBuffer(renderContext);

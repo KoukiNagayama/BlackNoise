@@ -145,7 +145,7 @@ bool GameStart::Start()
 	//m_door = NewGO<Door>(0, "door");
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
-	//m_enemy = NewGO<Enemy>(0, "enemy");
+	m_enemy = NewGO<Enemy>(0, "enemy");
 	m_item = NewGO<Item>(0, "item");
 	
 	return true;

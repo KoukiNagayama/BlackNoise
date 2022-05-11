@@ -35,6 +35,18 @@ namespace nsK2EngineLow {
 		}
 		m_cbSoundSource.s_colorRatio = m_colorRatio;
 	}
+
+	void InfoForEdge::Clear()
+	{
+		for (int i = 0; i < m_cbSoundSource.s_numSoundSource; i++) {
+			m_cbSoundSource.s_soundSourceData[i].s_position = Vector3::Zero;
+			m_cbSoundSource.s_soundSourceData[i].s_range = 0.0f;
+			m_cbSoundSource.s_soundSourceData[i].s_isSound = 0;
+			m_cbSoundSource.s_soundSourceData[i].s_rate = 0.0f;
+			m_cbSoundSource.s_soundSourceData[i].s_color = 0.0f;
+		}
+		m_cbSoundSource.s_numSoundSource = 0;
+	}
 	CBSoundSource g_cbSoundSource;
 	InfoForEdge	 g_infoForEdge;
 }
