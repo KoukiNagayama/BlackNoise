@@ -132,5 +132,6 @@ private:
 	bool						m_haveHammer = false;					//ハンマーを持っているか
 	SoundSource*				m_sound;								//ドアを壊す音
 	float						m_rateByTime;
+	float						m_deg;									//現在の角度
 };
 

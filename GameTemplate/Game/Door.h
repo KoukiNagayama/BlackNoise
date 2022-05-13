@@ -1,6 +1,7 @@
 #pragma once
-
+#include "sound/SoundSource.h"
 class GameCamera;
+class Enemy;
 
 class Door : public IGameObject
 {
@@ -61,6 +62,11 @@ private:
 	/// <returns>プレイヤーが近ければtrue</returns>
 	bool NearPlayer();
 	/// <summary>
+	/// エネミーがドアが開けられる位置にいるか
+	/// </summary>
+	/// <returns>Enemyが近ければtrue</returns>
+	bool NearEnemy();
+	/// <summary>
 	/// アニメーションを再生する。
 	/// </summary>
 	void PlayAnimation();
@@ -93,6 +99,16 @@ private:
 	/// </summary>
 	void CloseIdleState();
 private:
+	/// <summary>
+	/// 音の生成
+	/// </summary>
+	/// <param name="number">0->開、1->閉</param>
+	void MakeSound(int number);
+	/// <summary>
+	/// 影響率を調べる
+	/// </summary>
+	void CheckRate();
+
 	ModelRender					m_modelRender;							//モデルレンダ―。
 	Vector3						m_position = Vector3::Zero;								//座標。
 	Quaternion					m_rotation;								//回転。
@@ -108,7 +124,11 @@ private:
 	PhysicsStaticObject			m_physicsStaticObject;					//フィジクススタティックオブジェクト。	
 	EnDoorState					m_doorState = enDoorState_CloseIdle;	//ドアステート。
 	int							m_doorNumber = 0;						//ドアの番号。
-	GameCamera*					 m_gamecam = nullptr;					//ゲームカメラ。
-	float test;
+	GameCamera*					m_gamecam = nullptr;					//ゲームカメラ。
+	float						m_deg;									//ドアの角度
+	SoundSource*				m_sound;								//開きサウンド
+	float						m_rateByTime;
+	Enemy*						m_enemy = nullptr;						//エネミー
+	bool m_close = true;
 };
 
