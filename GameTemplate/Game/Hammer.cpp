@@ -33,8 +33,10 @@ void Hammer::Update()
 	//E‚¦‚é”ÍˆÍ‚¾‚Á‚½‚ç
 	if (m_disToPlayer.Length() <= DISTANCE)
 	{
-		m_b_door->PickHammer();
-		DeleteGO(this);
+		if (g_pad[0]->IsTrigger(enButtonA)) {
+			m_b_door->PickHammer();
+			DeleteGO(this);
+		}
 	}
 	m_modelRender.Update();
 }
