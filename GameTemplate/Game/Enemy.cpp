@@ -834,7 +834,7 @@ void Enemy::Update()
 
 void Enemy::Render(RenderContext& rc)
 {
-	m_enemyRender.Draw(rc);
+	//m_enemyRender.Draw(rc);
 
 	m_level.Draw(rc);
 }

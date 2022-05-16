@@ -3,7 +3,7 @@
 #include "TitleCamera.h"
 #include "TitleText.h"
 #include "BackGround.h"
-#include "Gramophone.h"
+#include "TitleGramophone.h"
 
 Title::~Title()
 {
@@ -39,20 +39,26 @@ bool Title::Start()
 			m_backGround->SetPosition(objData.position);
 			return true;
 		}
-		if (objData.EqualObjectName(L"gramophone") == true) {
-			m_gramophone = NewGO<Gramophone>(0, "gramophone");
-			m_gramophone->SetPosition(objData.position);
-			m_gramophone->SetRotation(objData.rotation);
+		if (objData.EqualObjectName(L"gramophone@3") == true) {
+			m_tGramophone = NewGO<TitleGramophone>(0, "titleGramophone");
+			m_tGramophone->SetPosition(objData.position);
+			m_tGramophone->SetRotation(objData.rotation);
 			return true;
 		}
 	});
+
+	
 
 	return true;
 }
 
 void Title::Update()
 {
-	
+	if (m_titleState == enTitleState_Idle) {
+		if (g_pad[0]->IsTrigger(enButtonA)) {
+			m_titleState = enTitleState_Play;
+		}
+	}
 }
 
 void Title::Render(RenderContext& rc)

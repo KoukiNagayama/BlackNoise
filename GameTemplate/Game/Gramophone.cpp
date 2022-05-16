@@ -289,7 +289,7 @@ void Gramophone::ChangeRate(int num)
 
 void Gramophone::Render(RenderContext& rc)
 {
-	m_modelRender.Draw(rc);
+	//m_modelRender.Draw(rc);
 	//m_font.Draw(rc);
 }
 

@@ -65,6 +65,8 @@ namespace nsK2EngineLow {
 		m_camera.SetFar(10000.0f);
 		// 近平面
 		m_camera.SetNear(5.0f);
+		// ライトビュープロジェクション行列の計算
+		m_camera.Update();
 	}
 
 	void CreatingMaps::Update()

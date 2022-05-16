@@ -41,13 +41,14 @@ namespace nsK2EngineLow {
 			// シャドウマップ描画用モデルの初期化
 			InitModelOnShadowMap(filePath);
 		}*/
-		if (outlineType == 0) {
+		m_outlineType = outlineType;
+		if (m_outlineType == 0) {
 			// モデルの初期化
 			//InitModel(filePath, enModelUpAxis, isShadowReceiver);
 			InitModelWithContours(filePath, enModelUpAxis);
 		}
-		else if (outlineType != 0) {
-			InitForwardRenderingModel(filePath, outlineType, enModelUpAxis);
+		else if (m_outlineType != 0) {
+			InitForwardRenderingModel(filePath, m_outlineType, enModelUpAxis);
 		}
 		// 深度値マップ描画用モデルの初期化
 		InitModelOnDepthValueMap(filePath);
@@ -165,6 +166,17 @@ namespace nsK2EngineLow {
 		// シェーダーファイルのファイルパスを指定する。
 		//modelInitData.m_fxFilePath = "Assets/shader/edgeExtraction.fx";
 		 modelInitData.m_fxFilePath = "Assets/shader/edge.fx";
+		 // エントリーポイントを指定する。
+		 if (m_animationClips != nullptr) {
+			 //スケルトンを指定する。
+			 modelInitData.m_skeleton = &m_skeleton;
+			 //スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
+			 modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+		 }
+		 else {
+			 //ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+			 modelInitData.m_vsEntryPointFunc = "VSMain";
+		 }
 		// カラーバッファのフォーマットを指定する。
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		// 各種マップを拡張SRVに設定する。
@@ -194,6 +206,20 @@ namespace nsK2EngineLow {
 		}
 		else if (outlineType == 2) {
 			modelInitData.m_fxFilePath = "Assets/shader/edgeFRred.fx";
+		}
+		else if (outlineType == 3) {
+			modelInitData.m_fxFilePath = "Assets/shader/edgeTitleText.fx";
+		}
+		// エントリーポイントを指定する。
+		if (m_animationClips != nullptr) {
+			//スケルトンを指定する。
+			modelInitData.m_skeleton = &m_skeleton;
+			//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
+			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+		}
+		else {
+			//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+			modelInitData.m_vsEntryPointFunc = "VSMain";
 		}
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		// 各種マップを拡張SRVに設定する。
@@ -233,6 +259,17 @@ namespace nsK2EngineLow {
 		modelInitData.m_modelUpAxis = enModelUpAxis;
 		// シェーダーファイルのファイルパスを指定する
 		modelInitData.m_fxFilePath = "Assets/shader/depthValueMap.fx";
+		// エントリーポイントを指定する。
+		if (m_animationClips != nullptr) {
+			//スケルトンを指定する。
+			modelInitData.m_skeleton = &m_skeleton;
+			//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
+			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+		}
+		else {
+			//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+			modelInitData.m_vsEntryPointFunc = "VSMain";
+		}
 		// tkmファイルのファイルパスを指定する
 		modelInitData.m_tkmFilePath = filePath;
 		// 初期化データをもとにモデルを初期化
@@ -267,9 +304,8 @@ namespace nsK2EngineLow {
 		if (m_skeleton.IsInited()) {
 			// スケルトンを更新
 			m_skeleton.Update(m_model.GetWorldMatrix());
+			m_skeleton.Update(m_depthValueMapModel.GetWorldMatrix());
 		}
-		// アニメーションを進める
-		m_animation.Progress(g_gameTime->GetFrameDeltaTime());
 
 		// 通常レンダリング用モデルのワールド行列を更新
 		m_model.UpdateWorldMatrix(
@@ -297,8 +333,13 @@ namespace nsK2EngineLow {
 			g_shadow.SetShadowModel(&m_shadowMapModel);
 		}
 
+		// アニメーションを進める
+		m_animation.Progress(g_gameTime->GetFrameDeltaTime());
+
 		g_creatingMaps.SetModel(&m_depthValueMapModel);
-		g_forwardRendering.SetModel(&m_model);
+		if (m_outlineType != 0) {
+			g_forwardRendering.SetModel(&m_model);
+		}
 	}
 
 	void ModelRender::Draw(RenderContext& rc)
