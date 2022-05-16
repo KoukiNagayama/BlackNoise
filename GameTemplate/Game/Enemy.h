@@ -96,6 +96,11 @@ public:
 	void ChangePath();
 	void SearchNearestPath();
 
+	const Vector3 GetPosition()
+	{
+		return m_position;
+	}
+
 private:
 	int					   m_alertLevel = enAlert_Safe;
 	int					   m_state = enNormal;					 //ステート

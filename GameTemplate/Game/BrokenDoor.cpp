@@ -10,6 +10,7 @@ namespace {
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
 	const float SOUND_RANGE = 900.0f;				//影響する範囲
+	const float ADD_DEG = 4.0f;						//1フレームで加算する角度
 }
 
 bool BrokenDoor::Start()
@@ -140,10 +141,12 @@ void BrokenDoor::ReleasePhysicsObject()
 bool BrokenDoor::CanBreakDoor()
 {
 	//ハンマーを持っていて、ドアに近い時
-	if (m_haveHammer != false && NearDoor() != false)
+	if (m_haveHammer != false /*&& NearDoor() != false*/)
 	{
-		//壊せる
-		return true;
+		if (NearDoor() != false) {
+			//壊せる
+			return true;
+		}
 	}
 }
 
@@ -175,14 +178,14 @@ void BrokenDoor::TransitionState()
 
 void BrokenDoor::BeforeState()
 {
-	if (CanBreakDoor() == false)
+	if (CanBreakDoor() != true)
 	{
 		return;
 	}
-	if (g_pad[0]->IsTrigger(enButtonA))
+	if (g_pad[0]->IsTrigger(enButtonX))
 	{
 		//モデルを差し替える
-		m_modelRender.Init("Assets/modelData/stage/brokendoor_low.tkm", m_animationClips, enAnimationClip_Num);
+		m_modelRender.Init("Assets/modelData/stage/brokendoor.tkm", m_animationClips, enAnimationClip_Num);
 
 		//音を出す
 		MakeSound();
@@ -201,27 +204,55 @@ void BrokenDoor::CloseIdleState()
 
 void BrokenDoor::CloseState()
 {
-	//ReleasePhysicsObject();
-	//クローズアニメーションが終了したら。
-	if (m_modelRender.IsPlayingAnimation() == false)
+	ReleasePhysicsObject();
+
+	if (m_deg >= 0.0f)
 	{
-		//当たり判定を作成する。
-		//CreatePhysicsObject();
+		m_rotation.AddRotationDegY(-ADD_DEG);
+		m_modelRender.SetRotation(m_rotation);
+		m_deg -= ADD_DEG;
+	}
+	else
+	{
+		CreatePhysicsObject();
 		//クローズ終わりステートに遷移する。
 		m_doorState = enDoorState_CloseIdle;
 	}
+
+	//クローズアニメーションが終了したら。
+	//if (m_modelRender.IsPlayingAnimation() == false)
+	//{
+	//	//当たり判定を作成する。
+	//	//CreatePhysicsObject();
+	//	//クローズ終わりステートに遷移する。
+	//	m_doorState = enDoorState_CloseIdle;
+	//}
 }
 void BrokenDoor::OpenState()
 {
-	//ReleasePhysicsObject();
-	//クローズアニメーションが終了したら。
-	if (m_modelRender.IsPlayingAnimation() == false)
+	ReleasePhysicsObject();
+	//100度回転させる
+	if (m_deg <= 200.0f) 
 	{
-		//当たり判定を作成する。
-		//CreatePhysicsObject();
+		m_rotation.AddRotationDegY(ADD_DEG);
+		m_modelRender.SetRotation(m_rotation);
+		m_deg += ADD_DEG;
+	}
+	else
+	{
+		CreatePhysicsObject();
 		//クローズ終わりステートに遷移する。
 		m_doorState = enDoorState_OpenIdle;
 	}
+	
+	////クローズアニメーションが終了したら。
+	//if (m_modelRender.IsPlayingAnimation() == false)
+	//{
+	//	//当たり判定を作成する。
+	//	//CreatePhysicsObject();
+	//	//クローズ終わりステートに遷移する。
+	//	m_doorState = enDoorState_OpenIdle;
+	//}
 }
 
 void BrokenDoor::OpenIdleState()
@@ -265,6 +296,6 @@ void BrokenDoor::PlayAnimation()
 
 void BrokenDoor::Render(RenderContext& rc)
 {
-	if(m_doorState == enDoorState_Before || m_doorState != enDoorState_CloseIdle)
+	//if(m_doorState == enDoorState_Before || m_doorState != enDoorState_CloseIdle)
 	m_modelRender.Draw(rc);
 }
