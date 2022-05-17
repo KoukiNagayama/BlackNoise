@@ -37,12 +37,12 @@ bool Door::Start()
 	m_animationClips[enAnimationClip_Close].Load("Assets/animData/door/close.tka");
 	m_animationClips[enAnimationClip_Close].SetLoopFlag(false);
 	//モデルを読み込む。
-	m_modelRender.Init("Assets/modelData/stage/door.tkm", m_animationClips, enAnimationClip_Num);
+	m_modelRender.Init("Assets/modelData/stage/door.tkm");
 	//座標を設定する。
 	m_modelRender.SetPosition(m_position);
 	//大きさを設定する。
-	m_modelRender.SetScale(m_scale);
-	//回転を設定する。
+	m_modelRender.SetScale({2.4f,2.15f,2.15f});
+	//回転を設定する。1
 	m_modelRender.SetRotation(m_rotation);
 
 	//モデルの更新。
@@ -122,16 +122,16 @@ void Door::TransitionState()
 			m_doorState = enDoorState_Close;
 		}
 	}
-	else if (NearEnemy() != false)
-	{
-		//しまっているとき
-		if (m_doorState == enDoorState_CloseIdle)
-		{
-			MakeSound(0);
-			//ドアを開ける
-			m_doorState = enDoorState_Open;
-		}
-	}
+	//else if (NearEnemy() != false)
+	//{
+	//	//しまっているとき
+	//	if (m_doorState == enDoorState_CloseIdle)
+	//	{
+	//		MakeSound(0);
+	//		//ドアを開ける
+	//		m_doorState = enDoorState_Open;
+	//	}
+	//}
 }
 
 void Door::PlayAnimation()

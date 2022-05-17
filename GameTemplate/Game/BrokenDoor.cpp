@@ -4,7 +4,7 @@
 #include "sound/SoundEngine.h"
 
 namespace {
-	const float DISTANCE = 70.0f;					//ドアとの距離
+	const float DISTANCE = 150.0f;					//ドアとの距離
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.005f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
@@ -27,7 +27,7 @@ bool BrokenDoor::Start()
 	m_animationClips[enAnimationClip_Close].Load("Assets/animData/brokendoor/close.tka");
 	m_animationClips[enAnimationClip_Close].SetLoopFlag(false);
 	//モデルを読み込む。
-	m_modelRender.Init("Assets/modelData/stage/door.tkm", m_animationClips, enAnimationClip_Num);
+	m_modelRender.Init("Assets/modelData/stage/door.tkm");
 	//座標を設定する。
 	m_modelRender.SetPosition(m_position);
 	//回転を設定する。
@@ -185,7 +185,7 @@ void BrokenDoor::BeforeState()
 	if (g_pad[0]->IsTrigger(enButtonX))
 	{
 		//モデルを差し替える
-		m_modelRender.Init("Assets/modelData/stage/brokendoor.tkm", m_animationClips, enAnimationClip_Num);
+		m_modelRender.Init("Assets/modelData/stage/brokendoor.tkm");
 
 		//音を出す
 		MakeSound();
@@ -219,14 +219,6 @@ void BrokenDoor::CloseState()
 		m_doorState = enDoorState_CloseIdle;
 	}
 
-	//クローズアニメーションが終了したら。
-	//if (m_modelRender.IsPlayingAnimation() == false)
-	//{
-	//	//当たり判定を作成する。
-	//	//CreatePhysicsObject();
-	//	//クローズ終わりステートに遷移する。
-	//	m_doorState = enDoorState_CloseIdle;
-	//}
 }
 void BrokenDoor::OpenState()
 {
@@ -244,15 +236,7 @@ void BrokenDoor::OpenState()
 		//クローズ終わりステートに遷移する。
 		m_doorState = enDoorState_OpenIdle;
 	}
-	
-	////クローズアニメーションが終了したら。
-	//if (m_modelRender.IsPlayingAnimation() == false)
-	//{
-	//	//当たり判定を作成する。
-	//	//CreatePhysicsObject();
-	//	//クローズ終わりステートに遷移する。
-	//	m_doorState = enDoorState_OpenIdle;
-	//}
+
 }
 
 void BrokenDoor::OpenIdleState()

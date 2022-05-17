@@ -20,13 +20,28 @@ public:
 	/// <param name="rc">レンダーコンテキスト</param>
 	void Render(RenderContext& rc);
 	/// <summary>
-	/// Aボタンを表示・非表示にする
+	/// ボタンの表示、非表示
 	/// </summary>
-	/// <param name="isDraw">表示->1</param>
-	void SetUIRender(bool isDraw)
+	/// <param name="isDraw">0->非表示,1->表示</param>
+	/// <param name="number">0->Aボタン,1->Xボタン</param>
+	void SetButtonRender(bool isDraw,int number)
 	{
-		m_isDraw_A = isDraw;
+		switch (number)
+		{
+		case 0:
+			m_spriteRender.Init("Assets/sprite/Abutton.dds", 128, 128);
+			break;
+		case 1:
+			m_spriteRender.Init("Assets/sprite/Xbutton.dds", 128, 128);
+			break;
+		default:
+			break;
+		}
+		m_isDraw = isDraw;
 	}
+
+	//収拾音の生成
+	void MakeGetSound();
 
 private:
 	//収拾音の生成
@@ -37,6 +52,6 @@ private:
 	FontRender m_recordFont;		//レコードを拾った
 	FontRender m_hammerFont;		//ハンマーを拾った
 	FontRender m_crowbarFont;		//バールを拾った
-	bool m_isDraw_A = false;		//AボタンのUIを表示するか
+	bool m_isDraw = false;		//AボタンのUIを表示するか
 };
 

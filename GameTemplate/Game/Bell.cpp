@@ -42,7 +42,6 @@ bool Bell::Start()
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/item/bell_low.wav");
 	//モデルの初期化。
 	m_modelRender.Init("Assets/modelData/item/bell.tkm");
-	//m_modelRender.SetScale({ 0.7f,0.7f,0.7f });
 
 	//サウンドをNewGO
 	m_bellSound = NewGO<SoundSource>(0);
