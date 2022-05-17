@@ -71,36 +71,51 @@ public:
 	void SetPath(const Vector3& position, const int& no)//徘徊状態のパスを設定する
 	{
 		m_pathList.push_back({ position, no + 1 });
-	}
+	};
 	void SetPosition(const Vector3& position)
 	{
 		m_position = position;
 		m_enemyRender.SetPosition(m_position);
-	}
+	};
 	void SetRoute(); //経路探索のルートを設定
 	void SetNearestPath(); //最寄りのパスを設定
 
 	void SetEndPath(const int& end)
 	{
 		//m_endPath = end;
-	}
+	};
 	void PlayAnimation();
 	void ChangeSpeed();
 	void SetPathLevel();
 	void SetAnimationClips();
-	void InitSound(Vector3 target, bool button);
+	void HeartBeat();
 	void UpAlertLevel();
 	void DownAlertLevel();
 	bool FindPlayer();
 	void SetSound();
 	void ChangePath();
 	void SearchNearestPath();
+	void SetGoalPosition(const Vector3& goal)
+	{
+		m_goalPosition = goal;
+	}
+	const float GetToGoal()
+	{
+		float length;
 
+		m_toGoal = m_goalPosition - m_position;
+		m_toGoal.y = 0.0f;
+
+		length = m_toGoal.Length();
+
+		return length;
+	}
 	const Vector3 GetPosition()
 	{
 		return m_position;
 	}
-
+	void ChangeMoveSpeed();
+	void SetPathPoint();
 private:
 	int					   m_alertLevel = enAlert_Safe;
 	int					   m_state = enNormal;					 //ステート
@@ -139,7 +154,7 @@ private:
 	const float			   m_attackRange = 100.0f;
 	float				   m_searchAngle = (Math::PI / 180.0f) * 75.0f;
 	float				   m_screamTimer = 3.0f;
-
+	bool				   m_heart = false;
 
 	FontRender			   m_level;
 	Vector3 player;
