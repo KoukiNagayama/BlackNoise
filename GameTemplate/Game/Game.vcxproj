@@ -253,6 +253,8 @@
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleCamera.cpp" />
     <ClCompile Include="TitleGramophone.cpp" />
+    <ClCompile Include="TitlePiano.cpp" />
+    <ClCompile Include="TitleSprite.cpp" />
     <ClCompile Include="TitleText.cpp" />
     <ClCompile Include="Toy.cpp" />
     <ClCompile Include="UI.cpp" />
@@ -283,6 +285,8 @@
     <ClInclude Include="Title.h" />
     <ClInclude Include="TitleCamera.h" />
     <ClInclude Include="TitleGramophone.h" />
+    <ClInclude Include="TitlePiano.h" />
+    <ClInclude Include="TitleSprite.h" />
     <ClInclude Include="TitleText.h" />
     <ClInclude Include="Toy.h" />
     <ClInclude Include="UI.h" />

@@ -34,6 +34,12 @@ namespace nsK2EngineLow {
 
 	void SpriteRender::Draw(RenderContext& rc)
 	{
+		rc.WaitUntilToPossibleSetRenderTarget(g_mainRenderTarget.GetMainRenderTarget());
+		rc.SetRenderTarget(
+			g_mainRenderTarget.GetMainRenderTarget().GetRTVCpuDescriptorHandle(),
+			g_mainRenderTarget.GetMainRenderTarget().GetDSVCpuDescriptorHandle()
+		);
 		m_sprite.Draw(rc);
+		rc.WaitUntilFinishDrawingToRenderTarget(g_mainRenderTarget.GetMainRenderTarget());
 	}
 }

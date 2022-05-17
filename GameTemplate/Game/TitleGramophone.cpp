@@ -7,8 +7,8 @@
 
 namespace
 {
-	const float RANGE = 700.0f;					// 影響範囲
-	const float EDGE_FADE_IN_DELTA_VALUE = 0.04f;	// エッジがフェードインするときの変位量
+	const float RANGE = 700.0f;						// 影響範囲
+	const float EDGE_FADE_IN_DELTA_VALUE = 0.01f;	// エッジがフェードインするときの変位量
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
@@ -36,7 +36,7 @@ void TitleGramophone::Init()
 	m_gramophoneState = enGramophoneState_Idle;
 	m_modelRender.Init("Assets/modelData/item/record_on.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);
 	// サウンドを登録
-	g_soundEngine->ResistWaveFileBank(12, "Assets/sound/record/record5.wav");
+	g_soundEngine->ResistWaveFileBank(14, "Assets/sound/record/record5.wav");
 	g_infoForEdge.InitForSound(0, m_position, RANGE, 0, m_rateByTime);
 
 	// モデルの座標、回転、拡大を設定
@@ -78,7 +78,7 @@ void TitleGramophone::ManegeState()
 void TitleGramophone::IdleState()
 {
 	// タイトルのステートが待機中ならば
-	if (m_title->GetTitleState() == 0) {
+	if (m_title->GetTitleState() != 2) {
 		return;
 	}
 	// タイトル用蓄音機のステートを演奏中に変更する
@@ -103,7 +103,7 @@ void TitleGramophone::MakeSound()
 {
 
 	m_soundSource1 = NewGO<SoundSource>(0);
-	m_soundSource1->Init(12);
+	m_soundSource1->Init(14);
 	m_soundSource1->Play(true);
 	g_infoForEdge.SetIsSound(0, 1);
 }

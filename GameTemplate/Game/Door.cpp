@@ -48,7 +48,7 @@ bool Door::Start()
 	//モデルの更新。
 	m_modelRender.Update();
 	//当たり判定を作成する。
-	m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
+	//m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 
 	//音の読み込み
 	g_soundEngine->ResistWaveFileBank(12, "Assets/sound/door/door_open.wav");
@@ -213,13 +213,13 @@ void Door::CheckRate()
 void Door::ReleasePhysicsObject()
 {
 	//当たり判定を開放する。
-	m_physicsStaticObject.Release();
+	//m_physicsStaticObject.Release();
 }
 
 void Door::CreatePhysicsObject()
 {
 	//当たり判定を作成する。
-	m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
+	//m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 }
 
 void Door::OpenState()
