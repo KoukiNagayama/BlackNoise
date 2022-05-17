@@ -113,7 +113,7 @@ bool GameStart::Start()
 		{
 			auto door = NewGO<Door>(0, "door");
 			door->SetPosition(objData.position);
-			door->SetScale(objData.scale);
+			//door->SetScale(objData.scale);
 			door->SetRotation(objData.rotation);
 			m_door.push_back(door);
 			return true;
