@@ -16,6 +16,14 @@ public:
 	{
 		m_cameraPos = position;
 	}
+	/// <summary>
+	/// 視点を取得
+	/// </summary>
+	/// <returns>座標</returns>
+	Vector3 GetPosition() const
+	{
+		return m_cameraPos;
+	}
 private:
 	Vector3				m_cameraPos;			// 座標(視点)	
 	Vector3				m_toCameraPos;			// 注視点から視点に向かうベクトル

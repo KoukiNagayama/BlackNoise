@@ -50,7 +50,14 @@ public:
 	{
 		m_number = number;
 	}
-
+	/// <summary>
+	/// À•W‚ğæ“¾
+	/// </summary>
+	/// <returns>À•W</returns>
+	const Vector3 GetPosition()
+	{
+		return m_position;
+	}
 private:
 	/// <summary>
 	/// ‰Šú‰»

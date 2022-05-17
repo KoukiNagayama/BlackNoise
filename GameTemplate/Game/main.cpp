@@ -46,7 +46,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	g_mainRenderTarget.Init();
 
 	// ブルームを初期化
-	//g_bloom.InitBloom(g_mainRenderTarget.GetMainRenderTarget());
+	g_bloom.InitBloom(g_mainRenderTarget.GetMainRenderTarget());
 
 
 	// ここからゲームループ。
