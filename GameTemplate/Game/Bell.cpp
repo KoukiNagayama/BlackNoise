@@ -100,9 +100,11 @@ void Bell::TransitionState()
 		m_bellState = enBellState_Ring;
 		//クールタイムのセット
 		m_timer = TIMER;
+		m_isRing = true;
 		return;
 	}
 	m_bellState = enBellState_Idle;
+	m_isRing = false;
 }
 
 void Bell::ManageState()
