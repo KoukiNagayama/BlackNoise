@@ -42,14 +42,14 @@ namespace nsK2EngineLow {
 			InitModelOnShadowMap(filePath);
 		}*/
 		m_outlineType = outlineType;
-		if (m_outlineType == 0) {
+		//if (m_outlineType == 0) {
 			// モデルの初期化
 			//InitModel(filePath, enModelUpAxis, isShadowReceiver);
 			InitModelWithContours(filePath, enModelUpAxis);
-		}
-		else if (m_outlineType != 0) {
-			InitForwardRenderingModel(filePath, m_outlineType, enModelUpAxis);
-		}
+		//}
+		//else if (m_outlineType != 0) {
+			//InitForwardRenderingModel(filePath, m_outlineType, enModelUpAxis);
+		//}
 		// 深度値マップ描画用モデルの初期化
 		InitModelOnDepthValueMap(filePath);
 
@@ -165,18 +165,29 @@ namespace nsK2EngineLow {
 		modelInitData.m_tkmFilePath = filePath;
 		// シェーダーファイルのファイルパスを指定する。
 		//modelInitData.m_fxFilePath = "Assets/shader/edgeExtraction.fx";
-		 modelInitData.m_fxFilePath = "Assets/shader/edge.fx";
-		 // エントリーポイントを指定する。
-		 if (m_animationClips != nullptr) {
-			 //スケルトンを指定する。
-			 modelInitData.m_skeleton = &m_skeleton;
-			 //スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
-			 modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
-		 }
-		 else {
-			 //ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
-			 modelInitData.m_vsEntryPointFunc = "VSMain";
-		 }
+		if (m_outlineType == 0) {
+			modelInitData.m_fxFilePath = "Assets/shader/edge.fx";
+		}
+		else if (m_outlineType == 1) {
+			modelInitData.m_fxFilePath = "Assets/shader/edgeFRorange.fx";
+		}
+		else if (m_outlineType == 2) {
+			modelInitData.m_fxFilePath = "Assets/shader/edgeFRred.fx";
+		}
+		else if (m_outlineType == 3) {
+			modelInitData.m_fxFilePath = "Assets/shader/edgeTitleText.fx";
+		}
+		// エントリーポイントを指定する。
+		if (m_animationClips != nullptr) {
+			//スケルトンを指定する。
+			modelInitData.m_skeleton = &m_skeleton;
+			//スキンメッシュ用の頂点シェーダーのエントリーポイントを指定。
+			modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";
+		}
+		else {
+			//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
+			modelInitData.m_vsEntryPointFunc = "VSMain";
+		}
 		// カラーバッファのフォーマットを指定する。
 		modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		// 各種マップを拡張SRVに設定する。
@@ -192,7 +203,7 @@ namespace nsK2EngineLow {
 		m_model.Init(modelInitData);
 	}
 
-	void ModelRender::InitForwardRenderingModel(const char* filePath,
+	/*void ModelRender::InitForwardRenderingModel(const char* filePath,
 		int outlineType,
 		EnModelUpAxis enModelUpAxis
 	)
@@ -233,7 +244,7 @@ namespace nsK2EngineLow {
 		modelInitData.m_expandConstantBufferSize = sizeof(g_infoForEdge.GetSoundSourceData());
 		// 初期化情報をもとにモデルを初期化
 		m_model.Init(modelInitData);
-	}
+	}*/
 	
 	void ModelRender::InitModelOnShadowMap(const char* filePath,
 		EnModelUpAxis enModelUpAxis

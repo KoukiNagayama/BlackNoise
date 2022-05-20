@@ -239,7 +239,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
                 }
             }
             // ƒsƒNƒZƒ‹‚ğ—ÖŠsü‚Æ‚µ‚Ä“h‚è‚Â‚Ô‚·
-            return float4(maxColor * 0.8f, maxColor * 0.8f, maxColor * 0.8f, 1.0f);
+            return float4(maxColor * 0.5f, maxColor * 0.5f, maxColor * 0.5f, 1.0f);
         }
 
     }

@@ -142,10 +142,15 @@ void Enemy::Rotation()
 		return;
 	}
 
-	float angle = atan2(-m_moveSpeed.x, m_moveSpeed.z);
+	Vector3 moveVector = m_moveSpeed;
+	moveVector.Normalize();
+
+	float angle = atan2(-moveVector.x, moveVector.z);
 	if (m_state == enAttack)
 	{
-		angle = atan2(-m_toPlayer.x, m_toPlayer.z);
+		Vector3 moveVectorToPlayer = m_toPlayer;
+		moveVectorToPlayer.Normalize();
+		angle = atan2(-moveVectorToPlayer.x, moveVectorToPlayer.z);
 	}
 
 	m_rotation.SetRotationY(-angle);
@@ -641,7 +646,7 @@ void Enemy::SetRoute()
 		m_naviMesh,
 		m_position,
 		m_goalPosition,
-		nullptr,
+		PhysicsWorld::GetInstance(),
 		30.0f,
 		45.0f
 	);
@@ -652,27 +657,27 @@ void Enemy::PlayAnimation()
 	switch (m_state)
 	{
 	case enNormal:
-		m_enemyRender.PlayAnimation(enAnimation_Normal,0.1f);
+		//m_enemyRender.PlayAnimation(enAnimation_Normal,0.1f);
 		break;
 
 	case enMove:
-		m_enemyRender.PlayAnimation(enAnimation_Move,0.1f);
+		//m_enemyRender.PlayAnimation(enAnimation_Move,0.1f);
 		break;
 
 	case enCaution:
-		m_enemyRender.PlayAnimation(enAnimation_Caution,1.0f);
+		//m_enemyRender.PlayAnimation(enAnimation_Caution,1.0f);
 		break;
 
 	case enReturn:
-		m_enemyRender.PlayAnimation(enAnimation_Normal,0.1f);
+		//m_enemyRender.PlayAnimation(enAnimation_Normal,0.1f);
 		break;
 
 	case enAttack:
-		m_enemyRender.PlayAnimation(enAnimation_Attack,0.5f);
+		//m_enemyRender.PlayAnimation(enAnimation_Attack,0.5f);
 		break;
 
 	case enScream:
-		m_enemyRender.PlayAnimation(enAnimation_Scream,1.0f);
+		//m_enemyRender.PlayAnimation(enAnimation_Scream,1.0f);
 		break;
 	}
 }

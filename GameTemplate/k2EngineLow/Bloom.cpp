@@ -79,17 +79,6 @@ namespace nsK2EngineLow {
 		finalspriteInitData.m_colorBufferFormat[0] = mainRenderTarget.GetColorBufferFormat();
 
 		m_finalSprite.Init(finalspriteInitData);
-/*
-		SpriteInitData spriteInitData;
-		//テクスチャはmainRenderTargetのカラーバッファ。
-		spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-		spriteInitData.m_width = mainRenderTarget.GetWidth();
-		spriteInitData.m_height = mainRenderTarget.GetHeight();
-		//モノクロ用のシェーダーを指定する。
-		spriteInitData.m_fxFilePath = "Assets/shader/2D.fx";
-		//初期化オブジェクトを使って、スプライトを初期化する。
-		m_copyToFrameBufferSprite.Init(spriteInitData);
-		*/
 	}
 
 	

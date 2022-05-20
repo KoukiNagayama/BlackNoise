@@ -58,6 +58,14 @@ public:
 	/// デバッグ用文字表示
 	/// </summary>
 	void Font();
+	/// <summary>
+	/// 音が鳴っているか取得
+	/// </summary>
+	/// <returns></returns>
+	bool IsRing() const
+	{
+		return m_isRing;
+	}
 
 private:
 	enum EnAnimationClip //アニメーション。

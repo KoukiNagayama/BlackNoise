@@ -17,6 +17,7 @@ class Hammer;
 class GroundFloor;
 class FloorGimmick;
 class Crowbar;
+class Enemy2;
 
 class GameStart : public IGameObject
 {
@@ -32,12 +33,14 @@ public:
 	void SwitchFirstFloor();
 private:
 	LevelRender m_levelRender;
+	LevelRender m_levelRender2;
 	Player* m_player = nullptr;
 	GameCamera* m_gamecam = nullptr;
 	BackGround* m_bg = nullptr;
 	Bell* m_bell = nullptr;
 	Toy* m_toy = nullptr;
-	Enemy* m_enemy = nullptr;
+	//Enemy* m_enemy = nullptr;
+	Enemy2* m_enemy = nullptr;
 	//Door* m_door;
 	BrokenDoor* m_brokendoor = nullptr;
 	Hammer* m_hammer = nullptr;

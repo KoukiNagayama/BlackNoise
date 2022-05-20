@@ -31,6 +31,8 @@
     <ClCompile Include="TitleGramophone.cpp" />
     <ClCompile Include="TitleSprite.cpp" />
     <ClCompile Include="TitlePiano.cpp" />
+    <ClCompile Include="Enemy2.cpp" />
+    <ClCompile Include="EnemyPath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
@@ -63,6 +65,8 @@
     <ClInclude Include="TitleGramophone.h" />
     <ClInclude Include="TitleSprite.h" />
     <ClInclude Include="TitlePiano.h" />
+    <ClInclude Include="Enemy2.h" />
+    <ClInclude Include="EnemyPath.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

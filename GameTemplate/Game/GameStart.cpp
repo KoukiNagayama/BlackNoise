@@ -17,6 +17,7 @@
 #include "GroundFloor.h"
 #include "Crowbar.h"
 #include "FloorGimmick.h"
+#include "Enemy2.h"
 
 namespace
 {
@@ -118,13 +119,13 @@ bool GameStart::Start()
 			m_door.push_back(door);
 			return true;
 		}
-		if (objData.ForwardMatchName(L"brokendoor") == true)
+		/*if (objData.ForwardMatchName(L"brokendoor") == true)
 		{
 			m_brokendoor = NewGO<BrokenDoor>(0, "brokendoor");
 			m_brokendoor->SetPosition(objData.position);
 			m_brokendoor->SetRotation(objData.rotation);
 			return true;
-		}
+		}*/
 		if (objData.ForwardMatchName(L"hammer") == true)
 		{
 			m_hammer = NewGO<Hammer>(0, "hammer");
@@ -163,9 +164,19 @@ bool GameStart::Start()
 
 		return false;
 	});
+
+	m_levelRender2.Init("Assets/level3D/stage2.tkl", [&](LevelObjectData& objData) {
+		if (objData.ForwardMatchName(L"enemy") == true)
+		{
+			m_enemy = NewGO<Enemy2>(0, "enemy");
+			m_enemy->SetPosition(objData.position);
+			m_enemy->SetNumber(objData.number);
+			return true;
+		}
+		});
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
-	m_enemy = NewGO<Enemy>(0, "enemy");
+	//m_enemy = NewGO<Enemy>(0, "enemy");
 	m_item = NewGO<Item>(0, "item");
 	
 	return true;
