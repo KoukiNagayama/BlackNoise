@@ -120,13 +120,6 @@ bool GameStart::Start()
 			m_door.push_back(door);
 			return true;
 		}
-		/*if (objData.ForwardMatchName(L"brokendoor") == true)
-		{
-			m_brokendoor = NewGO<BrokenDoor>(0, "brokendoor");
-			m_brokendoor->SetPosition(objData.position);
-			m_brokendoor->SetRotation(objData.rotation);
-			return true;
-		}*/
 		if (objData.ForwardMatchName(L"hammer") == true)
 		{
 			m_hammer = NewGO<Hammer>(0, "hammer");
@@ -161,7 +154,7 @@ bool GameStart::Start()
 		return false;
 	});
 
-	m_levelRender2.Init("Assets/level3D/stage2.tkl", [&](LevelObjectData& objData) {
+	m_levelRender2.Init("Assets/level3D/enemy_stage2.tkl", [&](LevelObjectData& objData) {
 		if (objData.ForwardMatchName(L"enemy") == true)
 		{
 			m_enemy = NewGO<Enemy2>(0, "enemy");
@@ -172,7 +165,6 @@ bool GameStart::Start()
 		});
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
-	//m_enemy = NewGO<Enemy>(0, "enemy");
 	m_item = NewGO<Item>(0, "item");
 	m_ui = NewGO<UI>(0, "ui");
 	return true;
