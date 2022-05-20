@@ -120,7 +120,7 @@ void Gramophone::IdleState()
 		if(m_recordNum == 1 || m_recordNum == 2){
 			m_item->IsUseRecord(m_recordNum);
 			m_gramophoneState = enGramophoneState_Play;
-			m_modelRender.Init("Assets/modelData/item/record_on.tkm");
+			m_modelRender.Init("Assets/modelData/item/record_on.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);
 		}
 	}
 }

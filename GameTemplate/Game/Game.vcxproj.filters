@@ -29,6 +29,8 @@
     <ClCompile Include="Toy.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="TitleGramophone.cpp" />
+    <ClCompile Include="TitleSprite.cpp" />
+    <ClCompile Include="TitlePiano.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
@@ -59,6 +61,8 @@
     <ClInclude Include="Toy.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="TitleGramophone.h" />
+    <ClInclude Include="TitleSprite.h" />
+    <ClInclude Include="TitlePiano.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
