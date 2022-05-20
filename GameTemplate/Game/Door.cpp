@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Door.h"
 #include "GameCamera.h"
-#include "Enemy.h"
+#include "Enemy2.h"
 #include "sound/SoundEngine.h"
 
 namespace
@@ -57,7 +57,7 @@ bool Door::Start()
 	g_infoForEdge.InitForSound(8, m_position, SOUND_RANGE, 0, m_rateByTime);
 
 	m_gamecam = FindGO<GameCamera>("gamecamera");
-	m_enemy = FindGO<Enemy>("enemy");
+	m_enemy = FindGO<Enemy2>("enemy");
 	return true;
 }
 

@@ -40,9 +40,7 @@ private:
 	BackGround* m_bg = nullptr;
 	Bell* m_bell = nullptr;
 	Toy* m_toy = nullptr;
-	//Enemy* m_enemy = nullptr;
 	Enemy2* m_enemy = nullptr;
-	//Door* m_door;
 	BrokenDoor* m_brokendoor = nullptr;
 	Hammer* m_hammer = nullptr;
 	std::vector<Door*>			m_door;

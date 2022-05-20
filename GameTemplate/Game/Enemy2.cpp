@@ -8,8 +8,8 @@ namespace
 {
 	const float WALK_SPEED = 6.5f;					// 歩く速さ
 	const float RUN_SPEED = 9.5f;					// 走る速さ
-	const float SEARCH_RANGE_CAUTION = 1500.0f;		// 警戒時に音が聞こえる範囲
-	const float SEARCH_RANGE_NORMAL = 800.0f;		// 通常時に音が聞こえる範囲
+	const float SEARCH_RANGE_TO_BELL = 1500.0f;		// ベルの音が聞こえる範囲
+	const float SEARCH_RANGE_TO_FOOTSTEP = 100.0f;	// 足音が聞こえる範囲
 	const float SCREAM_VOLUME = 1.0f;				// 咆哮の音量
 	const float SCREAM_RANGE = 1300.0f;				// 咆哮時に輪郭線が適用される範囲
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
@@ -98,28 +98,26 @@ void Enemy2::Update()
 void Enemy2::SearchSoundOfPlayer()
 {
 	// 索敵範囲
-	float searchRange;
+	float searchRange = 0.0f;
 
 	Vector3 playerPos = m_player->GetPosition();
 	// プレイヤーとの距離
 	Vector3 distance = m_position - playerPos;
 
-	// 通常時
-	if (m_enemyState == enEnemyState_Walk) {
-		searchRange = SEARCH_RANGE_NORMAL;
-	}
-	// 警戒時
-	else if (m_enemyState == enEnemyState_Chase) {
-		searchRange = SEARCH_RANGE_CAUTION;
+	// ベルが鳴っているならば
+	if (m_bell->IsRing()) {
+		// 索敵範囲をベル用に設定
+		searchRange = SEARCH_RANGE_TO_BELL;
 	}
 
-	// ベルがなっているならば
-	if (m_bell->IsRing()) {
-		if (distance.Length() <= searchRange) {
-			// プレイヤーを発見
-			m_isFound = true;
-		}
+	// プレイヤーとの距離が設定された索敵範囲内であれば
+	if (distance.Length() <= searchRange) {
+		// プレイヤーを発見した
+		m_isFound = true;
+		return;
 	}
+	// プレイヤーを発見できなかった
+	m_isFound = false;
 }
 
 void Enemy2::Walk()
@@ -197,11 +195,14 @@ void Enemy2::ProcessByState()
 	case enEnemyState_Scream:
 		Scream();
 		break;
-	// 注意状態
+	// 追跡状態
 	case enEnemyState_Chase:
 		Chase();
 		SearchSoundOfPlayer();
 		break;
+	case enEnemyState_Survey:
+		Survey();
+		SearchSoundOfPlayer();
 	}
 }
 
@@ -245,6 +246,7 @@ void Enemy2::OutlineByScream()
 				}
 			}
 		}
+		g_infoForEdge.SetPosition(2, m_position);
 		g_infoForEdge.SetIsSound(2, check);
 		g_infoForEdge.SetRate(2, m_screamRateByTime);
 	}
@@ -293,6 +295,11 @@ void Enemy2::Chase()
 
 }
 
+void Enemy2::Survey()
+{
+
+}
+
 void Enemy2::ProcessWalkStateTransition()
 {
 	// 敵を発見していないならば
@@ -318,7 +325,7 @@ void Enemy2::ProcessScreamStateTransition()
 void Enemy2::ProcessChaseStateTransition()
 {
 	// 敵を追跡する状態が維持されているならば
-	if (m_chaseTime > 0.0f) {
+	if (m_chaseTime > 0.0f || m_isFound == true) {
 		return;
 	}
 	// プレイヤーを攻撃可能な距離ならば
@@ -327,9 +334,14 @@ void Enemy2::ProcessChaseStateTransition()
 	}
 	// プレイヤーを見失っていたならば
 	else if (m_isFound == false) {
-		//m_enemyState = enEnemyState_Walk;
+		m_enemyState = enEnemyState_Survey;
 	}
 		
+}
+
+void Enemy2::ProcessSurveyStateTransition()
+{
+
 }
 
 void Enemy2::ProcessAttackStateTransition()
@@ -342,19 +354,19 @@ void Enemy2::PlayAnimation()
 	switch (m_enemyState) {
 	// 歩き
 	case enEnemyState_Walk:
-		m_modelRender.PlayAnimation(enAnimationClip_Walk, 0.2f);
+		m_modelRender.PlayAnimation(enAnimationClip_Walk, 0.1f);
 		break;
 	// 咆哮
 	case enEnemyState_Scream:
-		m_modelRender.PlayAnimation(enAnimationClip_Scream, 0.2f);
+		m_modelRender.PlayAnimation(enAnimationClip_Scream, 0.1f);
 		break;
 	// 追跡
 	case enEnemyState_Chase:
-		m_modelRender.PlayAnimation(enAnimationClip_Run, 0.2f);
+		m_modelRender.PlayAnimation(enAnimationClip_Run, 0.1f);
 		break;
 	// 攻撃
 	case enEnemyState_Attack:
-		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.2f);
+		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
 		break;
 	}
 }

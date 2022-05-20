@@ -60,6 +60,14 @@ public:
 	{
 		m_enemyNumber = number;
 	}
+	/// <summary>
+	/// 座標を取得
+	/// </summary>
+	/// <returns>座標</returns>
+	const Vector3 GetPosition()
+	{
+		return m_position;
+	}
 private:
 	/// <summary>
 	/// 回転
@@ -94,6 +102,10 @@ private:
 	/// </summary>
 	void Chase();
 	/// <summary>
+	/// 見回し
+	/// </summary>
+	void Survey();
+	/// <summary>
 	/// 歩き時のステート遷移
 	/// </summary>
 	void ProcessWalkStateTransition();
@@ -110,6 +122,10 @@ private:
 	/// </summary>
 	void ProcessScreamStateTransition();
 	/// <summary>
+	/// 見回し時のステート遷移
+	/// </summary>
+	void ProcessSurveyStateTransition();
+	/// <summary>
 	/// アニメーション再生
 	/// </summary>
 	void PlayAnimation();
@@ -119,6 +135,7 @@ private:
 		enEnemyState_Walk,				// 歩き	
 		enEnemyState_Scream,			// 咆哮
 		enEnemyState_Chase,				// 追跡
+		enEnemyState_Survey,			// 見回し
 		enEnemyState_Attack,			// 攻撃
 		enEnemyState_Num,				// ステートの数
 	};

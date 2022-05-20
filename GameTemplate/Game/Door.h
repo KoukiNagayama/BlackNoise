@@ -1,7 +1,7 @@
 #pragma once
 #include "sound/SoundSource.h"
 class GameCamera;
-class Enemy;
+class Enemy2;
 
 class Door : public IGameObject
 {
@@ -128,7 +128,7 @@ private:
 	float						m_deg = 0.0f;							//ドアの角度
 	SoundSource*				m_sound = nullptr;						//開きサウンド
 	float						m_rateByTime = 0.0f;
-	Enemy*						m_enemy = nullptr;						//エネミー
+	Enemy2*						m_enemy = nullptr;						//エネミー
 	bool						m_close = true;							//閉じているか
 };
 

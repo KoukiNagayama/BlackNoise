@@ -79,6 +79,14 @@ bool GameStart::Start()
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
+		// エネミー
+		if (objData.ForwardMatchName(L"enemy") == true)
+		{
+			m_enemy = NewGO<Enemy2>(0, "enemy");
+			m_enemy->SetPosition(objData.position);
+			m_enemy->SetNumber(objData.number);
+			return true;
+		}
 		//つみき
 		if (objData.EqualObjectName(L"crashtoy") == true) {
 
@@ -111,7 +119,7 @@ bool GameStart::Start()
 			m_record.push_back(record);
 			return true;
 		}
-		if(objData.ForwardMatchName(L"door") == true)
+		if (objData.ForwardMatchName(L"door") == true)
 		{
 			auto door = NewGO<Door>(0, "door");
 			door->SetPosition(objData.position);
@@ -151,10 +159,11 @@ bool GameStart::Start()
 			return true;
 		}
 
+
 		return false;
 	});
 
-	m_levelRender2.Init("Assets/level3D/enemy_stage2.tkl", [&](LevelObjectData& objData) {
+	/*m_levelRender2.Init("Assets/level3D/enemy_stage2.tkl", [&](LevelObjectData& objData) {
 		if (objData.ForwardMatchName(L"enemy") == true)
 		{
 			m_enemy = NewGO<Enemy2>(0, "enemy");
@@ -162,7 +171,7 @@ bool GameStart::Start()
 			m_enemy->SetNumber(objData.number);
 			return true;
 		}
-		});
+		});*/
 	m_player = NewGO<Player>(0, "player");
 	m_bell = NewGO<Bell>(0, "bell");
 	m_item = NewGO<Item>(0, "item");
