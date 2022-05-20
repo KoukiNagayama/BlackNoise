@@ -108,5 +108,7 @@ private:
 	int						m_number;									// オブジェクトの番号
 	Item*					m_item;
 	int						m_recordNum;
-};
+	bool					m_isPlay = false;							//再生中か否か。
+	bool					m_onRecord = false;							//レコードを乗せたか
 
+};

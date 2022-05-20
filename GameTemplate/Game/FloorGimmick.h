@@ -1,4 +1,5 @@
 #pragma once
+#include "sound/SoundSource.h"
 class Item;
 class GameCamera;
 class FloorGimmick : public IGameObject
@@ -54,6 +55,15 @@ private:
 	/// フィジックスオブジェクトの開放
 	/// </summary>
 	void ReleasePhysicsObject();
+	/// <summary>
+/// 破壊音の生成
+/// </summary>
+	void MakeSound();
+	/// <summary>
+	/// 影響率を調べる
+	/// </summary>
+	void CheckRate();
+
 	Vector3 m_position;	//座標
 	Vector3 m_scale;	//拡大率
 	Quaternion m_rotation;	//回転
@@ -64,5 +74,8 @@ private:
 
 	Item* m_item = nullptr;	//アイテムクラス
 	GameCamera* m_gamecam = nullptr;	//ゲームカメラ
+	SoundSource* m_sound = nullptr;		//破壊音
+	float m_rateByTime = 0.0f;
+
 };
 

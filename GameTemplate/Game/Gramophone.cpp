@@ -7,12 +7,13 @@
 
 namespace
 {
-	const float RANGE = 900.0f;					// 影響範囲
+	const float DISTANCE = 130.0f;					//蓄音機までの距離
+	const float RANGE = 1000.0f;						// 影響範囲
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
-	const float MAXIMUM_VOLUME = 2.00f;				// 最大音量
+	const float MAXIMUM_VOLUME = 0.2f;				// 最大音量
 	const float MINIMUM_VOLUME = 0.00f;				// 最小音量
 }
 Gramophone::~Gramophone()
@@ -114,7 +115,7 @@ void Gramophone::IdleState()
 	Vector3 diff = m_position - gameCameraPos;
 	
 	// 範囲内でAボタンを押したら
-	if (diff.Length() <= 100.0f && g_pad[0]->IsTrigger(enButtonA)) {
+	if (diff.Length() <= DISTANCE && g_pad[0]->IsTrigger(enButtonA)) {
 		m_recordNum = m_item->GetHaveRecord();
 		if(m_recordNum == 1 || m_recordNum == 2){
 			m_item->IsUseRecord(m_recordNum);
@@ -149,7 +150,7 @@ void Gramophone::MakeSound()
 		else if (m_recordNum == 2) {
 			m_soundSource1->Init(3);
 		}
-		m_soundSource1->Play(true);
+		m_soundSource1->Play(false);
 		g_infoForEdge.SetIsSound(2, 1);
 	}
 	else if(m_number == 2){
@@ -160,7 +161,7 @@ void Gramophone::MakeSound()
 		else if (m_recordNum == 2) {
 			m_soundSource2->Init(3);
 		}
-		m_soundSource2->Play(true);
+		m_soundSource2->Play(false);
 		g_infoForEdge.SetIsSound(3, 1);
 	}
 	else if (m_number == 3) {

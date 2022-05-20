@@ -78,6 +78,7 @@ public:
 				return true;
 			}
 		}
+		return false;
 	}
 	/// <summary>
 	/// アイテムを使い終わった

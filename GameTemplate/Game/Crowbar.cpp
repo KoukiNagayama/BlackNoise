@@ -2,6 +2,7 @@
 #include "Crowbar.h"
 #include "GameCamera.h"
 #include "Item.h"
+#include "UI.h"
 
 namespace
 {
@@ -21,6 +22,8 @@ bool Crowbar::Start()
 	m_item = FindGO<Item>("item");
 	//ƒQ[ƒ€ƒJƒƒ‰
 	m_gamecam = FindGO<GameCamera>("gamecamera");
+	//UI
+	m_ui = FindGO<UI>("ui");
 
 	return true;
 }
@@ -36,6 +39,7 @@ void Crowbar::Update()
 		if (g_pad[0]->IsTrigger(enButtonA))
 		{
 			m_item->SetCrowbarToPendingItem();
+			m_ui->MakeGetSound();
 			DeleteGO(this);
 		}
 	}

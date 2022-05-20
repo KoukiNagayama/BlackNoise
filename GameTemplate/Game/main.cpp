@@ -10,6 +10,7 @@
 #include "Title.h"
 #include "ForwardRendering.h"
 #include "MainRenderTarget.h"
+#include "GroundFloor.h"
 
 
 // K2EngineLowのグローバルアクセスポイント。

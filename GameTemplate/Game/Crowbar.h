@@ -1,6 +1,7 @@
 #pragma once
 class Item;
 class GameCamera;
+class UI;
 class Crowbar : public IGameObject
 {
 public:
@@ -57,5 +58,6 @@ private:
 
 	Item* m_item = nullptr;					//アイテム
 	GameCamera* m_gamecam = nullptr;		//ゲームカメラ
+	UI* m_ui = nullptr;
 };
 

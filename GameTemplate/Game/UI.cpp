@@ -16,6 +16,14 @@ void UI::Update()
 
 }
 
+void UI::MakeGetSound()
+{
+	m_se = NewGO<SoundSource>(10);
+	m_se->Init(10);
+	m_se->SetVolume(1.0f);
+	m_se->Play(false);
+}
+
 void  UI::Render(RenderContext& rc)
 {
 	if (m_isDraw != false)

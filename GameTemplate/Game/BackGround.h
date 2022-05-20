@@ -13,5 +13,5 @@ public:
 private:
 	ModelRender m_modelRender;
 	PhysicsStaticObject m_physicsStaticObject;
-	Vector3 m_position;
+	Vector3 m_position = Vector3::Zero;
 };

@@ -41,8 +41,8 @@ bool Door::Start()
 	//座標を設定する。
 	m_modelRender.SetPosition(m_position);
 	//大きさを設定する。
-	m_modelRender.SetScale({2.4f,2.15f,2.15f});
-	//回転を設定する。1
+	m_modelRender.SetScale(m_scale);
+	//回転を設定する。
 	m_modelRender.SetRotation(m_rotation);
 
 	//モデルの更新。
@@ -58,9 +58,6 @@ bool Door::Start()
 
 	m_gamecam = FindGO<GameCamera>("gamecamera");
 	m_enemy = FindGO<Enemy>("enemy");
-
-	//音を読み込む。
-	//g_soundEngine->ResistWaveFileBank(5, "Assets/sound/door_cut.wav");
 	return true;
 }
 
@@ -89,6 +86,7 @@ bool Door::NearPlayer()
 	if (disToPlayer.Length() <= DISTANCE) {
 		return true;
 	}
+	return false;
 }
 
 bool Door::NearEnemy()
@@ -100,6 +98,7 @@ bool Door::NearEnemy()
 	if (disToPlayer.Length() <= DISTANCE) {
 		return true;
 	}
+	return false;
 }
 
 void Door::TransitionState()
@@ -122,16 +121,16 @@ void Door::TransitionState()
 			m_doorState = enDoorState_Close;
 		}
 	}
-	//else if (NearEnemy() != false)
-	//{
-	//	//しまっているとき
-	//	if (m_doorState == enDoorState_CloseIdle)
-	//	{
-	//		MakeSound(0);
-	//		//ドアを開ける
-	//		m_doorState = enDoorState_Open;
-	//	}
-	//}
+	else if (NearEnemy() != false)
+	{
+		//しまっているとき
+		if (m_doorState == enDoorState_CloseIdle)
+		{
+			MakeSound(0);
+			//ドアを開ける
+			m_doorState = enDoorState_Open;
+		}
+	}
 }
 
 void Door::PlayAnimation()
@@ -248,6 +247,7 @@ void Door::OpenIdleState()
 void Door::CloseState()
 {
 	ReleasePhysicsObject();
+	//if(PlayAnimation)
 
 	if (m_deg >= 0.0f)
 	{

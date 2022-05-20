@@ -17,6 +17,7 @@
 #include "GroundFloor.h"
 #include "Crowbar.h"
 #include "FloorGimmick.h"
+#include "UI.h"
 
 namespace
 {
@@ -33,9 +34,9 @@ GameStart::~GameStart()
 	DeleteGO(m_gamecam);
 	DeleteGO(m_bell);
 	DeleteGO(m_toy);
-	//DeleteGO(m_brokendoor);
+	DeleteGO(m_brokendoor);
 	DeleteGO(m_hammer);
-	//DeleteGO(m_enemy); 
+	DeleteGO(m_enemy); 
 	for (auto door : m_door)
 	{
 		DeleteGO(door);
@@ -49,16 +50,17 @@ GameStart::~GameStart()
 		DeleteGO(record);
 	}
 	DeleteGO(m_floorgimmick);
+	DeleteGO(m_item);
+	DeleteGO(m_crowbar);
+	DeleteGO(m_ui);
 }
 
 bool GameStart::Start()
 {
 	Vector3 position = Vector3::Zero;
-	//g_infoForEdge.InitForSound(0, position, 200.0f, 0);
-	//g_infoForEdge.InitForSound(0, position, 200.0f, 1, 0.00f);
 	//各クラスを生成。
 
-	m_levelRender.Init("Assets/modelData/stage/stage2.tkl", [&](LevelObjectData& objData) {
+	m_levelRender.Init("Assets/level3D/stage2.tkl", [&](LevelObjectData& objData) {
 		//ステージ
 		if (objData.EqualObjectName(L"floor2") == true) {
 
@@ -113,12 +115,12 @@ bool GameStart::Start()
 		{
 			auto door = NewGO<Door>(0, "door");
 			door->SetPosition(objData.position);
-			//door->SetScale(objData.scale);
+			door->SetScale(objData.scale);
 			door->SetRotation(objData.rotation);
 			m_door.push_back(door);
 			return true;
 		}
-		if (objData.ForwardMatchName(L"brokendoor") == true)
+		/*if (objData.ForwardMatchName(L"brokendoor") == true)
 		{
 			m_brokendoor = NewGO<BrokenDoor>(0, "brokendoor");
 			m_brokendoor->SetPosition(objData.position);
@@ -130,13 +132,8 @@ bool GameStart::Start()
 			m_hammer = NewGO<Hammer>(0, "hammer");
 			m_hammer->SetPosition(objData.position);
 			return true;
-		}
-		if (objData.ForwardMatchName(L"hammer") == true)
-		{
-			m_hammer = NewGO<Hammer>(0, "hammer");
-			m_hammer->SetPosition(objData.position);
-			return true;
-		}
+		}*/
+
 		if (objData.ForwardMatchName(L"switchfloor") == true)
 		{
 			m_switchPos = objData.position;
@@ -167,7 +164,7 @@ bool GameStart::Start()
 	m_bell = NewGO<Bell>(0, "bell");
 	m_enemy = NewGO<Enemy>(0, "enemy");
 	m_item = NewGO<Item>(0, "item");
-	
+	m_ui = NewGO<UI>(0, "ui");
 	return true;
 }
 
