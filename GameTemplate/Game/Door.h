@@ -110,8 +110,8 @@ private:
 	void CheckRate();
 
 	ModelRender					m_modelRender;							//モデルレンダ―。
-	Vector3						m_position = Vector3::Zero;								//座標。
-	Quaternion					m_rotation;								//回転。
+	Vector3						m_position = Vector3::Zero;				//座標。
+	Quaternion					m_rotation = Quaternion::Identity;		//回転。
 	Vector3						m_scale = Vector3::One;					//大きさ。
 	enum EnAnimationClip {					//アニメーション。
 		enAnimationClip_CloseIdle,			//待機。	
@@ -125,10 +125,10 @@ private:
 	EnDoorState					m_doorState = enDoorState_CloseIdle;	//ドアステート。
 	int							m_doorNumber = 0;						//ドアの番号。
 	GameCamera*					m_gamecam = nullptr;					//ゲームカメラ。
-	float						m_deg;									//ドアの角度
-	SoundSource*				m_sound;								//開きサウンド
-	float						m_rateByTime;
+	float						m_deg = 0.0f;							//ドアの角度
+	SoundSource*				m_sound = nullptr;						//開きサウンド
+	float						m_rateByTime = 0.0f;
 	Enemy*						m_enemy = nullptr;						//エネミー
-	bool m_close = true;
+	bool						m_close = true;							//閉じているか
 };
 

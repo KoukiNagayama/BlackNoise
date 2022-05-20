@@ -10,14 +10,15 @@ namespace
 	const float POSITION = 60.0f;
 	const float TIMER = 3.0f;
 	const float VOLUME = 1.0f;
-	const float RANGE = 2000.0f;
+	const float SOUND_RANGE = 500.0f;
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
-	const float EDGE_FADE_OUT_DELTA_VALUE = 0.00f;	// エッジがフェードアウトするときの変位量
+	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
-	const float MODEL_MULTIPLIER = 35.0f;
-	const float MODEL_UP = 25.0f;
-	const float SOUND_MULTIPLIER = 15.0f;
+	const float MODEL_MULTIPLIER = 35.0f;			//カメラの前方向、右方向に乗算する値。
+	const float MODEL_UP = 25.0f;					//カメラの上方向に乗算する値
+	const float SOUND_MULTIPLIER = 15.0f;			//ベルの前方向に乗算する値
+
 }
 
 Bell::Bell()
@@ -31,10 +32,10 @@ Bell::~Bell()
 bool Bell::Start()
 {
 	//アニメーションの初期化。
-	animationClips[enAnimationClip_Idle].Load("Assets/animData/item/idle.tka");
-	animationClips[enAnimationClip_Idle].SetLoopFlag(true);
-	animationClips[enAnimationClip_Ring].Load("Assets/animData/item/ring.tka");
-	animationClips[enAnimationClip_Ring].SetLoopFlag(true);
+	//animationClips[enAnimationClip_Idle].Load("Assets/animData/item/idle.tka");
+	//animationClips[enAnimationClip_Idle].SetLoopFlag(true);
+	//animationClips[enAnimationClip_Ring].Load("Assets/animData/item/ring.tka");
+	//animationClips[enAnimationClip_Ring].SetLoopFlag(true);
 
 	m_player = FindGO<Player>("player");
 	m_gameCam = FindGO<GameCamera>("gamecamera");
@@ -46,7 +47,7 @@ bool Bell::Start()
 	//サウンドをNewGO
 	m_bellSound = NewGO<SoundSource>(0);
 
-	g_infoForEdge.InitForSound(0, m_position, RANGE, 0, rate);
+	g_infoForEdge.InitForSound(0, m_position, SOUND_RANGE, 0, m_rateByTime);
 
 	return true;
 }
@@ -61,6 +62,8 @@ void Bell::Update()
 	//PlayAnimation();
 	// デバッグ用の文字表示
 	Font();
+	//影響率
+	CheckRate();
 	//モデルの更新。
 	m_modelRender.Update();
 }
@@ -91,7 +94,11 @@ void Bell::TransitionState()
 {
 	if (g_pad[0]->IsTrigger(enButtonB))
 	{
+		//音を鳴らす
+		MakeSound();
+		//Ringステートにする
 		m_bellState = enBellState_Ring;
+		//クールタイムのセット
 		m_timer = TIMER;
 		m_isRing = true;
 		return;
@@ -118,42 +125,13 @@ void Bell::ManageState()
 
 void Bell::Ring()
 {
-	if (m_timer >= TIMER) {
-		m_bellSound->Init(0);
-		m_bellSound->SetPosition(m_position);
-		m_bellSound->SetVolume(VOLUME);
-		m_bellSound->Play(false);
-		
-	}
-	int check;
-	if (m_bellSound != nullptr) {
-		if (m_bellSound->IsPlaying() == true)
-		{
-			check = 1;
-			if (rate < RATE_BY_TIME_MAX_VALUE) {
-				rate += EDGE_FADE_IN_DELTA_VALUE;
-			}
-		}
-		else {
-			check = 0;
-			if (rate > RATE_BY_TIME_MIN_VALUE && check == 0) {
-				rate -= EDGE_FADE_OUT_DELTA_VALUE;
-				if (rate <= RATE_BY_TIME_MIN_VALUE) {
-					rate = RATE_BY_TIME_MIN_VALUE;
-					TransitionState();
-				}
-			}
-		}
-		g_infoForEdge.SetInfoForSound(0, m_soundPos, RANGE, check, rate);
-	}
-
-
-	m_timer -= g_gameTime->GetFrameDeltaTime();
 	if (m_timer <= 0.0f)
 	{
-		m_bellSound = NewGO<SoundSource>(0);
 		m_timer = 0.0f;
+		m_bellState = enBellState_Idle;
+		return;
 	}
+	m_timer -= g_gameTime->GetFrameDeltaTime();
 }
 
 void Bell::Idle()
@@ -161,21 +139,53 @@ void Bell::Idle()
 	TransitionState();
 }
 
-void Bell::PlayAnimation()
+void Bell::MakeSound()
 {
-	switch (m_bellState)
-	{
-		//待機。
-	case enBellState_Idle:
-		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.3f);
-		break;
-		//音を鳴らす。
-	case enBellState_Ring:
-		m_modelRender.PlayAnimation(enAnimationClip_Ring, 0.3f);
-	default:
-		break;
+	m_bellSound = NewGO<SoundSource>(0);
+	m_bellSound->Init(0);
+	m_bellSound->SetVolume(1.0f);
+	m_bellSound->Play(false);
+}
+
+void Bell::CheckRate()
+{
+	int check1;
+	if (m_bellSound != nullptr) {
+		if (m_bellSound->IsPlaying() == true)
+		{
+			check1 = 1;
+			if (m_rateByTime < RATE_BY_TIME_MAX_VALUE) {
+				m_rateByTime += EDGE_FADE_IN_DELTA_VALUE;
+			}
+		}
+		else {
+			check1 = 0;
+			if (m_rateByTime > RATE_BY_TIME_MIN_VALUE && check1 == 0) {
+				m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
+				if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
+					m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+				}
+			}
+		}
+		g_infoForEdge.SetInfoForSound(0, m_soundPos, SOUND_RANGE, check1, m_rateByTime);
 	}
 }
+
+//void Bell::PlayAnimation()
+//{
+//	switch (m_bellState)
+//	{
+//		//待機。
+//	case enBellState_Idle:
+//		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.3f);
+//		break;
+//		//音を鳴らす。
+//	case enBellState_Ring:
+//		m_modelRender.PlayAnimation(enAnimationClip_Ring, 0.3f);
+//	default:
+//		break;
+//	}
+//}
 
 void Bell::Font()
 {
@@ -187,7 +197,7 @@ void Bell::Font()
 	m_font.SetPosition(Vector3(-760.0f, 400.0f, 0.0f));
 	//フォントの大きさを設定。
 	m_font.SetScale(1.0f);
-	swprintf_s(wcsbuf, 256, L"rate:%.3f", rate);
+	swprintf_s(wcsbuf, 256, L"rate:%.3f", m_rateByTime);
 	//表示するテキストを設定。
 	m_font1.SetText(wcsbuf);
 	//フォントの位置を設定。

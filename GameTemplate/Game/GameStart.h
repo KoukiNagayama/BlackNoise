@@ -18,6 +18,7 @@ class GroundFloor;
 class FloorGimmick;
 class Crowbar;
 class Enemy2;
+class UI;
 
 class GameStart : public IGameObject
 {
@@ -51,6 +52,7 @@ private:
 	GroundFloor* m_groundfloor = nullptr;
 	FloorGimmick* m_floorgimmick = nullptr;
 	Crowbar* m_crowbar = nullptr;
+	UI* m_ui = nullptr;
 
 	Vector3 m_switchPos;
 };

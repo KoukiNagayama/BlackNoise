@@ -27,6 +27,7 @@ GameCamera::GameCamera()
 }
 GameCamera::~GameCamera()
 {
+	DeleteGO(m_sound);
 }
 bool GameCamera::Start()
 {

@@ -2,6 +2,7 @@
 class Gramophone;
 class GameCamera;
 class Item;
+class UI;
 
 class Record : public IGameObject
 {
@@ -48,10 +49,10 @@ private:
 	Vector3					m_scale = Vector3::Zero;			// 拡大率
 	Quaternion				m_rotation = Quaternion::Identity;	// 回転
 	ModelRender				m_modelRender;						// モデルレンダー
-	int						m_number;
+	int						m_number;							//レコードの番号
 	GameCamera*				m_gameCamera;
 	Vector3					m_gameCameraPos;
 	Item*					m_item;
-
+	UI*						m_ui;
 };
 

@@ -24,7 +24,7 @@ GroundFloor::~GroundFloor()
 bool GroundFloor::Start()
 {
 	//各クラスを生成。
-	m_levelRender.Init("Assets/modelData/stage1/stage1.tkl", [&](LevelObjectData& objData) {
+	m_levelRender.Init("Assets/level3D/stage1.tkl", [&](LevelObjectData& objData) {
 		//ステージ
 		if (objData.EqualObjectName(L"floor1") == true) {
 

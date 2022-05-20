@@ -4,7 +4,7 @@ class UI:public IGameObject
 {
 public:
 	UI() {};
-	~UI();
+	~UI() {};
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
@@ -44,8 +44,6 @@ public:
 	void MakeGetSound();
 
 private:
-	//収拾音の生成
-	void MakeSound();
 
 	SpriteRender m_spriteRender;	//Aボタンの画像
 	SoundSource* m_se;				//アイテム収拾音

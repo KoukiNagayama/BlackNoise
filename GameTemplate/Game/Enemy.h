@@ -138,7 +138,7 @@ private:
 	bool				   press = false;
 	float				   m_disSpeed = 1.0f;
 	float				   time = 0.0f;
-	Player* m_player;
+	Player* m_player = nullptr;
 	Vector3				   m_forward = Vector3::AxisZ;
 	Vector3				   m_oldPosition;
 	Vector3				   m_toGoal;
@@ -146,8 +146,8 @@ private:
 	Animation			   m_animation;
 	PathPoint			   m_nearestPath;						 //ç≈äÒÇËÇÃÉpÉX
 	LevelRender			   m_pathRender;
-	SoundSource* m_heartSE;
-	SoundSource* m_screamSE;
+	SoundSource* m_heartSE = nullptr;
+	SoundSource* m_screamSE = nullptr;
 	AnimationClip		   m_animationClips[enAnimation_Num];
 	SphereCollider		   m_sphereCollider;
 	const int			   m_maxPath = 8;
@@ -157,6 +157,6 @@ private:
 	bool				   m_heart = false;
 
 	FontRender			   m_level;
-	Vector3 player;
-	float toPlayerAngle;
+	Vector3 player = Vector3::Zero;
+	float toPlayerAngle = 0.0f;
 };
