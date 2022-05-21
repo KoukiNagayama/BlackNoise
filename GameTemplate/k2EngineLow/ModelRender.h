@@ -112,6 +112,14 @@ namespace nsK2EngineLow {
 		{
 			m_animation.AddAnimationEventListener(eventListener);
 		}
+		/// <summary>
+		/// アニメーション再生の速度を設定する。
+		/// </summary>
+		/// <param name="animationSpeed">数値の分だけ倍にする。</param>
+		void SetAnimationSpeed(const float animationSpeed)
+		{
+			m_animationSpeed = animationSpeed;
+		}
 	private:
 		/// <summary>
 		/// モデルの初期化
@@ -171,27 +179,28 @@ namespace nsK2EngineLow {
 
 
 	private:
-		Model				m_model;							// モデル
-		Skeleton			m_skeleton;							// スケルトン
-		Animation			m_animation;						// アニメーション
-		AnimationClip*		m_animationClips;					// アニメーションクリップ
-		int					m_numAnimationClips;				// アニメーションクリップの数
-		Vector3				m_position = Vector3::Zero;			// 座標
-		Vector3				m_scale = Vector3::One;				// 拡大率
-		Quaternion			m_rotation = Quaternion::Identity;	// 回転
-		std::vector<Model>  m_shadowModelArray;					// 影モデル配列
-		Model				m_shadowMapModel;					// シャドウマップ描画用モデル
-		Model				m_shadowModel;						// 影モデル
-		bool				m_isShadowCaster;					// 影をキャストするか
-		std::vector<Model>	m_modelArray;						// モデル配列
-		Model				m_depthValueMapModel;				// 深度値マップ描画用モデル
-		int					m_numInstance = 0;					// インスタンスの数。
-		int					m_maxInstance = 1;					// 最大インスタンス数。
-		int					m_fixNumInstanceOnFrame = 0;		// このフレームに描画するインスタンスの数の確定数。。
-		bool				m_isEnableInstancingDraw = false;	// インスタンシング描画が有効？
-		std::unique_ptr<Matrix[]>	m_worldMatrixArray;			// ワールド行列の配列。
-		StructuredBuffer			m_worldMatrixArraySB;		// ワールド行列の配列のストラクチャードバッファ。
-		int					m_outlineType;
+		Model						m_model;							// モデル
+		Skeleton					m_skeleton;							// スケルトン
+		Animation					m_animation;						// アニメーション
+		AnimationClip*				m_animationClips;					// アニメーションクリップ
+		int							m_numAnimationClips;				// アニメーションクリップの数
+		Vector3						m_position = Vector3::Zero;			// 座標
+		Vector3						m_scale = Vector3::One;				// 拡大率
+		Quaternion					m_rotation = Quaternion::Identity;	// 回転
+		std::vector<Model>			m_shadowModelArray;					// 影モデル配列
+		Model						m_shadowMapModel;					// シャドウマップ描画用モデル
+		Model						m_shadowModel;						// 影モデル
+		bool						m_isShadowCaster;					// 影をキャストするか
+		std::vector<Model>			m_modelArray;						// モデル配列
+		Model						m_depthValueMapModel;				// 深度値マップ描画用モデル
+		int							m_numInstance = 0;					// インスタンスの数。
+		int							m_maxInstance = 1;					// 最大インスタンス数。
+		int							m_fixNumInstanceOnFrame = 0;		// このフレームに描画するインスタンスの数の確定数。。
+		bool						m_isEnableInstancingDraw = false;	// インスタンシング描画が有効？
+		std::unique_ptr<Matrix[]>	m_worldMatrixArray;					// ワールド行列の配列。
+		StructuredBuffer			m_worldMatrixArraySB;				// ワールド行列の配列のストラクチャードバッファ。
+		int							m_outlineType;						// 輪郭線の種類
+		float						m_animationSpeed = 1.0f;			// アニメーションの速さの倍率
 	};
 }
 

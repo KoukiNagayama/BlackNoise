@@ -6,19 +6,24 @@
 
 namespace
 {
-	const float WALK_SPEED = 6.5f;					// 歩く速さ
-	const float RUN_SPEED = 9.5f;					// 走る速さ
-	const float SEARCH_RANGE_TO_BELL = 1500.0f;		// ベルの音が聞こえる範囲
-	const float SEARCH_RANGE_TO_FOOTSTEP = 100.0f;	// 足音が聞こえる範囲
-	const float SCREAM_VOLUME = 1.0f;				// 咆哮の音量
-	const float SCREAM_RANGE = 1300.0f;				// 咆哮時に輪郭線が適用される範囲
-	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
-	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
-	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
-	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
-	const float MINIMUM_CHASE_TIME = 2.0f;			// 最低限追跡する時間
-	const float ENEMY_RADIUS = 30.0f;				// エネミーの半径
-	const float ENEMY_HEIGHT = 200.0f;				// エネミーの高さ
+	const float WALK_SPEED = 6.5f;									// 歩く速さ
+	const float RUN_SPEED = 9.5f;									// 走る速さ
+	const float SEARCH_RANGE_TO_BELL = 1500.0f;						// ベルの音が聞こえる範囲
+	const float SEARCH_RANGE_TO_FOOTSTEP = 100.0f;					// 足音が聞こえる範囲
+	const float SCREAM_VOLUME = 1.0f;								// 咆哮の音量
+	const float SCREAM_RANGE = 1300.0f;								// 咆哮時に輪郭線が適用される範囲
+	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;					// エッジがフェードインするときの変位量
+	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;					// エッジがフェードアウトするときの変位量
+	const float RATE_BY_TIME_MAX_VALUE = 1.00f;						// 時間による影響率の最大値
+	const float RATE_BY_TIME_MIN_VALUE = 0.00f;						// 時間による影響率の最小値
+	const float MINIMUM_CHASE_TIME = 2.0f;							// 最低限追跡する時間
+	const float ENEMY_RADIUS = 30.0f;								// エネミーの半径
+	const float ENEMY_HEIGHT = 200.0f;								// エネミーの高さ
+	const float ATTACKING_RANGE = 120.0f;							// 攻撃可能な距離
+	const float DISTANCE_TO_TARGET_WHILE_WALKING = 10.0f;			// 歩き中の目標地点までの距離
+	const float DISTANCE_TO_TARGET_WHILE_RETURNING = 30.0f;			// 期間中の目標地点までの距離
+	const float TIME_TO_LOSE_SIGHT = 5.0f;							// プレイヤーを見失った時間
+	const float INTERPOLATION_TIME_FOR_ANIMATION = 0.5f;			// アニメーションの補間時間
 }
 
 bool Enemy2::Start()
@@ -39,7 +44,7 @@ bool Enemy2::Start()
 	m_animationClips[enAnimationClip_Survey].SetLoopFlag(true);
 	// 攻撃時のアニメーションをロード
 	m_animationClips[enAnimationClip_Attack].Load("Assets/animData/enemy/attack.tka");
-	m_animationClips[enAnimationClip_Attack].SetLoopFlag(false);
+	m_animationClips[enAnimationClip_Attack].SetLoopFlag(true);
 
 
 	// モデルの初期化
@@ -83,10 +88,10 @@ void Enemy2::Update()
 {
 	// 回転
 	Rotation();
-	// ステート管理
-	ManageState();
 	// ステートによる処理
 	ProcessByState();
+	// ステート管理
+	ManageState();
 	// アニメーション再生
 	PlayAnimation();
 
@@ -126,7 +131,7 @@ void Enemy2::Walk()
 	Vector3 distance = m_point->s_position - m_position;
 
 	// 目的地までの距離が近ければ
-	if (distance.Length() <= 10.0f) {
+	if (distance.Length() <= DISTANCE_TO_TARGET_WHILE_WALKING) {
 		// 現在最後のポイントにいるならば
 		if (m_point->s_number == m_enemyPath.GetPointListSize() - 1) {
 			// 最初のポイント情報を取得
@@ -176,9 +181,17 @@ void Enemy2::ManageState()
 	case enEnemyState_Chase:
 		ProcessChaseStateTransition();
 		break;
+	// 見回し状態
+	case enEnemyState_Survey:
+		ProcessSurveyStateTransition();
+		break;
+	// パス移動への帰還状態
+	case enEnemyState_ReturnToPath:
+		ProcessReturnToPathStateTransition();
+		break;
 	// 攻撃状態
 	case enEnemyState_Attack:
-		//ProcessAttackStateTransition();
+		ProcessAttackStateTransition();
 		break;
 	}
 }
@@ -200,9 +213,20 @@ void Enemy2::ProcessByState()
 		Chase();
 		SearchSoundOfPlayer();
 		break;
+	// 見回し状態
 	case enEnemyState_Survey:
 		Survey();
 		SearchSoundOfPlayer();
+		break;
+	// パス移動への帰還状態
+	case enEnemyState_ReturnToPath:
+		ReturnToPath();
+		SearchSoundOfPlayer();
+		break;
+	// 攻撃状態
+	case enEnemyState_Attack:
+
+		break;
 	}
 }
 
@@ -245,6 +269,10 @@ void Enemy2::OutlineByScream()
 					m_screamRateByTime = RATE_BY_TIME_MIN_VALUE;
 				}
 			}
+			else {
+				// 咆哮が終了
+				m_isEndScream = true;
+			}
 		}
 		g_infoForEdge.SetPosition(2, m_position);
 		g_infoForEdge.SetIsSound(2, check);
@@ -263,7 +291,7 @@ void Enemy2::Chase()
 
 	// 最低追跡する残り時間
 	// 追跡する残り時間を減らす
-	m_chaseTime -= 1.0 * g_gameTime->GetFrameDeltaTime();
+	m_chaseTime -= g_gameTime->GetFrameDeltaTime();
 	// 追跡する残り時間が0になったなら
 	if (m_chaseTime < 0.0f) {
 		m_chaseTime = 0.0f;
@@ -286,18 +314,63 @@ void Enemy2::Chase()
 		isEnd
 	);
 
+	// 方向
+	// 直前の座標と現在の座標を比較して移動した方向を求める
+	Vector3 momentDist = m_position - m_lastPosition;
+	momentDist.Normalize();
+
+	// 移動する方向を設定
+	m_moveVector = momentDist;
+	
+	// プレイヤーとの距離
+	Vector3 distanceToPlayer = m_position - playerPos;
+	// プレイヤーとの距離が近ければ
+	if (distanceToPlayer.Length() <= ATTACKING_RANGE) {
+		// 攻撃を行う
+		m_isAttackable = true;
+	}
+
+}
+
+void Enemy2::Survey()
+{
+	// 見回した時間を加算
+	m_surveyTimer += g_gameTime->GetFrameDeltaTime();
+}
+
+void Enemy2::ReturnToPath()
+{
+	// 現在の座標から一番近い座標のポイントを取得
+	m_point = m_enemyPath.GetNearPoint(m_position);
+
+	bool isEnd;
+
+	// 移動直前の座標を記録
+	m_lastPosition = m_position;
+
+	// 帰還目標のパスまでのパスを検索
+	m_pathFinding.Execute(
+		m_path,
+		m_nvmMesh,
+		m_position,
+		m_point->s_position,
+		PhysicsWorld::GetInstance(),
+		ENEMY_RADIUS,
+		ENEMY_HEIGHT
+	);
+	// 設定されたパスをもとに移動
+	m_position = m_path.Move(
+		m_position,
+		WALK_SPEED,
+		isEnd
+	);
+
 	// 直前の座標と現在の座標を比較して移動した方向を求める
 	Vector3 distance = m_position - m_lastPosition;
 	distance.Normalize();
 
 	// 移動する方向を設定
 	m_moveVector = distance;
-
-}
-
-void Enemy2::Survey()
-{
-
 }
 
 void Enemy2::ProcessWalkStateTransition()
@@ -306,34 +379,41 @@ void Enemy2::ProcessWalkStateTransition()
 	if (m_isFound == false) {
 		return;
 	}
+	// 咆哮をリセット
+	m_screamSound = nullptr;
+	m_screamRateByTime = 0.0f;
+	m_isEndScream = false;
 	// ステートを咆哮状態にする
 	m_enemyState = enEnemyState_Scream;
 }
 
 void Enemy2::ProcessScreamStateTransition()
 {
-	// 咆哮のアニメーションが再生中ならば
-	if (m_screamRateByTime > 0.0f) {
+	// 咆哮が終了していないならば
+	if (m_isEndScream == false) {
 		return;
 	}
 	// 最低限追跡する時間を指定
 	m_chaseTime = MINIMUM_CHASE_TIME;
-	// ステートを注意状態にする
+	// ステートを追跡状態にする
 	m_enemyState = enEnemyState_Chase;
 }
 
 void Enemy2::ProcessChaseStateTransition()
 {
+	// プレイヤーを攻撃可能な距離ならば
+	if (m_isAttackable == true) {
+		m_enemyState = enEnemyState_Attack;
+	}
 	// 敵を追跡する状態が維持されているならば
 	if (m_chaseTime > 0.0f || m_isFound == true) {
 		return;
 	}
-	// プレイヤーを攻撃可能な距離ならば
-	if (m_isAttackable == true) {
-		//m_enemyState = enEnemyState_Attack;
-	}
 	// プレイヤーを見失っていたならば
-	else if (m_isFound == false) {
+	if (m_isFound == false) {
+		// 見回す時間をリセット
+		m_surveyTimer = 0.0f;
+		// ステートを見回し状態にする
 		m_enemyState = enEnemyState_Survey;
 	}
 		
@@ -341,12 +421,46 @@ void Enemy2::ProcessChaseStateTransition()
 
 void Enemy2::ProcessSurveyStateTransition()
 {
+	// 一定時間以内にプレイヤーを発見
+	if (m_isFound == true) {
+		// 最低限追跡する時間を指定
+		m_chaseTime = MINIMUM_CHASE_TIME;
+		// 追跡を開始
+		m_enemyState = enEnemyState_Chase;
+	}
+	// 一定時間プレイヤーを見失っていたら
+	if (m_surveyTimer > TIME_TO_LOSE_SIGHT) {
+		// ステートをパスへの帰還状態にする
+		m_enemyState = enEnemyState_ReturnToPath;
+	}
 
+}
+
+void Enemy2::ProcessReturnToPathStateTransition()
+{
+	// 目標の座標と現在の座標の距離を測る
+	Vector3 distance = m_point->s_position - m_position;
+
+	// プレイヤーを発見したら
+	if (m_isFound == true) {
+		// 咆哮をリセット
+		m_screamRateByTime = 0.0f;
+		m_isEndScream = false;
+		m_screamSound = nullptr;
+		// ステートを咆哮状態にする
+		m_enemyState = enEnemyState_Scream;
+	}
+	// 目標の座標に近くなったら
+	else if (distance.Length() < DISTANCE_TO_TARGET_WHILE_RETURNING) {
+		// ステートを歩き状態にする
+		m_enemyState = enEnemyState_Walk;
+	}
 }
 
 void Enemy2::ProcessAttackStateTransition()
 {
-
+	// ゲームオーバー
+	m_isGameOver = true;
 }
 
 void Enemy2::PlayAnimation()
@@ -354,24 +468,33 @@ void Enemy2::PlayAnimation()
 	switch (m_enemyState) {
 	// 歩き
 	case enEnemyState_Walk:
-		m_modelRender.PlayAnimation(enAnimationClip_Walk, 0.1f);
+		m_modelRender.PlayAnimation(enAnimationClip_Walk, INTERPOLATION_TIME_FOR_ANIMATION);
 		break;
 	// 咆哮
 	case enEnemyState_Scream:
-		m_modelRender.PlayAnimation(enAnimationClip_Scream, 0.1f);
+		m_modelRender.PlayAnimation(enAnimationClip_Scream, INTERPOLATION_TIME_FOR_ANIMATION);
 		break;
 	// 追跡
 	case enEnemyState_Chase:
-		m_modelRender.PlayAnimation(enAnimationClip_Run, 0.1f);
+		m_modelRender.PlayAnimation(enAnimationClip_Run, INTERPOLATION_TIME_FOR_ANIMATION);
+		break;
+	// 見回し
+	case enEnemyState_Survey:
+		m_modelRender.PlayAnimation(enAnimationClip_Survey, INTERPOLATION_TIME_FOR_ANIMATION);
+		break;
+	// パスへの帰還
+	case enEnemyState_ReturnToPath:
+		m_modelRender.PlayAnimation(enAnimationClip_Walk, INTERPOLATION_TIME_FOR_ANIMATION);
 		break;
 	// 攻撃
 	case enEnemyState_Attack:
-		m_modelRender.PlayAnimation(enAnimationClip_Attack, 0.1f);
+		m_modelRender.PlayAnimation(enAnimationClip_Attack, INTERPOLATION_TIME_FOR_ANIMATION);
 		break;
 	}
 }
 
 void Enemy2::Render(RenderContext& rc)
 {
+	// 描画
 	m_modelRender.Draw(rc);
 }

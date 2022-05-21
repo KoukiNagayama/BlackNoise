@@ -106,6 +106,10 @@ private:
 	/// </summary>
 	void Survey();
 	/// <summary>
+	/// パス移動への帰還
+	/// </summary>
+	void ReturnToPath();
+	/// <summary>
 	/// 歩き時のステート遷移
 	/// </summary>
 	void ProcessWalkStateTransition();
@@ -126,6 +130,10 @@ private:
 	/// </summary>
 	void ProcessSurveyStateTransition();
 	/// <summary>
+	/// パス移動への帰還時のステート遷移
+	/// </summary>
+	void ProcessReturnToPathStateTransition();
+	/// <summary>
 	/// アニメーション再生
 	/// </summary>
 	void PlayAnimation();
@@ -136,6 +144,7 @@ private:
 		enEnemyState_Scream,			// 咆哮
 		enEnemyState_Chase,				// 追跡
 		enEnemyState_Survey,			// 見回し
+		enEnemyState_ReturnToPath,		// パス移動に戻る
 		enEnemyState_Attack,			// 攻撃
 		enEnemyState_Num,				// ステートの数
 	};
@@ -172,5 +181,8 @@ private:
 	nsAI::Path			m_path;										// ナビゲーションメッシュ用パス
 	nsAI::PathFinding	m_pathFinding;								// パス検索
 	Vector3				m_lastPosition;								// 直前の座標
+	float				m_surveyTimer = 0.0f;						// 見回す時間
+	bool				m_isEndScream = false;						// 咆哮が終了しているか
+	bool				m_isGameOver = false;						// ゲームオーバーになっているか
 };
 

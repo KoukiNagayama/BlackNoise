@@ -305,7 +305,7 @@ namespace nsK2EngineLow {
 			// なので、単位行列を渡して、モデル空間でボーン行列を構築する。
 			m_skeleton.Update(g_matIdentity);
 			//アニメーションを進める。
-			m_animation.Progress(g_gameTime->GetFrameDeltaTime());
+			m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
 		}
 		m_numInstance++;
 	}

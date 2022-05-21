@@ -17,3 +17,18 @@ void EnemyPath::Init(const char* filePath)
 			return true;
 		});
 }
+
+Point* EnemyPath::GetNearPoint(const Vector3& position)
+{
+	Point* point = &m_pointlist[0];
+	Vector3 diff = m_pointlist[0].s_position - position;
+	//¡‚ÌêŠ‚©‚çˆê”Ô‹ß‚¢ƒ|ƒCƒ“ƒg’T‚·
+	for (int i = 1; i < m_pointlist.size(); i++) {
+		Vector3 diff2 = m_pointlist[i].s_position - position;
+		if (diff.LengthSq() > diff2.LengthSq()) {
+			diff = diff2;
+			point = &m_pointlist[i];
+		}
+	}
+	return point;
+}

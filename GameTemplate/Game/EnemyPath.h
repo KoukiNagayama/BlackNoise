@@ -41,6 +41,12 @@ public:
 		return m_pointlist.size();
 	}
 	/// <summary>
+	/// 現在の座標から一番近いポイントを取得
+	/// </summary>
+	/// <param name="position">座標</param>
+	/// <returns>ポイント</returns>
+	Point* GetNearPoint(const Vector3& position);
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="filePath">ポイント登録に使用したレベルのファイルパス</param>
