@@ -3,13 +3,14 @@
 #include "EnemyPath.h"
 #include "Player.h"
 #include "Bell.h"
+#include "GameCamera.h"
 
 namespace
 {
 	const float WALK_SPEED = 6.5f;									// 歩く速さ
 	const float RUN_SPEED = 9.5f;									// 走る速さ
-	const float SEARCH_RANGE_TO_BELL = 1500.0f;						// ベルの音が聞こえる範囲
-	const float SEARCH_RANGE_TO_FOOTSTEP = 100.0f;					// 足音が聞こえる範囲
+	const float SEARCH_RANGE_TO_BELL = 1000.0f;						// ベルの音が聞こえる範囲
+	const float SEARCH_RANGE_TO_FOOTSTEP = 200.0f;					// 足音が聞こえる範囲
 	const float SCREAM_VOLUME = 1.0f;								// 咆哮の音量
 	const float SCREAM_RANGE = 1300.0f;								// 咆哮時に輪郭線が適用される範囲
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;					// エッジがフェードインするときの変位量
@@ -68,6 +69,7 @@ bool Enemy2::Start()
 	// プレイヤー情報を取得
 	m_player = FindGO<Player>("player");
 	m_bell = FindGO<Bell>("bell");
+	m_gameCamera = FindGO<GameCamera>("gamecamera");
 
 	// 音源の登録
 	g_soundEngine->ResistWaveFileBank(4, "Assets/sound/enemy/heart_beat/Heart_Beat/heart_beat_caution.wav");
@@ -94,9 +96,9 @@ void Enemy2::Update()
 	ManageState();
 	// アニメーション再生
 	PlayAnimation();
-
+	// 座標の更新
 	m_modelRender.SetPosition(m_position);
-
+	// モデルの更新
 	m_modelRender.Update();
 }
 
@@ -113,6 +115,11 @@ void Enemy2::SearchSoundOfPlayer()
 	if (m_bell->IsRing()) {
 		// 索敵範囲をベル用に設定
 		searchRange = SEARCH_RANGE_TO_BELL;
+	}
+	// 足音が鳴っているならば
+	else if (m_gameCamera->IsSound()) {
+		// 索敵範囲を足音用に設定
+		searchRange = SEARCH_RANGE_TO_FOOTSTEP;
 	}
 
 	// プレイヤーとの距離が設定された索敵範囲内であれば

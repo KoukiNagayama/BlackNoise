@@ -45,11 +45,11 @@ public:
 
 private:
 
-	SpriteRender m_spriteRender;	//Aボタンの画像
-	SoundSource* m_se;				//アイテム収拾音
-	FontRender m_recordFont;		//レコードを拾った
-	FontRender m_hammerFont;		//ハンマーを拾った
-	FontRender m_crowbarFont;		//バールを拾った
-	bool m_isDraw = false;		//AボタンのUIを表示するか
+	SpriteRender m_spriteRender;	// Aボタンの画像
+	SoundSource* m_se;				// アイテム収拾音
+	FontRender m_recordFont;		// レコード用フォント
+	FontRender m_hammerFont;		// ハンマー用フォント
+	FontRender m_crowbarFont;		// バール用フォント
+	bool m_isDraw = false;		// AボタンのUIを表示するか
 };
 

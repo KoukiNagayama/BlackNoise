@@ -6,6 +6,7 @@
 
 class Player;
 class Bell;
+class GameCamera;
 /// <summary>
 /// エネミークラス
 /// </summary>
@@ -184,5 +185,6 @@ private:
 	float				m_surveyTimer = 0.0f;						// 見回す時間
 	bool				m_isEndScream = false;						// 咆哮が終了しているか
 	bool				m_isGameOver = false;						// ゲームオーバーになっているか
+	GameCamera*			m_gameCamera = nullptr;						// ゲームカメラ
 };
 

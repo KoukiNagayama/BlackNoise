@@ -45,7 +45,14 @@ public:
 	{
 		m_scale = scale;
 	}
-
+	/// <summary>
+	/// 攻撃回数を取得
+	/// </summary>
+	/// <returns></returns>
+	int GetAttackCount() const 
+	{
+		return m_attack;
+	}
 private:
 	/// <summary>
 	/// フィジックスオブジェクトの生成

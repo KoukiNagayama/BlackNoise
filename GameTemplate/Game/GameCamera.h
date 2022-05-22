@@ -100,6 +100,13 @@ public:
 	{
 		return fabsf(m_moveSpeed.x) >= 0.001f && fabsf(m_moveSpeed.z) >= 0.001f;
 	}
+	/// <summary>
+	/// 足音が鳴っているか
+	/// </summary>
+	bool IsSound() const
+	{
+		return m_isSound;
+	}
 private:
 	/////////////////////////////////////
 	//メンバ関数
@@ -179,9 +186,10 @@ private:
 	Vector3 m_target;								//ターゲット。
 	CharacterController m_charaCon;					//キャラクターコントローラー。
 	Quaternion m_rotation;							//回転。
-	SoundSource* m_sound;
+	SoundSource* m_sound = nullptr;
 	ModelRender m_modelRender;
 	Vector3 m_up;
 	float m_rateByTime;
 	float beforeRate;
+	bool m_isSound = false;
 };

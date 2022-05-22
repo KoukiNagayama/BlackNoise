@@ -225,12 +225,14 @@ void GameCamera::ManageState()
 void GameCamera::IdleState()
 {
 	m_sound->Pause();
+	m_isSound = false;
 	TransitionState();
 }
 
 void GameCamera::WalkState()
 {
 	m_sound->Play(true);
+	m_isSound = true;
 	TransitionState();
 }
 
@@ -305,6 +307,7 @@ void GameCamera::CheckRate()
 			}
 		}
 		g_infoForEdge.SetInfoForSound(6, GetYaxisZeroPosition(), SOUND_RANGE, check1, m_rateByTime);
+
 	}
 }
 
