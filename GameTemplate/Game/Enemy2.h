@@ -138,6 +138,22 @@ private:
 	/// アニメーション再生
 	/// </summary>
 	void PlayAnimation();
+	/// <summary>
+	/// 足音の輪郭線描画
+	/// </summary>
+	void OutlineByStep();
+	/// <summary>
+	/// プレイヤーと音源の距離により音の大きさを調整する
+	/// </summary>
+	/// <param name="range">音源の影響範囲</param>
+	float SoundLevelByDistance(float range);
+	/// <summary>
+	/// 音量調整
+	/// </summary>
+	void StepVolumeControl();
+	// アニメーションイベント用の関数。
+	void OnStepAnimationEvent(const wchar_t* clipName, const wchar_t* eventName);
+
 private:
 	// ステート
 	enum EnEnemyState {
@@ -174,7 +190,9 @@ private:
 	EnEnemyState		m_enemyState = enEnemyState_Walk;			// ステート
 	Bell*				m_bell = nullptr;							// ベル
 	SoundSource*		m_screamSound = nullptr;					// 咆哮時の音源
+	SoundSource*		m_stepSound = nullptr;						// 足音
 	float				m_screamRateByTime = 0.0f;					// 咆哮の時間による影響率
+	float				m_stepRateByTime = 0.0f;					// 足音による影響率
 	float				m_chaseTime;								// 追いかけ続ける時間
 	bool				m_isFound = false;							// プレイヤーを見つけているか
 	bool				m_isAttackable = false;						// プレイヤーへの攻撃は可能か

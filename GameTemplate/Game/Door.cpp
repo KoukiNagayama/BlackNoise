@@ -54,7 +54,7 @@ bool Door::Start()
 	g_soundEngine->ResistWaveFileBank(12, "Assets/sound/door/door_open.wav");
 	g_soundEngine->ResistWaveFileBank(13, "Assets/sound/door/door_close.wav");
 	//ó÷äsê¸ï`é ÇÃèâä˙âª
-	g_infoForEdge.InitForSound(8, m_position, SOUND_RANGE, 0, m_rateByTime);
+	//g_infoForEdge.InitForSound(8, m_position, SOUND_RANGE, 0, m_rateByTime);
 
 	m_gamecam = FindGO<GameCamera>("gamecamera");
 	m_enemy = FindGO<Enemy2>("enemy");
@@ -187,26 +187,26 @@ void Door::MakeSound(int number)
 
 void Door::CheckRate()
 {
-	int check1;
-	if (m_sound != nullptr) {
-		if (m_sound->IsPlaying() == true)
-		{
-			check1 = 1;
-			if (m_rateByTime < RATE_BY_TIME_MAX_VALUE) {
-				m_rateByTime += EDGE_FADE_IN_DELTA_VALUE;
-			}
-		}
-		else {
-			check1 = 0;
-			if (m_rateByTime > RATE_BY_TIME_MIN_VALUE && check1 == 0) {
-				m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
-				if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
-					m_rateByTime = RATE_BY_TIME_MIN_VALUE;
-				}
-			}
-		}
-		g_infoForEdge.SetInfoForSound(5, m_position, SOUND_RANGE, check1, m_rateByTime);
-	}
+	//int check1;
+	//if (m_sound != nullptr) {
+	//	if (m_sound->IsPlaying() == true)
+	//	{
+	//		check1 = 1;
+	//		if (m_rateByTime < RATE_BY_TIME_MAX_VALUE) {
+	//			m_rateByTime += EDGE_FADE_IN_DELTA_VALUE;
+	//		}
+	//	}
+	//	else {
+	//		check1 = 0;
+	//		if (m_rateByTime > RATE_BY_TIME_MIN_VALUE && check1 == 0) {
+	//			m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
+	//			if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
+	//				m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+	//			}
+	//		}
+	//	}
+	//	g_infoForEdge.SetInfoForSound(5, m_position, SOUND_RANGE, check1, m_rateByTime);
+	//}
 }
 
 void Door::ReleasePhysicsObject()

@@ -152,30 +152,21 @@ private:
 	/////////////////////////////////////
 	//メンバ変数
 	/////////////////////////////////////
-	Player* m_player = nullptr;						//プレイヤークラスのポインタ。
+	Player* m_player = nullptr;										//プレイヤークラスのポインタ。
 	Vector3 m_toCameraPos = Vector3::Zero;							//注視点から視点に向かうベクトル。
 	Vector3 m_moveSpeed = Vector3::Zero;							//移動速度。
-	float m_multiplier = 0.0f;								//移動速度に乗算する値。
+	float m_multiplier = 0.0f;										//移動速度に乗算する値。
 	Vector3 m_position = Vector3::Zero;								//座標。
 	Vector3 m_stickL = Vector3::Zero;								//左スティック
 	Vector3 m_switchPos = Vector3::Zero;							//一階への切り替え地点。
-	EnMoveState m_moveState = enMoveState_Idle;		//ステート。
+	EnMoveState m_moveState = enMoveState_Idle;						//ステート。
 	Vector3 m_target = Vector3::Zero;								//ターゲット。
-	CharacterController m_charaCon;					//キャラクターコントローラー。
-<<<<<<< HEAD
-	Quaternion m_rotation = Quaternion::Identity;							//回転。
-	SoundSource* m_sound = nullptr;							//足音
-	ModelRender m_modelRender;						//モデル
+	CharacterController m_charaCon;									//キャラクターコントローラー。
+	Quaternion m_rotation = Quaternion::Identity;					//回転。
+	SoundSource* m_sound = nullptr;									//足音
+	ModelRender m_modelRender;										//モデル
 	Vector3 m_up = Vector3::Zero;									//カメラ上方向
-	float m_rateByTime = 0.0f;								//影響率
-	Enemy2* m_enemy = nullptr;
-=======
-	Quaternion m_rotation;							//回転。
-	SoundSource* m_sound = nullptr;
-	ModelRender m_modelRender;
-	Vector3 m_up;
-	float m_rateByTime;
-	float beforeRate;
-	bool m_isSound = false;
->>>>>>> ceb7b33a381df7189d193fb5753aea37f71752dc
+	float m_rateByTime = 0.0f;										//影響率
+	Enemy2* m_enemy = nullptr;										//エネミー
+	bool m_isSound = false;											//足音が鳴っているか
 };

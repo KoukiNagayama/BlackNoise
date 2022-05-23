@@ -7,27 +7,16 @@
 
 namespace
 {
-<<<<<<< HEAD
-	const float WALK_SPEED = 6.5f;					// 歩く速さ
-	const float RUN_SPEED = 9.5f;					// 走る速さ
-	const float SEARCH_RANGE_TO_BELL = 1500.0f;		// ベルの音が聞こえる範囲
-	const float SEARCH_RANGE_TO_FOOTSTEP = 100.0f;	// 足音が聞こえる範囲
-	const float SCREAM_VOLUME = 1.0f;				// 咆哮の音量
-	const float SCREAM_RANGE = 1300.0f;				// 咆哮時に輪郭線が適用される範囲
-	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
-	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
-	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
-	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
-	const float MINIMUM_CHASE_TIME = 2.0f;			// 最低限追跡する時間
-	const float ENEMY_RADIUS = 10.0f;				// エネミーの半径
-	const float ENEMY_HEIGHT = 200.0f;				// エネミーの高さ
-=======
 	const float WALK_SPEED = 6.5f;									// 歩く速さ
 	const float RUN_SPEED = 9.5f;									// 走る速さ
 	const float SEARCH_RANGE_TO_BELL = 1000.0f;						// ベルの音が聞こえる範囲
 	const float SEARCH_RANGE_TO_FOOTSTEP = 200.0f;					// 足音が聞こえる範囲
 	const float SCREAM_VOLUME = 1.0f;								// 咆哮の音量
+	const float MAXIMUM_VOLUME = 0.9f;								// 足音最大音量
+	const float MINIMUM_VOLUME = 0.00f;								// 足音最小音量
 	const float SCREAM_RANGE = 1300.0f;								// 咆哮時に輪郭線が適用される範囲
+	const float STEP_RANGE = 150.0f;								// 歩行時に輪郭線が適用される範囲
+	const float STEP_SOUNDRANGE = 1350.0f;							// 歩行時にプレイヤーに聞こえる範囲
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;					// エッジがフェードインするときの変位量
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;					// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;						// 時間による影響率の最大値
@@ -41,7 +30,6 @@ namespace
 	const float TIME_TO_LOSE_SIGHT = 5.0f;							// プレイヤーを見失った時間
 	const float INTERPOLATION_TIME_FOR_ANIMATION = 0.5f;			// アニメーションの補間時間
 	const float TIME_TO_FORCE_STATE_TRANSITION = 6.0f;				// 強制的にステート遷移する時間
->>>>>>> ceb7b33a381df7189d193fb5753aea37f71752dc
 }
 
 bool Enemy2::Start()
@@ -68,6 +56,9 @@ bool Enemy2::Start()
 	// モデルの初期化
 	m_modelRender.Init("Assets/modelData/enemy/enemy.tkm", m_animationClips, enAnimationClip_Num, false, enModelUpAxisZ, false, 0, 2);
 
+	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
+		OnStepAnimationEvent(clipName, eventName);
+	});
 
 	// エネミーのパス移動の情報を初期化
 	std::string filePath;
@@ -93,9 +84,15 @@ bool Enemy2::Start()
 	g_soundEngine->ResistWaveFileBank(5, "Assets/sound/enemy/heart_beat/Heart_Beat/heart_beat_warning.wav");
 	g_soundEngine->ResistWaveFileBank(6, "Assets/sound/enemy/heart_beat/Heart_Beat/heart_beat_danger.wav");
 	g_soundEngine->ResistWaveFileBank(7, "Assets/sound/enemy/scream/scream.wav");
+	g_soundEngine->ResistWaveFileBank(14, "Assets/sound/enemy/step/walk1.wav");
+	g_soundEngine->ResistWaveFileBank(15, "Assets/sound/enemy/step/walk2.wav");
+	g_soundEngine->ResistWaveFileBank(16, "Assets/sound/enemy/step/run1.wav");
+	g_soundEngine->ResistWaveFileBank(17, "Assets/sound/enemy/step/run2.wav");
 
 	// 輪郭線情報の初期化
-	g_infoForEdge.InitForSound(9, m_position, SCREAM_RANGE, 0, m_screamRateByTime);
+	g_infoForEdge.InitForSound(7, m_position, SCREAM_RANGE, 0, m_screamRateByTime);
+	// 輪郭線情報の初期化
+	g_infoForEdge.InitForSound(8, m_position, STEP_RANGE, 0, m_screamRateByTime);
 
 	// ナビゲーションメッシュの初期化
 	m_nvmMesh.Init("Assets/modelData/enemy/stage2_mesh.tkn");
@@ -113,6 +110,8 @@ void Enemy2::Update()
 	ManageState();
 	// アニメーション再生
 	PlayAnimation();
+	//足音の輪郭線描画
+	OutlineByStep();
 	// 座標の更新
 	m_modelRender.SetPosition(m_position);
 	// モデルの更新
@@ -298,9 +297,9 @@ void Enemy2::OutlineByScream()
 				m_isEndScream = true;
 			}
 		}
-		g_infoForEdge.SetPosition(2, m_position);
-		g_infoForEdge.SetIsSound(2, check);
-		g_infoForEdge.SetRate(2, m_screamRateByTime);
+		g_infoForEdge.SetPosition(7, m_position);
+		g_infoForEdge.SetIsSound(7, check);
+		g_infoForEdge.SetRate(7, m_screamRateByTime);
 	}
 }
 
@@ -496,6 +495,8 @@ void Enemy2::ProcessAttackStateTransition()
 	m_isGameOver = true;
 }
 
+
+
 void Enemy2::PlayAnimation()
 {
 	switch (m_enemyState) {
@@ -523,6 +524,96 @@ void Enemy2::PlayAnimation()
 	case enEnemyState_Attack:
 		m_modelRender.PlayAnimation(enAnimationClip_Attack, INTERPOLATION_TIME_FOR_ANIMATION);
 		break;
+	}
+}
+
+void Enemy2::OnStepAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
+{
+	//キーの名前が「attack_start」の時。
+	if (wcscmp(eventName, L"walk1") == 0) {
+		m_stepSound = NewGO<SoundSource>(0);
+		m_stepSound->Init(14);
+		m_stepSound->Play(false);
+		StepVolumeControl();
+	}
+	//キーの名前が「attack_end」の時。
+	else if (wcscmp(eventName, L"walk2") == 0) {
+		m_stepSound = NewGO<SoundSource>(0);
+		m_stepSound->Init(15);
+		m_stepSound->Play(false);
+		StepVolumeControl();
+	}
+	//キーの名前が「magic_attack」の時。
+	else if (wcscmp(eventName, L"run1") == 0) {
+		m_stepSound = NewGO<SoundSource>(0);
+		m_stepSound->Init(16);
+		m_stepSound->Play(false);
+		StepVolumeControl();
+	}
+	//キーの名前が「magic_attack」の時。
+	else if (wcscmp(eventName, L"run2") == 0) {
+		m_stepSound = NewGO<SoundSource>(0);
+		m_stepSound->Init(17);
+		m_stepSound->Play(false);
+		StepVolumeControl();
+	}
+}
+
+float Enemy2::SoundLevelByDistance(float range)
+{
+	Vector3 gameCameraPos = m_gameCamera->GetPosition();
+	gameCameraPos.y = m_position.y;
+
+	//プレイヤーと蓄音機の距離
+	Vector3 diff = m_position - gameCameraPos;
+
+	// 音の大きさ
+	float soundLevel = MAXIMUM_VOLUME - (diff.Length() / range * MAXIMUM_VOLUME);
+	// 最小音量より小さくなったら固定する
+	if (soundLevel <= MINIMUM_VOLUME) {
+		soundLevel = MINIMUM_VOLUME;
+	}
+
+	return soundLevel;
+}
+
+void Enemy2::StepVolumeControl()
+{
+	if (m_stepSound != nullptr)
+	{
+		m_stepSound->SetVolume(SoundLevelByDistance(STEP_SOUNDRANGE));
+	}
+}
+
+void Enemy2::OutlineByStep()
+{
+	int check;
+
+	if (m_stepSound != nullptr) {
+		// 音源が再生中
+		if (m_stepSound->IsPlaying() == true)
+		{
+			check = 1;
+			// 影響率を増やす
+			if (m_stepRateByTime < RATE_BY_TIME_MAX_VALUE) {
+				m_stepRateByTime += EDGE_FADE_IN_DELTA_VALUE;
+			}
+		}
+		// 音源が再生されていない時
+		else {
+			check = 0;
+			// 影響率を減らす
+			if (m_stepRateByTime > RATE_BY_TIME_MIN_VALUE && check == 0) {
+				m_stepRateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
+				// 影響率を最低数値以下にならないように固定
+				if (m_stepRateByTime <= RATE_BY_TIME_MIN_VALUE) {
+					m_stepRateByTime = RATE_BY_TIME_MIN_VALUE;
+				}
+			}
+		}
+		g_infoForEdge.SetPosition(8, m_position);
+		g_infoForEdge.SetIsSound(8, check);
+		g_infoForEdge.SetRate(8, m_stepRateByTime);
 	}
 }
 

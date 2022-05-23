@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="BackGround.cpp" />
-    <ClCompile Include="BrokenDoor.cpp" />
     <ClCompile Include="Crowbar.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -36,7 +35,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
-    <ClInclude Include="BrokenDoor.h" />
     <ClInclude Include="Crowbar.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
