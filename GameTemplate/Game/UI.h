@@ -1,5 +1,11 @@
 #pragma once
 #include "sound/SoundSource.h"
+class Hammer;
+class Record;
+class Gramophone;
+class Crowbar;
+class GameCamera;
+
 class UI:public IGameObject
 {
 public:
@@ -42,14 +48,33 @@ public:
 
 	//収拾音の生成
 	void MakeGetSound();
-
 private:
-
-	SpriteRender m_spriteRender;	//Aボタンの画像
-	SoundSource* m_se;				//アイテム収拾音
-	FontRender m_recordFont;		//レコードを拾った
-	FontRender m_hammerFont;		//ハンマーを拾った
-	FontRender m_crowbarFont;		//バールを拾った
-	bool m_isDraw = false;		//AボタンのUIを表示するか
+	/// <summary>
+	/// アイテムの位置を検索
+	/// </summary>
+	void FindLocateOfItem();
+	/// <summary>
+	/// プレイヤーがアイテムを向いているか調べる
+	/// </summary>
+	/// <param name="diffToItem">アイテムとプレイヤーの座標の差</param> 
+	bool CheckPlayerOrientation(Vector3 diffToItem);
+	/// <summary>
+	/// 表示する文字列を指定
+	/// </summary>
+	void SpecifyStringToDisplay(std::string item);
+private:
+	SpriteRender		m_spriteRender;				// Aボタンの画像
+	SoundSource*		m_se;						// アイテム収拾音
+	FontRender			m_itemNameFont;				// アイテム名用フォント
+	FontRender			m_supplementFont;			// 補足用フォント
+	bool				m_isDraw = false;			// AボタンのUIを表示するか
+	Hammer*				m_hammer = nullptr;			// ハンマー
+	Record*				m_record = nullptr;			// レコード
+	Gramophone*			m_gramophone = nullptr;		// 蓄音機
+	Crowbar*			m_crowbar = nullptr;		// バール
+	GameCamera*			m_gameCamera;				// ゲームカメラ
+	Vector3				m_playerForward;			// プレイヤーの正面
+	Vector3				m_playerPos;				// プレイヤーの座標
+	Vector3				m_diffToItem;				// アイテムとの座標の差
 };
 

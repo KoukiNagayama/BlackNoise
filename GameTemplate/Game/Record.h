@@ -44,6 +44,14 @@ public:
 	{
 		m_number = number;
 	}
+	/// <summary>
+	/// À•W‚ğæ“¾
+	/// </summary>
+	/// <returns>À•W</returns>
+	const Vector3 GetPosition()
+	{
+		return m_position;
+	}
 private:
 	Vector3					m_position;							// À•W
 	Vector3					m_scale = Vector3::Zero;			// Šg‘å—¦

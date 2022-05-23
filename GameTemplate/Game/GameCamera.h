@@ -89,6 +89,13 @@ public:
 	{
 		return fabsf(m_moveSpeed.x) >= 0.001f && fabsf(m_moveSpeed.z) >= 0.001f;
 	}
+	/// <summary>
+	/// 足音が鳴っているか
+	/// </summary>
+	bool IsSound() const
+	{
+		return m_isSound;
+	}
 private:
 	/////////////////////////////////////
 	//メンバ関数
@@ -155,10 +162,20 @@ private:
 	EnMoveState m_moveState = enMoveState_Idle;		//ステート。
 	Vector3 m_target = Vector3::Zero;								//ターゲット。
 	CharacterController m_charaCon;					//キャラクターコントローラー。
+<<<<<<< HEAD
 	Quaternion m_rotation = Quaternion::Identity;							//回転。
 	SoundSource* m_sound = nullptr;							//足音
 	ModelRender m_modelRender;						//モデル
 	Vector3 m_up = Vector3::Zero;									//カメラ上方向
 	float m_rateByTime = 0.0f;								//影響率
 	Enemy2* m_enemy = nullptr;
+=======
+	Quaternion m_rotation;							//回転。
+	SoundSource* m_sound = nullptr;
+	ModelRender m_modelRender;
+	Vector3 m_up;
+	float m_rateByTime;
+	float beforeRate;
+	bool m_isSound = false;
+>>>>>>> ceb7b33a381df7189d193fb5753aea37f71752dc
 };
