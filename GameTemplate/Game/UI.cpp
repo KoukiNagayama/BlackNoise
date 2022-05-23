@@ -10,9 +10,11 @@
 
 namespace
 {
-	const Vector3 ITEM_NAME_POSITION = Vector3(200.0f, -80.0f, 0.0f);	// フォントを表示する座標
-	const Vector3 SUPPLEMENT_POSITION = Vector3(200.0f, -120.0f, 0.0f);
-	const float DISTANCE_TO_ITEM = 400.0f;								// アイテムとの距離
+	const Vector3	ITEM_NAME_POSITION = Vector3(200.0f, -80.0f, 0.0f);		// アイテム名を表示する座標
+	const Vector3	SUPPLEMENT_POSITION = Vector3(200.0f, -120.0f, 0.0f);	// 補足を表示する座標
+	const float		DISTANCE_TO_ITEM = 400.0f;								// アイテムとの距離
+	const float		VECTOR_CONSISTENCY = 0.8f;								// ベクトルが一致しているか比較する値
+	const float		TIME_TO_DISPLAY = 2.5f;
 }
 
 bool UI::Start()
@@ -33,25 +35,28 @@ bool UI::Start()
 
 void UI::Update()
 {
-	if (m_crowbar == nullptr) {
-		return;
-	}
+
 	// バールを検索
 	m_crowbar = FindGO<Crowbar>("crowbar");
-
 	// プレイヤーの座標を取得
 	m_playerPos = m_gameCamera->GetPosition();
 	// プレイヤーの前方向を取得
 	m_playerForward = g_camera3D->GetForward();
 
-	if (m_crowbar != nullptr) {
-		FindLocateOfItem();
+
+	FindLocateOfCrowbar();
+	
+	// 文字列の表示時間を減らす
+	if (m_timeToDisplay >= 0.0f) {
+		m_timeToDisplay -= g_gameTime->GetFrameDeltaTime();
 	}
 }
 
-void UI::FindLocateOfItem()
+void UI::FindLocateOfCrowbar()
 {
-
+	if (m_crowbar == nullptr) {
+		return;
+	}
 	// バールの座標
 	Vector3 crowbarPos = m_crowbar->GetPosition();
 	// プレイヤーとアイテムの座標の差
@@ -63,6 +68,7 @@ void UI::FindLocateOfItem()
 		if (CheckPlayerOrientation(diffToItem)) {
 			// 表示する文字列を指定
 			SpecifyStringToDisplay("crowbar");
+			return;
 		}
 	}
 
@@ -75,7 +81,7 @@ bool UI::CheckPlayerOrientation(Vector3 diffToItem)
 	// 内積を求める
 	float dot = m_playerForward.Dot(diffToItem);
 	// プレイヤーがアイテムに近い方向を向いていたら
-	if (dot >= 0.8f) {
+	if (dot >= VECTOR_CONSISTENCY) {
 		m_isDraw = true;
 		return true;
 	}
@@ -100,6 +106,13 @@ void UI::SpecifyStringToDisplay(std::string item)
 		// 補足情報を設定
 		m_supplementFont.SetText(supplement);
 		m_supplementFont.SetPosition(SUPPLEMENT_POSITION);
+
+		// 文字列を表示するように設定する
+		if (m_isCrowbarDescript == false) {
+			m_isCrowbarDescript = true;
+			m_timeToDisplay = TIME_TO_DISPLAY;
+		}
+		return;
 	}
 }
 
@@ -113,9 +126,11 @@ void UI::MakeGetSound()
 
 void  UI::Render(RenderContext& rc)
 {
-	if (m_isDraw == true) {
-		// 描画
-		m_itemNameFont.Draw(rc);
-		m_supplementFont.Draw(rc);
+	if (m_isDraw) {
+		if(m_timeToDisplay >= 0.0f){
+			// 描画
+			m_itemNameFont.Draw(rc);
+			m_supplementFont.Draw(rc);
+		}
 	}
 }

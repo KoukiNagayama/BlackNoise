@@ -6,7 +6,7 @@
 
 namespace
 {
-	const float DISTANCE = 100.0f;	//プレイヤーまでの距離
+	const float DISTANCE = 200.0f;	//プレイヤーまでの距離
 }
 
 bool Crowbar::Start()

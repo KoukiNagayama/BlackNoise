@@ -150,7 +150,7 @@ void Gramophone::MakeSound()
 		else if (m_recordNum == 2) {
 			m_soundSource1->Init(3);
 		}
-		m_soundSource1->Play(false);
+		m_soundSource1->Play(true);
 		g_infoForEdge.SetIsSound(2, 1);
 	}
 	else if(m_number == 2){
@@ -161,7 +161,7 @@ void Gramophone::MakeSound()
 		else if (m_recordNum == 2) {
 			m_soundSource2->Init(3);
 		}
-		m_soundSource2->Play(false);
+		m_soundSource2->Play(true);
 		g_infoForEdge.SetIsSound(3, 1);
 	}
 	else if (m_number == 3) {

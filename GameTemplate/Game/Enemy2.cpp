@@ -7,8 +7,8 @@
 
 namespace
 {
-	const float WALK_SPEED = 6.5f;									// 歩く速さ
-	const float RUN_SPEED = 9.5f;									// 走る速さ
+	const float WALK_SPEED = 6.5f * 0.7f;							// 歩く速さ
+	const float RUN_SPEED = 9.5f * 0.7f;							// 走る速さ
 	const float SEARCH_RANGE_TO_BELL = 1000.0f;						// ベルの音が聞こえる範囲
 	const float SEARCH_RANGE_TO_FOOTSTEP = 200.0f;					// 足音が聞こえる範囲
 	const float SCREAM_VOLUME = 1.0f;								// 咆哮の音量
@@ -17,7 +17,7 @@ namespace
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;					// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;						// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;						// 時間による影響率の最小値
-	const float MINIMUM_CHASE_TIME = 2.0f;							// 最低限追跡する時間
+	const float MINIMUM_CHASE_TIME = 20.0f;							// 最低限追跡する時間
 	const float ENEMY_RADIUS = 30.0f;								// エネミーの半径
 	const float ENEMY_HEIGHT = 200.0f;								// エネミーの高さ
 	const float ATTACKING_RANGE = 120.0f;							// 攻撃可能な距離
@@ -26,6 +26,8 @@ namespace
 	const float TIME_TO_LOSE_SIGHT = 5.0f;							// プレイヤーを見失った時間
 	const float INTERPOLATION_TIME_FOR_ANIMATION = 0.5f;			// アニメーションの補間時間
 	const float TIME_TO_FORCE_STATE_TRANSITION = 6.0f;				// 強制的にステート遷移する時間
+	const float ANIMATION_SPEED = 0.7f;								// アニメーションのスピードの倍率
+	const float PATH_FINDING_TIMER = 0.7f;							// ナビメッシュによるパスを検索する時間の間隔
 }
 
 bool Enemy2::Start()
@@ -84,6 +86,10 @@ bool Enemy2::Start()
 	// ナビゲーションメッシュの初期化
 	m_nvmMesh.Init("Assets/modelData/enemy/stage2_mesh.tkn");
 
+	// アニメーションスピードを代入
+	m_animationSpeed = ANIMATION_SPEED;
+	// アニメーションのスピードを指定
+	m_modelRender.SetAnimationSpeed(m_animationSpeed);
 	return true;
 }
 
@@ -292,6 +298,23 @@ void Enemy2::Chase()
 {
 	// ターゲットとなるプレイヤーの座標を取得
 	Vector3	playerPos = m_player->GetPosition();
+
+	if (m_pathFindingTimer <= 0.0f) {
+		// プレイヤーまでのパスを検索
+		m_pathFinding.Execute(
+			m_path,
+			m_nvmMesh,
+			m_position,
+			playerPos,
+			PhysicsWorld::GetInstance(),
+			ENEMY_RADIUS,
+			ENEMY_HEIGHT
+		);
+		m_pathFindingTimer = PATH_FINDING_TIMER;
+	}
+
+	m_pathFindingTimer -= g_gameTime->GetFrameDeltaTime();
+
 	// 指定した座標への移動が完了したか
 	bool isEnd;
 	// 移動直前の座標を記録
@@ -305,16 +328,7 @@ void Enemy2::Chase()
 		m_chaseTime = 0.0f;
 	}
 
-	// プレイヤーまでのパスを検索
-	m_pathFinding.Execute(
-		m_path,							
-		m_nvmMesh,						
-		m_position,						
-		playerPos,						
-		PhysicsWorld::GetInstance(),	
-		ENEMY_RADIUS,					
-		ENEMY_HEIGHT					
-	);
+
 	// 設定されたパスをもとに移動
 	m_position = m_path.Move(
 		m_position,
@@ -348,24 +362,28 @@ void Enemy2::Survey()
 
 void Enemy2::ReturnToPath()
 {
-	// 現在の座標から一番近い座標のポイントを取得
-	m_point = m_enemyPath.GetNearPoint(m_position);
-
 	bool isEnd;
 
 	// 移動直前の座標を記録
 	m_lastPosition = m_position;
 
-	// 帰還目標のパスまでのパスを検索
-	m_pathFinding.Execute(
-		m_path,
-		m_nvmMesh,
-		m_position,
-		m_point->s_position,
-		PhysicsWorld::GetInstance(),
-		ENEMY_RADIUS,
-		ENEMY_HEIGHT
-	);
+	// パスを検索していないならば
+	if (m_isPathFindingWhileReturning == false) {
+		// 現在の座標から一番近い座標のポイントを取得
+		m_point = m_enemyPath.GetNearPoint(m_position);
+		// 帰還目標のパスまでのパスを検索
+		m_pathFinding.Execute(
+			m_path,
+			m_nvmMesh,
+			m_position,
+			m_point->s_position,
+			PhysicsWorld::GetInstance(),
+			ENEMY_RADIUS,
+			ENEMY_HEIGHT
+		);
+		m_isPathFindingWhileReturning = true;
+	}
+
 	// 設定されたパスをもとに移動
 	m_position = m_path.Move(
 		m_position,
@@ -411,7 +429,7 @@ void Enemy2::ProcessChaseStateTransition()
 {
 	// プレイヤーを攻撃可能な距離ならば
 	if (m_isAttackable == true) {
-		m_enemyState = enEnemyState_Attack;
+		//m_enemyState = enEnemyState_Attack;
 	}
 	// 敵を追跡する状態が維持されているならば
 	if (m_chaseTime > 0.0f || m_isFound == true) {
@@ -423,6 +441,9 @@ void Enemy2::ProcessChaseStateTransition()
 		m_surveyTimer = 0.0f;
 		// ステートを見回し状態にする
 		m_enemyState = enEnemyState_Survey;
+		// パスを検索する間隔をリセット
+		m_pathFindingTimer = PATH_FINDING_TIMER;
+		
 	}
 		
 }
@@ -472,6 +493,7 @@ void Enemy2::ProcessReturnToPathStateTransition()
 		// 強制的にステートを歩き状態にする
 		m_enemyState = enEnemyState_Walk;
 	}
+	m_isPathFindingWhileReturning = false;
 }
 
 void Enemy2::ProcessAttackStateTransition()

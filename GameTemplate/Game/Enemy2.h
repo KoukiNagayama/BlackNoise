@@ -186,6 +186,9 @@ private:
 	bool				m_isEndScream = false;						// 咆哮が終了しているか
 	bool				m_isGameOver = false;						// ゲームオーバーになっているか
 	GameCamera*			m_gameCamera = nullptr;						// ゲームカメラ
-	float				m_timeToReturn = 0.0f;						// 帰還する時間 
+	float				m_timeToReturn = 0.0f;						// 帰還する時間
+	float				m_animationSpeed = 1.0f;					// アニメーションのスピード
+	float				m_pathFindingTimer = 0.0f;					// 目的地までのパスを検索する間の時間
+	bool				m_isPathFindingWhileReturning = false;		// パス移動への帰還時にパス検索をしたか
 };
 

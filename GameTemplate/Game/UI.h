@@ -50,9 +50,9 @@ public:
 	void MakeGetSound();
 private:
 	/// <summary>
-	/// アイテムの位置を検索
+	/// バールの位置を検索
 	/// </summary>
-	void FindLocateOfItem();
+	void FindLocateOfCrowbar();
 	/// <summary>
 	/// プレイヤーがアイテムを向いているか調べる
 	/// </summary>
@@ -63,18 +63,23 @@ private:
 	/// </summary>
 	void SpecifyStringToDisplay(std::string item);
 private:
-	SpriteRender		m_spriteRender;				// Aボタンの画像
-	SoundSource*		m_se;						// アイテム収拾音
-	FontRender			m_itemNameFont;				// アイテム名用フォント
-	FontRender			m_supplementFont;			// 補足用フォント
-	bool				m_isDraw = false;			// AボタンのUIを表示するか
-	Hammer*				m_hammer = nullptr;			// ハンマー
-	Record*				m_record = nullptr;			// レコード
-	Gramophone*			m_gramophone = nullptr;		// 蓄音機
-	Crowbar*			m_crowbar = nullptr;		// バール
-	GameCamera*			m_gameCamera;				// ゲームカメラ
-	Vector3				m_playerForward;			// プレイヤーの正面
-	Vector3				m_playerPos;				// プレイヤーの座標
-	Vector3				m_diffToItem;				// アイテムとの座標の差
+	SpriteRender		m_spriteRender;						// Aボタンの画像
+	SoundSource*		m_se;								// アイテム収拾音
+	FontRender			m_itemNameFont;						// アイテム名用フォント
+	FontRender			m_supplementFont;					// 補足用フォント
+	bool				m_isDraw = false;					// AボタンのUIを表示するか
+	Hammer*				m_hammer = nullptr;					// ハンマー
+	Record*				m_record = nullptr;					// レコード
+	Gramophone*			m_gramophone = nullptr;				// 蓄音機
+	Crowbar*			m_crowbar = nullptr;				// バール
+	GameCamera*			m_gameCamera;						// ゲームカメラ
+	Vector3				m_playerForward;					// プレイヤーの正面
+	Vector3				m_playerPos;						// プレイヤーの座標
+	Vector3				m_diffToItem;						// アイテムとの座標の差
+	bool				m_isCrowbarDescript = false;		// バールの説明を表示するか
+	bool				m_isHammerDescript = false;			// ハンマーの説明を表示するか
+	bool				m_isRecordDescript = false;			// レコードの説明を表示するか
+	bool				m_isGramophoneDescript = false;		// 蓄音機の説明を表示するか
+	float				m_timeToDisplay = 0.0f;				// 
 };
 
