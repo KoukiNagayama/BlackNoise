@@ -17,7 +17,7 @@ namespace
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
 	const float MINIMUM_CHASE_TIME = 2.0f;			// 最低限追跡する時間
-	const float ENEMY_RADIUS = 30.0f;				// エネミーの半径
+	const float ENEMY_RADIUS = 10.0f;				// エネミーの半径
 	const float ENEMY_HEIGHT = 200.0f;				// エネミーの高さ
 }
 
