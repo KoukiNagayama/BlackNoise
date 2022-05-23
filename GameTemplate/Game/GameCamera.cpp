@@ -3,13 +3,14 @@
 #include "GameCamera.h"
 #include "Player.h"
 #include "InfoForEdge.h"
+#include "Enemy2.h"
 
 namespace
 {
 	const float CAMPOS_Y = 250.0f;			//視点の高さ
 	const float TOCAMPOS_Z = -77.0f;		//注視点までのZ座標
 	const float DISTANCE = 100.0f;			//プレイヤーとの距離	
-	const float MOVESPEED = 1300.0f;		//歩きの移動速度
+	const float MOVESPEED = 500.0f;			//歩きの移動速度
 	const float MOVE_RUN = 1.22f;			//走り時にいくら乗算するか
 	const float MOVE_SNEAK = 0.3f;			//しゃがみ時にいくら乗算するか
 	const float TARGET_UNDER = -0.7f;		//カメラの下限
@@ -20,6 +21,8 @@ namespace
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
 	const float SOUND_RANGE = 180.0f;				//影響範囲
 	const float VOLUME = 0.7f;						//ボリューム
+	const float FRICTION = 0.5f;					//摩擦
+	const float VIEWPOINT_UP = 350.0f;				//敵の顔の高さ
 }
 
 GameCamera::GameCamera()
@@ -36,6 +39,8 @@ bool GameCamera::Start()
 
 	//プレイヤーのインスタンスを探す。
 	m_player = FindGO<Player>("player");
+	//エネミー
+	m_enemy = FindGO<Enemy2>("enemy");
 
 	//m_position = Vector3::Zero;
 	m_modelRender.Init("Assets/modelData/human/playerbox.tkm");
@@ -55,8 +60,6 @@ bool GameCamera::Start()
 	m_sound->Init(11);
 	m_sound->SetVolume(VOLUME);
 
-	beforeRate = 0.00f;
-	//g_infoForEdge.SetRate(6, m_rateByTime);
 	g_infoForEdge.InitForSound(6, m_position, 200.0f, 0, m_rateByTime);
 
 	return true;
@@ -91,9 +94,9 @@ void GameCamera::Move()
 		return;
 	}
 	}*/
-	//x,zの移動速度を0にする。
-	m_moveSpeed.x = 0.0f;
-	m_moveSpeed.z = 0.0f;
+	////x,zの移動速度を0にする。
+	//m_moveSpeed.x = 0.0f;
+	//m_moveSpeed.z = 0.0f;
 
 
 	//左スティックの入力量を計算
@@ -113,38 +116,20 @@ void GameCamera::Move()
 	m_moveSpeed += right * stickL.x * MOVESPEED;
 	m_moveSpeed += forward * stickL.y * MOVESPEED;
 
-	//走りステートなら速度を1.3倍にする。
-	if (m_moveState == enMoveState_Run)
-	{
-		m_moveSpeed.x *= MOVE_RUN;
-		m_moveSpeed.z *= MOVE_RUN;
-
-	}
-	//しゃがみステートなら速度を0.7倍にする。
-	if (m_moveState == enMoveState_Sneak)
-	{
-		m_moveSpeed.x *= MOVE_SNEAK;
-		m_moveSpeed.z *= MOVE_SNEAK;
-	}
 	//摩擦
-	m_moveSpeed.x -= m_moveSpeed.x * 0.3f;
-	m_moveSpeed.z -= m_moveSpeed.z * 0.3f;
+	m_moveSpeed.x -= m_moveSpeed.x * FRICTION;
+	m_moveSpeed.z -= m_moveSpeed.z * FRICTION;
 	//2ベクトル間の強さが0.001以下だったら
 	if (m_moveSpeed.Length() < 0.001f)
 	{
-		m_moveSpeed.x -= m_moveSpeed.x * 0.3f;
-		m_moveSpeed.z -= m_moveSpeed.z * 0.3f;
+		m_moveSpeed.x -= m_moveSpeed.x * FRICTION;
+		m_moveSpeed.z -= m_moveSpeed.z * FRICTION;
 	}
 	
 	//キャラコンを使って座標を移動させる。
 	m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 	//視点の高さを上げる。
 	m_position.y = CAMPOS_Y;
-	//しゃがみ状態だったら
-	if (IsSneak() == false)
-	{
-		m_position.y -= m_position.y / 2;
-	}
 	//カメラの座標を設定する。
 	g_camera3D->SetPosition(m_position);
 }
@@ -153,14 +138,16 @@ void GameCamera::ViewPoint()
 {
 	//カメラを更新。
 	//注視点を計算する。
-	m_target = m_position;
+	//m_target = m_position;
 	//プレイヤの足元からちょっと上を注視点とする。
-	m_target += g_camera3D->GetForward() * 50.0f;
+	//m_target += g_camera3D->GetForward() * 50.0f;
 
 	Vector3 toCameraPosOld = m_toCameraPos;
 	//パッドの入力を使ってカメラを回す。
-	float x = g_pad[0]->GetRStickXF();
-	float y = g_pad[0]->GetRStickYF();
+	float x = g_pad[0]->GetRStickXF() * 1.5f;
+	float y = g_pad[0]->GetRStickYF() * 1.5f;
+
+
 
 	//Y軸周りの回転
 	Quaternion qRot;
@@ -190,6 +177,12 @@ void GameCamera::ViewPoint()
 
 	//視点を計算する。
 	m_target = m_position + m_toCameraPos;
+
+	//プレイヤーが攻撃を受けたら
+	/*if (m_player->IsEnableMove() == false) {
+		m_target = m_enemy->GetPosition();
+		m_target.y += VIEWPOINT_UP;
+	}*/
 	//メインカメラに注視点と視点を設定する。
 	g_camera3D->SetTarget(m_target);
 }
@@ -205,17 +198,6 @@ void GameCamera::ManageState()
 		//歩きステート
 	case enMoveState_Walk:
 		WalkState();
-		break;
-		//走りステート
-	case enMoveState_Run:
-		RunState();
-		break;
-		//しゃがみステート
-	case enMoveState_Sneak:
-		SneakState();
-		break;
-	case enMoveState_SneakIdle:
-		SneakIdleState();
 		break;
 	default:
 		break;
@@ -236,54 +218,17 @@ void GameCamera::WalkState()
 	TransitionState();
 }
 
-void GameCamera::RunState()
-{
-	TransitionState();
-}
-
-void GameCamera::SneakState()
-{
-	TransitionState();
-}
-
-void GameCamera::SneakIdleState()
-{
-	TransitionState();
-}
-
 void GameCamera::TransitionState()
 {
 
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.01f && fabsf(m_moveSpeed.z) >= 0.01f)
 	{
-		//Bボタンを押している間は走る。
-		if (g_pad[0]->IsPress(enButtonA))
-		{
-			//走り状態にする。
-			m_moveState = enMoveState_Run;
-		}
-		//LBボタンを押している間しゃがむ。
-		if (g_pad[0]->IsPress(enButtonLB2))
-		{
-			//しゃがみ状態にする。
-			m_moveState = enMoveState_Sneak;
-		}
 		//歩き状態にする。
 		m_moveState = enMoveState_Walk;
+		return;
 	}
-	else
-	{
-		//LB2を押していたら
-		if (g_pad[0]->IsPress(enButtonLB2))
-		{
-			//しゃがみ待機状態にする。
-			m_moveState = enMoveState_SneakIdle;
-			return;
-		}
-		//待機状態にする。
-		m_moveState = enMoveState_Idle;
-	}
+	m_moveState = enMoveState_Idle;
 }
 
 void GameCamera::CheckRate()

@@ -18,7 +18,7 @@ namespace
 }
 Gramophone::~Gramophone()
 {
-	for (int i = 1; i <= 3; i++)
+	for (int i = 2; i <= 4; i++)
 	{
 		g_infoForEdge.SetIsSound(i, 0);
 		g_infoForEdge.SetRate(i, 0.00f);
