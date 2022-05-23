@@ -25,6 +25,7 @@ namespace
 	const float DISTANCE_TO_TARGET_WHILE_RETURNING = 30.0f;			// 期間中の目標地点までの距離
 	const float TIME_TO_LOSE_SIGHT = 5.0f;							// プレイヤーを見失った時間
 	const float INTERPOLATION_TIME_FOR_ANIMATION = 0.5f;			// アニメーションの補間時間
+	const float TIME_TO_FORCE_STATE_TRANSITION = 6.0f;				// 強制的にステート遷移する時間
 }
 
 bool Enemy2::Start()
@@ -437,6 +438,8 @@ void Enemy2::ProcessSurveyStateTransition()
 	}
 	// 一定時間プレイヤーを見失っていたら
 	if (m_surveyTimer > TIME_TO_LOSE_SIGHT) {
+		// 帰還状態の時間を指定
+		m_timeToReturn = TIME_TO_FORCE_STATE_TRANSITION;
 		// ステートをパスへの帰還状態にする
 		m_enemyState = enEnemyState_ReturnToPath;
 	}
@@ -447,6 +450,8 @@ void Enemy2::ProcessReturnToPathStateTransition()
 {
 	// 目標の座標と現在の座標の距離を測る
 	Vector3 distance = m_point->s_position - m_position;
+
+	m_timeToReturn -= g_gameTime->GetFrameDeltaTime();
 
 	// プレイヤーを発見したら
 	if (m_isFound == true) {
@@ -460,6 +465,11 @@ void Enemy2::ProcessReturnToPathStateTransition()
 	// 目標の座標に近くなったら
 	else if (distance.Length() < DISTANCE_TO_TARGET_WHILE_RETURNING) {
 		// ステートを歩き状態にする
+		m_enemyState = enEnemyState_Walk;
+	}
+	// 一定時間以内に帰還できなかった場合
+	else if (m_timeToReturn <= 0.0f) {
+		// 強制的にステートを歩き状態にする
 		m_enemyState = enEnemyState_Walk;
 	}
 }

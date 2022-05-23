@@ -38,7 +38,14 @@ public:
 	{
 		m_rotation = rot;
 	}
-
+	/// <summary>
+	/// 座標を取得
+	/// </summary>
+	/// <returns>座標</returns>
+	const Vector3 GetPosition()
+	{
+		return m_position;
+	}
 private:
 	Vector3			m_disToPlayer;			//プレイヤーとの距離
 	Vector3			m_position;				//座標

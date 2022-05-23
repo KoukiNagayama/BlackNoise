@@ -60,7 +60,7 @@ bool GameStart::Start()
 	Vector3 position = Vector3::Zero;
 	//各クラスを生成。
 
-	m_levelRender.Init("Assets/level3D/stage2.tkl", [&](LevelObjectData& objData) {
+	m_levelRender.Init("Assets/level3D/stage2_2.tkl", [&](LevelObjectData& objData) {
 		//ステージ
 		if (objData.EqualObjectName(L"floor2") == true) {
 
@@ -149,7 +149,7 @@ bool GameStart::Start()
 
 			return true;
 		}
-		if (objData.ForwardMatchName(L"crowbar") == true)
+		if (objData.EqualObjectName(L"crowbar") == true)
 		{
 			m_crowbar = NewGO<Crowbar>(0, "crowbar");
 			m_crowbar->SetPosition(objData.position);
