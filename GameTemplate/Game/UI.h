@@ -6,6 +6,7 @@ class Gramophone;
 class Crowbar;
 class GameCamera;
 class FloorGimmick;
+class Item;
 
 class UI:public IGameObject
 {
@@ -53,15 +54,15 @@ private:
 	/// <summary>
 	/// バールの位置を検索
 	/// </summary>
-	void FindLocateOfCrowbar();
+	bool FindLocateOfCrowbar();
 	/// <summary>
 	/// レコードの位置を検索
 	/// </summary>
-	void FindLocateOfRecord();
+	bool FindLocateOfRecord();
 	/// <summary>
 	/// 封鎖する木の板の位置を検索
 	/// </summary>
-	void FindLocateOfFloorGimmick();
+	bool FindLocateOfFloorGimmick();
 	/// <summary>
 	/// プレイヤーがアイテムを向いているか調べる
 	/// </summary>
@@ -83,6 +84,7 @@ private:
 	Crowbar*			m_crowbar = nullptr;				// バール
 	GameCamera*			m_gameCamera = nullptr;				// ゲームカメラ
 	FloorGimmick*		m_floorGimmick = nullptr;			// フロア封鎖用ギミック
+	Item*				m_item = nullptr;					// アイテムクラス
 	Vector3				m_playerForward;					// プレイヤーの正面
 	Vector3				m_playerPos;						// プレイヤーの座標
 	Vector3				m_diffToItem;						// アイテムとの座標の差
