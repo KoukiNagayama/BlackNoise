@@ -5,6 +5,7 @@ class Record;
 class Gramophone;
 class Crowbar;
 class GameCamera;
+class FloorGimmick;
 
 class UI:public IGameObject
 {
@@ -54,6 +55,14 @@ private:
 	/// </summary>
 	void FindLocateOfCrowbar();
 	/// <summary>
+	/// レコードの位置を検索
+	/// </summary>
+	void FindLocateOfRecord();
+	/// <summary>
+	/// 封鎖する木の板の位置を検索
+	/// </summary>
+	void FindLocateOfFloorGimmick();
+	/// <summary>
 	/// プレイヤーがアイテムを向いているか調べる
 	/// </summary>
 	/// <param name="diffToItem">アイテムとプレイヤーの座標の差</param> 
@@ -72,7 +81,8 @@ private:
 	Record*				m_record = nullptr;					// レコード
 	Gramophone*			m_gramophone = nullptr;				// 蓄音機
 	Crowbar*			m_crowbar = nullptr;				// バール
-	GameCamera*			m_gameCamera;						// ゲームカメラ
+	GameCamera*			m_gameCamera = nullptr;				// ゲームカメラ
+	FloorGimmick*		m_floorGimmick = nullptr;			// フロア封鎖用ギミック
 	Vector3				m_playerForward;					// プレイヤーの正面
 	Vector3				m_playerPos;						// プレイヤーの座標
 	Vector3				m_diffToItem;						// アイテムとの座標の差
@@ -80,6 +90,7 @@ private:
 	bool				m_isHammerDescript = false;			// ハンマーの説明を表示するか
 	bool				m_isRecordDescript = false;			// レコードの説明を表示するか
 	bool				m_isGramophoneDescript = false;		// 蓄音機の説明を表示するか
-	float				m_timeToDisplay = 0.0f;				// 
+	bool				m_isFloorGimmickDescript = false;	// フロア封鎖用ギミックの説明を表示するか
+	float				m_timeToDisplay = 0.0f;				// テキストを表示する時間
 };
 

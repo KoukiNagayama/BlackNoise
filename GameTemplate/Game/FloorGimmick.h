@@ -53,6 +53,14 @@ public:
 	{
 		return m_attack;
 	}
+	/// <summary>
+	/// 座標を取得
+	/// </summary>
+	/// <returns>座標</returns>
+	const Vector3 GetPosition()
+	{
+		return m_position;
+	}
 private:
 	/// <summary>
 	/// フィジックスオブジェクトの生成

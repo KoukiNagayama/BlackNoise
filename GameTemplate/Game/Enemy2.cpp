@@ -325,6 +325,7 @@ void Enemy2::Chase()
 			ENEMY_RADIUS,
 			ENEMY_HEIGHT
 		);
+		// タイマーリセット
 		m_pathFindingTimer = PATH_FINDING_TIMER;
 	}
 
