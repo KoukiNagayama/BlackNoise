@@ -5,12 +5,13 @@ class Record;
 class Gramophone;
 class Crowbar;
 class GameCamera;
+class Item;
 
 class UI:public IGameObject
 {
 public:
 	UI() {};
-	~UI() {};
+	~UI();
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
@@ -62,6 +63,7 @@ private:
 	/// 表示する文字列を指定
 	/// </summary>
 	void SpecifyStringToDisplay(std::string item);
+
 private:
 	SpriteRender		m_spriteRender;						// Aボタンの画像
 	SoundSource*		m_se;								// アイテム収拾音
@@ -81,5 +83,6 @@ private:
 	bool				m_isRecordDescript = false;			// レコードの説明を表示するか
 	bool				m_isGramophoneDescript = false;		// 蓄音機の説明を表示するか
 	float				m_timeToDisplay = 0.0f;				// 
+
 };
 

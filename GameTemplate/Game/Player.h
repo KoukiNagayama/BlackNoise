@@ -11,7 +11,7 @@ public:
 	enum EnPlayerState {
 		enPlayerState_Nomal,		//通常
 		enPlayerState_Damage,		//ダメージステート
-		enPlayerState_Down			//ダウンステート
+		enPlayerState_Stop			//ダウンステート
 	};
 public:
 	Player() {};
@@ -28,7 +28,7 @@ public:
 	bool IsEnableMove() const
 	{
 		return m_playerState != enPlayerState_Damage &&
-			m_playerState != enPlayerState_Down;
+			m_playerState != enPlayerState_Stop;
 	}
 	/// <summary>
 	/// ダメージステートの設定
@@ -36,6 +36,16 @@ public:
 	void ReceiveDamege()
 	{
 		m_playerState = enPlayerState_Damage;
+	}
+
+	void SetStopState()
+	{
+		m_playerState = enPlayerState_Stop;
+	}
+
+	void SetNormalState()
+	{
+		m_playerState = enPlayerState_Nomal;
 	}
 	/// <summary>
 	/// 座標を渡す。

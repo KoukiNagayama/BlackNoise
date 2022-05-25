@@ -12,10 +12,12 @@ namespace {
 	const float SOUND_RANGE = 900.0f;				//‰e‹¿‚·‚é”ÍˆÍ
 }
 
-//FloorGimmick::~FloorGimmick()
-//{
-//
-//}
+FloorGimmick::~FloorGimmick()
+{
+	g_infoForEdge.SetIsSound(5, 0);
+	g_infoForEdge.SetRate(5, 0.00f);
+	DeleteGO(m_sound);
+}
 
 bool FloorGimmick::Start()
 {
@@ -59,6 +61,10 @@ void FloorGimmick::Update()
 
 void FloorGimmick::MakeSound()
 {
+	if (m_sound != nullptr)
+	{
+		DeleteGO(m_sound);
+	}
 	m_sound = NewGO<SoundSource>(9);
 	m_sound->Init(9);
 	m_sound->SetVolume(1.0f);
@@ -82,6 +88,7 @@ void FloorGimmick::CheckRate()
 				m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
 				if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
 					m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+					m_sound = nullptr;
 				}
 			}
 		}
@@ -102,12 +109,10 @@ void FloorGimmick::NearGimmick()
 		case 2:
 			if (g_pad[0]->IsTrigger(enButtonA))
 			{
-				ReleasePhysicsObject();
 				MakeSound();
 				//ƒ‚ƒfƒ‹‚ÌØ‚è‘Ö‚¦
 				m_modelRender.Init("Assets/modelData/stage/wood2.tkm");
 				m_attack -= 1;
-				CreatePhysicsObject();
 			}
 			break;
 		case 1:
@@ -118,7 +123,6 @@ void FloorGimmick::NearGimmick()
 				//ƒ‚ƒfƒ‹‚ÌØ‚è‘Ö‚¦
 				m_modelRender.Init("Assets/modelData/stage/wood.tkm");
 				m_attack -= 1;
-				CreatePhysicsObject();
 			}
 			break;
 		case 0:

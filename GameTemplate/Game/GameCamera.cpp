@@ -30,6 +30,8 @@ GameCamera::GameCamera()
 }
 GameCamera::~GameCamera()
 {
+	g_infoForEdge.SetIsSound(6, 0);
+	g_infoForEdge.SetRate(6, 0.00f);
 	DeleteGO(m_sound);
 }
 bool GameCamera::Start()

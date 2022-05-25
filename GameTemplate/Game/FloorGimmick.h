@@ -6,7 +6,7 @@ class FloorGimmick : public IGameObject
 {
 public:
 	FloorGimmick() {};
-	~FloorGimmick() {};
+	~FloorGimmick();
 	/// <summary>
 	/// ‰Šú‰»ˆ—
 	/// </summary>

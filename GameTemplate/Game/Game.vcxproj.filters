@@ -13,7 +13,6 @@
     <ClCompile Include="GameStart.cpp" />
     <ClCompile Include="Bell.cpp" />
     <ClCompile Include="Gramophone.cpp" />
-    <ClCompile Include="Hammer.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="Piece.cpp" />
@@ -46,7 +45,6 @@
     <ClInclude Include="GameStart.h" />
     <ClInclude Include="Bell.h" />
     <ClInclude Include="Gramophone.h" />
-    <ClInclude Include="Hammer.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Key.h" />
     <ClInclude Include="Piece.h" />

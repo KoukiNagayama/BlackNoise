@@ -34,6 +34,20 @@ namespace
 	const float PATH_FINDING_TIMER = 0.7f;							// ナビメッシュによるパスを検索する時間の間隔
 }
 
+Enemy2::~Enemy2()
+{
+	g_infoForEdge.SetIsSound(7, 0);
+	g_infoForEdge.SetRate(7, 0.00f);
+	g_infoForEdge.SetIsSound(8, 0);
+	g_infoForEdge.SetRate(8, 0.00f);
+	if (m_screamSound != nullptr) {
+		DeleteGO(m_screamSound);
+	}
+	if (m_stepSound != nullptr) {
+		DeleteGO(m_stepSound);
+	}
+}
+
 bool Enemy2::Start()
 {
 
@@ -517,8 +531,6 @@ void Enemy2::ProcessAttackStateTransition()
 	m_isGameOver = true;
 }
 
-
-
 void Enemy2::PlayAnimation()
 {
 	switch (m_enemyState) {
@@ -630,6 +642,7 @@ void Enemy2::OutlineByStep()
 				// 影響率を最低数値以下にならないように固定
 				if (m_stepRateByTime <= RATE_BY_TIME_MIN_VALUE) {
 					m_stepRateByTime = RATE_BY_TIME_MIN_VALUE;
+					m_stepSound = nullptr;
 				}
 			}
 		}

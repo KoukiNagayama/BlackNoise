@@ -11,6 +11,14 @@ namespace {
 	const float SOUND_RANGE = 400.0f;
 }
 
+Toy::~Toy()
+{
+	g_infoForEdge.SetIsSound(1, 0);
+	g_infoForEdge.SetRate(1, 0.00f);
+	if (m_sound != nullptr) {
+		DeleteGO(m_sound);
+	}
+}
 
 bool Toy::Start()
 {
@@ -74,6 +82,7 @@ void Toy::CheckRate()
 				m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
 				if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
 					m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+					m_sound = nullptr;
 				}
 			}
 		}

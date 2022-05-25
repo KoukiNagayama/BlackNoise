@@ -6,6 +6,7 @@
 #include "Gramophone.h"
 #include "Hammer.h"
 #include "Record.h"
+#include "Item.h"
 
 
 namespace
@@ -15,6 +16,13 @@ namespace
 	const float		DISTANCE_TO_ITEM = 400.0f;								// アイテムとの距離
 	const float		VECTOR_CONSISTENCY = 0.8f;								// ベクトルが一致しているか比較する値
 	const float		TIME_TO_DISPLAY = 2.5f;
+
+	const float TIMER = 2.0f;
+}
+
+UI::~UI()
+{
+	DeleteGO(m_se);
 }
 
 bool UI::Start()
@@ -29,7 +37,6 @@ bool UI::Start()
 
 	m_crowbar = FindGO<Crowbar>("crowbar");
 
-
 	return true;
 }
 
@@ -42,7 +49,6 @@ void UI::Update()
 	m_playerPos = m_gameCamera->GetPosition();
 	// プレイヤーの前方向を取得
 	m_playerForward = g_camera3D->GetForward();
-
 
 	FindLocateOfCrowbar();
 	
