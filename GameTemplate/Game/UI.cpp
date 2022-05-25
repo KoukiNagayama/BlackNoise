@@ -6,13 +6,18 @@
 #include "Gramophone.h"
 #include "Hammer.h"
 #include "Record.h"
+<<<<<<< HEAD
 #include "Item.h"
+=======
+#include "FloorGimmick.h"
+>>>>>>> a188c8f14d60cd4fe21394d449913ec772daa121
 
 
 namespace
 {
 	const Vector3	ITEM_NAME_POSITION = Vector3(200.0f, -80.0f, 0.0f);		// アイテム名を表示する座標
 	const Vector3	SUPPLEMENT_POSITION = Vector3(200.0f, -120.0f, 0.0f);	// 補足を表示する座標
+<<<<<<< HEAD
 	const float		DISTANCE_TO_ITEM = 400.0f;								// アイテムとの距離
 	const float		VECTOR_CONSISTENCY = 0.8f;								// ベクトルが一致しているか比較する値
 	const float		TIME_TO_DISPLAY = 2.5f;
@@ -23,15 +28,16 @@ namespace
 UI::~UI()
 {
 	DeleteGO(m_se);
+=======
+	const float		DISTANCE_TO_ITEM = 150.0f;								// アイテムとの距離
+	const float		DISTANCE_TO_FLOORGIMMICK = 350.0f;						// フロアを封鎖するギミックとの距離
+	const float		VECTOR_CONSISTENCY = 0.8f;								// ベクトルが一致しているか比較する値		
+	const float		TIME_TO_DISPLAY = 3.0f;									// アイテムに対する反応のテキストを表示させる時間
+>>>>>>> a188c8f14d60cd4fe21394d449913ec772daa121
 }
 
 bool UI::Start()
 {
-	//m_spriteRender.Init("Assets/sprite/Abutton.dds", 128, 128);
-	//m_spriteRender.SetPosition(Vector3(0.0f, -130.0f, 0.0f));
-	
-	//破壊音の読み込み
-	g_soundEngine->ResistWaveFileBank(10, "Assets/sound/se/item_get.wav");
 
 	m_gameCamera = FindGO<GameCamera>("gamecamera");
 
@@ -51,6 +57,10 @@ void UI::Update()
 	m_playerForward = g_camera3D->GetForward();
 
 	FindLocateOfCrowbar();
+
+	FindLocateOfRecord();
+
+	FindLocateOfFloorGimmick();
 	
 	// 文字列の表示時間を減らす
 	if (m_timeToDisplay >= 0.0f) {
@@ -65,7 +75,8 @@ void UI::FindLocateOfCrowbar()
 	}
 	// バールの座標
 	Vector3 crowbarPos = m_crowbar->GetPosition();
-	// プレイヤーとアイテムの座標の差
+
+	// プレイヤーとバールの座標の差
 	Vector3 diffToItem = crowbarPos - m_playerPos;
 
 	// プレイヤーとバールが一定距離以下ならば
@@ -78,6 +89,63 @@ void UI::FindLocateOfCrowbar()
 		}
 	}
 
+}
+
+void UI::FindLocateOfRecord()
+{
+	// レコードを検索して配列とする
+	const auto& records = FindGOs<Record>("record");
+	// レコード配列のサイズ
+	const int recordSize = records.size();
+	for (int i = 0; i < recordSize; i++) {
+		m_record = records[i];
+		if (m_record == nullptr) {
+			return;
+		}
+		// レコードの座標
+		Vector3 recordPos = m_record->GetPosition();
+
+		// プレイヤーとレコードの座標の差
+		Vector3 diffToItem = recordPos - m_playerPos;
+
+		// プレイヤーとレコードが一定距離以下ならば
+		if (diffToItem.Length() <= DISTANCE_TO_ITEM) {
+			// プレイヤーが見ている方向にアイテムがあるか調べる
+			if (CheckPlayerOrientation(diffToItem)) {
+				// 表示する文字列を指定
+				SpecifyStringToDisplay("record");
+			}
+		}
+	}
+}
+
+void UI::FindLocateOfFloorGimmick()
+{
+	// レコードを検索して配列とする
+	const auto& gimmicks = FindGOs<FloorGimmick>("floorgimmick");
+	// レコード配列のサイズ
+	const int gimmickSize = gimmicks.size();
+	for (int i = 0; i < gimmickSize; i++) {
+		m_floorGimmick = gimmicks[i];
+		if (m_floorGimmick == nullptr) {
+			return;
+		}
+
+		// レコードの座標
+		Vector3 gimmickPos = m_floorGimmick->GetPosition();
+
+		// プレイヤーとレコードの座標の差
+		Vector3 diffToItem = gimmickPos - m_playerPos;
+
+		// プレイヤーとレコードが一定距離以下ならば
+		if (diffToItem.Length() <= DISTANCE_TO_FLOORGIMMICK) {
+			// プレイヤーが見ている方向にアイテムがあるか調べる
+			if (CheckPlayerOrientation(diffToItem)) {
+				// 表示する文字列を指定
+				SpecifyStringToDisplay("floorGimmick");
+			}
+		}
+	}
 }
 
 bool UI::CheckPlayerOrientation(Vector3 diffToItem)
@@ -116,6 +184,44 @@ void UI::SpecifyStringToDisplay(std::string item)
 		// 文字列を表示するように設定する
 		if (m_isCrowbarDescript == false) {
 			m_isCrowbarDescript = true;
+			m_timeToDisplay = TIME_TO_DISPLAY;
+		}
+		return;
+	}
+	// レコードの場合
+	else if (item == "record") {
+		// レコード用文字列を設定
+		swprintf_s(itemName, 256, L"レコードだ");
+		swprintf_s(supplement, 256, L"どこかで使えるかな");
+		// アイテム名を設定
+		m_itemNameFont.SetText(itemName);
+		m_itemNameFont.SetPosition(ITEM_NAME_POSITION);
+		// 補足情報を設定
+		m_supplementFont.SetText(supplement);
+		m_supplementFont.SetPosition(SUPPLEMENT_POSITION);
+
+		// 文字列を表示するように設定する
+		if (m_isRecordDescript == false) {
+			m_isRecordDescript = true;
+			m_timeToDisplay = TIME_TO_DISPLAY;
+		}
+		return;
+	}
+	// 
+	else if (item == "floorGimmick") {
+		// レコード用文字列を設定
+		swprintf_s(itemName, 256, L"木の板で封鎖されている");
+		swprintf_s(supplement, 256, L"どうにかして壊せないだろうか");
+		// アイテム名を設定
+		m_itemNameFont.SetText(itemName);
+		m_itemNameFont.SetPosition(ITEM_NAME_POSITION);
+		// 補足情報を設定
+		m_supplementFont.SetText(supplement);
+		m_supplementFont.SetPosition(SUPPLEMENT_POSITION);
+
+		// 文字列を表示するように設定する
+		if (m_isFloorGimmickDescript == false) {
+			m_isFloorGimmickDescript = true;
 			m_timeToDisplay = TIME_TO_DISPLAY;
 		}
 		return;
