@@ -72,6 +72,7 @@ private:
 	/// 表示する文字列を指定
 	/// </summary>
 	void SpecifyStringToDisplay(std::string item);
+
 private:
 	SpriteRender		m_spriteRender;						// Aボタンの画像
 	SoundSource*		m_se;								// アイテム収拾音

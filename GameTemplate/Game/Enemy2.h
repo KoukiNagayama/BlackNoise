@@ -14,7 +14,7 @@ class Enemy2 : public IGameObject
 {
 public:
 	Enemy2() {};
-	~Enemy2() {};
+	~Enemy2();
 
 	/// <summary>
 	/// ‰Šú‰»ˆ—

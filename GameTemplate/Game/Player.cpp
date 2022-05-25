@@ -24,11 +24,6 @@ bool Player::Start()
 	Vector3 position;
 	position = m_position;
 	position.y = 0.0f;
-	//m_modelRender.Init("Assets/modelData/human/playerbox.tkm");
-	//m_modelRender.SetPosition(m_position);
-	//キャラコンを初期化する。
-	//m_charaCon.Init(10.0f, 45.0f, position);
-
 	return true;
 }
 
@@ -84,7 +79,7 @@ void Player::TransitionState()
 	if (m_hp == 0)
 	{
 		//ダウン状態にする。
-		m_playerState = enPlayerState_Down;
+		m_playerState = enPlayerState_Stop;
 		return;
 	}
 }
@@ -102,7 +97,7 @@ void Player::ManageState()
 		DamageState();
 		break;
 		//ダウン状態
-	case enPlayerState_Down:
+	case enPlayerState_Stop:
 		DownState();
 		break;
 	default:

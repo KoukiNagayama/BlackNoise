@@ -34,8 +34,6 @@ GameStart::~GameStart()
 	DeleteGO(m_gamecam);
 	DeleteGO(m_bell);
 	DeleteGO(m_toy);
-	DeleteGO(m_brokendoor);
-	DeleteGO(m_hammer);
 	DeleteGO(m_enemy); 
 	for (auto door : m_door)
 	{
@@ -125,16 +123,10 @@ bool GameStart::Start()
 			door->SetPosition(objData.position);
 			door->SetScale(objData.scale);
 			door->SetRotation(objData.rotation);
+			door->SetDoorNumber(objData.number);
 			m_door.push_back(door);
 			return true;
 		}
-		if (objData.ForwardMatchName(L"hammer") == true)
-		{
-			m_hammer = NewGO<Hammer>(0, "hammer");
-			m_hammer->SetPosition(objData.position);
-			return true;
-		}
-
 		if (objData.ForwardMatchName(L"switchfloor") == true)
 		{
 			m_switchPos = objData.position;

@@ -10,7 +10,7 @@ namespace
 }
 bool Record::Start()
 {
-	m_modelRender.Init("Assets/modelData/item/record_item.tkm");
+	m_modelRender.Init("Assets/modelData/item/record_item.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);
 
 	m_gameCamera = FindGO<GameCamera>("gamecamera");
 
@@ -18,12 +18,6 @@ bool Record::Start()
 
 	m_ui = FindGO<UI>("ui");
 
-	//if (m_number == 1) {
-	//	m_position = Vector3(300.0f, 100.0f, 0.0f);
-	//}
-	//else if (m_number == 2) {
-	//	m_position = Vector3(0.0f, 50.0f, 0.0f);
-	//}
 	m_modelRender.SetTRS(m_position, m_rotation, m_scale);
 	
 	return true;

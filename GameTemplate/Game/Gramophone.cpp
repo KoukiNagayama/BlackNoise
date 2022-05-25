@@ -13,7 +13,7 @@ namespace
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
-	const float MAXIMUM_VOLUME = 0.2f;				// 最大音量
+	const float MAXIMUM_VOLUME = 0.5f;				// 最大音量
 	const float MINIMUM_VOLUME = 0.00f;				// 最小音量
 }
 Gramophone::~Gramophone()
@@ -23,8 +23,12 @@ Gramophone::~Gramophone()
 		g_infoForEdge.SetIsSound(i, 0);
 		g_infoForEdge.SetRate(i, 0.00f);
 	}
-	DeleteGO(m_soundSource1);
-	DeleteGO(m_soundSource2);
+	if (m_soundSource1 != nullptr) {
+		DeleteGO(m_soundSource1);
+	}
+	if (m_soundSource2 != nullptr) {
+		DeleteGO(m_soundSource2);
+	}
 	DeleteGO(m_soundSource3);
 
 }
@@ -48,7 +52,7 @@ void Gramophone::Init(int num)
 		m_gramophoneState = enGramophoneState_Idle;
 		m_modelRender.Init("Assets/modelData/item/record_off.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);
 		// サウンドを登録
-		g_soundEngine->ResistWaveFileBank(2, "Assets/sound/record/record3.wav");
+		g_soundEngine->ResistWaveFileBank(2, "Assets/sound/record/record3_1.wav");
 		g_infoForEdge.InitForSound(2, m_position, RANGE, 0, m_rateByTime);
 	}
 
@@ -57,7 +61,7 @@ void Gramophone::Init(int num)
 		m_gramophoneState = enGramophoneState_Idle;
 		m_modelRender.Init("Assets/modelData/item/record_off.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);
 		// サウンドを登録
-		g_soundEngine->ResistWaveFileBank(3, "Assets/sound/record/record4.wav");
+		g_soundEngine->ResistWaveFileBank(3, "Assets/sound/record/record4_1.wav");
 		g_infoForEdge.InitForSound(3, m_position, RANGE, 0, m_rateByTime);
 	}
 	
@@ -66,7 +70,7 @@ void Gramophone::Init(int num)
 		m_gramophoneState = enGramophoneState_Play;
 		m_modelRender.Init("Assets/modelData/item/record_on.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);
 		// サウンドを登録
-		g_soundEngine->ResistWaveFileBank(1, "Assets/sound/record/record7.wav");
+		g_soundEngine->ResistWaveFileBank(1, "Assets/sound/record/record7_1.wav");
 		g_infoForEdge.InitForSound(4, m_position, RANGE, 0, m_rateByTime);
 	}
 
@@ -99,11 +103,13 @@ void Gramophone::ManegeState()
 	case enGramophoneState_Play:
 		PlayState();
 		break;
+	case enGramophoneState_Stop:
+		StopState();
+		break;
 	default:
 		break;
 	}
 }
-
 
 void Gramophone::IdleState()
 {
@@ -118,7 +124,7 @@ void Gramophone::IdleState()
 	if (diff.Length() <= DISTANCE && g_pad[0]->IsTrigger(enButtonA)) {
 		m_recordNum = m_item->GetHaveRecord();
 		if(m_recordNum == 1 || m_recordNum == 2){
-			m_item->IsUseRecord(m_recordNum);
+			m_item->IsUseRecord(m_recordNum);		
 			m_gramophoneState = enGramophoneState_Play;
 			m_modelRender.Init("Assets/modelData/item/record_on.tkm", nullptr, 0, false, enModelUpAxisZ, false, 0, 1);
 		}
@@ -127,45 +133,64 @@ void Gramophone::IdleState()
 
 void Gramophone::PlayState()
 {
-	if (m_number == 1 && m_soundSource1 == nullptr
-		|| m_number == 2 && m_soundSource2 == nullptr
-		|| m_number == 3 && m_soundSource3 == nullptr) 
+	if (m_isPlayed != false)
 	{
-		MakeSound();
+		if (m_number == 1 && m_soundSource1 == nullptr
+			|| m_number == 2 && m_soundSource2 == nullptr
+			|| m_number == 3 && m_soundSource3 == nullptr)
+		{
+			m_gramophoneState = enGramophoneState_Stop;
+			return;
+		}
 	}
 
-
+	else{
+		if (m_number == 1 && m_soundSource1 == nullptr
+			|| m_number == 2 && m_soundSource2 == nullptr
+			|| m_number == 3 && m_soundSource3 == nullptr)
+		{
+			MakeSound();
+			m_isPlayed = true;
+		}
+	}
+	
 	VolumeControl();
 
 	ChangeRate(m_number);
 }
 
+void Gramophone::StopState()
+{
+	return;
+}
+
 void Gramophone::MakeSound()
 {
+
 	if (m_number == 1) {
-		m_soundSource1 = NewGO<SoundSource>(2);
+		m_soundSource1 = NewGO<SoundSource>(0);
 		if (m_recordNum == 1) {
 			m_soundSource1->Init(2);
 		}
 		else if (m_recordNum == 2) {
 			m_soundSource1->Init(3);
 		}
-		m_soundSource1->Play(true);
+		m_soundSource1->Play(false);
 		g_infoForEdge.SetIsSound(2, 1);
 	}
 	else if(m_number == 2){
-		m_soundSource2 = NewGO<SoundSource>(3);
+		m_soundSource2 = NewGO<SoundSource>(0);
 		if (m_recordNum == 1) {
 			m_soundSource2->Init(2);
 		}
 		else if (m_recordNum == 2) {
 			m_soundSource2->Init(3);
 		}
-		m_soundSource2->Play(true);
+		m_soundSource2->Play(false);
 		g_infoForEdge.SetIsSound(3, 1);
 	}
 	else if (m_number == 3) {
-		m_soundSource3 = NewGO<SoundSource>(1);
+		m_soundSource3 = NewGO<SoundSource>(0);
 		m_soundSource3->Init(1);
 		m_soundSource3->Play(true);
 		g_infoForEdge.SetIsSound(4, 1);
@@ -193,13 +218,13 @@ float Gramophone::SoundLevelByDistance(float range)
 
 void Gramophone::VolumeControl()
 {
-	if (m_number == 1) {
+	if (m_number == 1 && m_soundSource1->IsPlaying() != false) {
 		m_soundSource1->SetVolume(SoundLevelByDistance(RANGE));
 	}
-	else if (m_number == 2) {
+	else if (m_number == 2 && m_soundSource2->IsPlaying()!=false ) {
 		m_soundSource2->SetVolume(SoundLevelByDistance(RANGE));
 	}
-	else if (m_number == 3) {
+	else if (m_number == 3 && m_soundSource3->IsPlaying() != false) {
 		m_soundSource3->SetVolume(SoundLevelByDistance(RANGE));
 	}
 }
@@ -229,6 +254,7 @@ void Gramophone::ChangeRate(int num)
 					// 
 					if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
 						m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+						m_soundSource1 = nullptr;
 					}
 				}
 			}
@@ -256,6 +282,7 @@ void Gramophone::ChangeRate(int num)
 					m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
 					if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
 						m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+						m_soundSource2 = nullptr;
 					}
 				}
 			}
@@ -279,6 +306,7 @@ void Gramophone::ChangeRate(int num)
 					m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
 					if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
 						m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+						m_soundSource3 = nullptr;
 					}
 				}
 			}

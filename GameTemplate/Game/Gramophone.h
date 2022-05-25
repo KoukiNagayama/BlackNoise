@@ -10,7 +10,8 @@ public:
 	enum enGramophoneState
 	{
 		enGramophoneState_Idle,
-		enGramophoneState_Play
+		enGramophoneState_Play,
+		enGramophoneState_Stop
 	};
 
 	Gramophone() {};
@@ -90,9 +91,14 @@ private:
 	/// </summary>
 	void PlayState();
 	/// <summary>
+	/// 止まった後の動作
+	/// </summary>
+	void StopState();
+	/// <summary>
 	/// 影響率
 	/// </summary>
 	void ChangeRate(int num);
+
 
 private:
 	enGramophoneState		m_gramophoneState = enGramophoneState_Idle;	// ステート
@@ -109,6 +115,5 @@ private:
 	Item*					m_item;
 	int						m_recordNum;
 	bool					m_isPlay = false;							//再生中か否か。
-	bool					m_onRecord = false;							//レコードを乗せたか
-
+	bool					m_isPlayed = false;							//再生済みか
 };

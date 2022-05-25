@@ -109,6 +109,8 @@ private:
 	/// </summary>
 	void CheckRate();
 
+	bool DotDoorToPlayer();
+
 	ModelRender					m_modelRender;							//モデルレンダ―。
 	Vector3						m_position = Vector3::Zero;				//座標。
 	Quaternion					m_rotation = Quaternion::Identity;		//回転。
@@ -130,5 +132,6 @@ private:
 	float						m_rateByTime = 0.0f;
 	Enemy2*						m_enemy = nullptr;						//エネミー
 	bool						m_close = true;							//閉じているか
+	float						m_timer = 2.0f;							//エネミーがドアを開けるまでのタイマー
 };
 

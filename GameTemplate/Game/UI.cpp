@@ -27,7 +27,6 @@ bool UI::Start()
 
 	m_crowbar = FindGO<Crowbar>("crowbar");
 
-
 	return true;
 }
 

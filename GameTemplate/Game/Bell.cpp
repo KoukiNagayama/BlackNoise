@@ -26,7 +26,11 @@ Bell::Bell()
 }
 Bell::~Bell()
 {
-	DeleteGO(m_bellSound);
+	g_infoForEdge.SetIsSound(0, 0);
+	g_infoForEdge.SetRate(0, 0.00f);
+	if (m_bellSound != nullptr) {
+		DeleteGO(m_bellSound);
+	}
 }
 
 bool Bell::Start()
@@ -43,9 +47,6 @@ bool Bell::Start()
 	g_soundEngine->ResistWaveFileBank(0, "Assets/sound/item/bell_low.wav");
 	//モデルの初期化。
 	m_modelRender.Init("Assets/modelData/item/bell.tkm");
-
-	//サウンドをNewGO
-	m_bellSound = NewGO<SoundSource>(0);
 
 	g_infoForEdge.InitForSound(0, m_position, SOUND_RANGE, 0, m_rateByTime);
 
@@ -164,6 +165,7 @@ void Bell::CheckRate()
 				m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
 				if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
 					m_rateByTime = RATE_BY_TIME_MIN_VALUE;
+					m_bellSound = nullptr;
 				}
 			}
 		}
@@ -171,26 +173,15 @@ void Bell::CheckRate()
 	}
 }
 
-//void Bell::PlayAnimation()
-//{
-//	switch (m_bellState)
-//	{
-//		//待機。
-//	case enBellState_Idle:
-//		m_modelRender.PlayAnimation(enAnimationClip_Idle, 0.3f);
-//		break;
-//		//音を鳴らす。
-//	case enBellState_Ring:
-//		m_modelRender.PlayAnimation(enAnimationClip_Ring, 0.3f);
-//	default:
-//		break;
-//	}
-//}
-
 void Bell::Font()
 {
+	int i = 0;
+	if (m_bellSound != nullptr)
+	{
+		i = 1;
+	}
 	wchar_t wcsbuf[256];
-	swprintf_s(wcsbuf, 256, L"timer:%.3f", m_timer);
+	swprintf_s(wcsbuf, 256, L"timer:%d", i);
 	//表示するテキストを設定。
 	m_font.SetText(wcsbuf);
 	//フォントの位置を設定。
