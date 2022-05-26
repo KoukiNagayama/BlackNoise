@@ -10,7 +10,7 @@ namespace
 	const float CAMPOS_Y = 250.0f;			//視点の高さ
 	const float TOCAMPOS_Z = -77.0f;		//注視点までのZ座標
 	const float DISTANCE = 100.0f;			//プレイヤーとの距離	
-	const float MOVESPEED = 500.0f;			//歩きの移動速度
+	const float MOVESPEED = 2000.0f;			//歩きの移動速度
 	const float MOVE_RUN = 1.22f;			//走り時にいくら乗算するか
 	const float MOVE_SNEAK = 0.3f;			//しゃがみ時にいくら乗算するか
 	const float TARGET_UNDER = -0.7f;		//カメラの下限
