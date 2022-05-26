@@ -36,7 +36,7 @@ bool Title::Start()
 			return true;
 		}
 	});
-	m_levelRender2.Init("Assets/modelData/stage/stage2.tkl", [&](LevelObjectData& objData)
+	m_levelRender2.Init("Assets/level3D/stage2.tkl", [&](LevelObjectData& objData)
 	{
 		if (objData.EqualObjectName(L"floor2") == true) {
 			m_backGround = NewGO<BackGround>(0, "backGround");
