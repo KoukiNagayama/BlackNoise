@@ -73,6 +73,7 @@ bool Door::Start()
 
 void Door::Update()
 {
+	m_enemy = FindGO<Enemy2>("enemy");
 	//アニメーションを再生する。
 	PlayAnimation();
 	//ステート管理。

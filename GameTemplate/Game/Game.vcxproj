@@ -255,8 +255,6 @@
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleCamera.cpp" />
-    <ClCompile Include="TitleGramophone.cpp" />
-    <ClCompile Include="TitlePiano.cpp" />
     <ClCompile Include="TitleSprite.cpp" />
     <ClCompile Include="TitleText.cpp" />
     <ClCompile Include="Toy.cpp" />
@@ -288,8 +286,6 @@
     <ClInclude Include="system\system.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TitleCamera.h" />
-    <ClInclude Include="TitleGramophone.h" />
-    <ClInclude Include="TitlePiano.h" />
     <ClInclude Include="TitleSprite.h" />
     <ClInclude Include="TitleText.h" />
     <ClInclude Include="Toy.h" />

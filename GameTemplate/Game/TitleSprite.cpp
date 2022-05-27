@@ -10,21 +10,24 @@ namespace
 }
 bool TitleSprite::Start()
 {
+	// 各スプライトを初期化
 	m_spriteRender1.Init("Assets/sprite/PRESS_A_TO_PLAY_MUSIC.dds", 1920, 1080);
 	m_spriteRender2.Init("Assets/sprite/PRESS_A_TO_START.dds", 1920, 1080);
 
+	// スプライトの座標を指定
 	m_spritePos1 = SPRITE_POSITION1;
 	m_spritePos2 = SPRITE_POSITION2;
 
+	// スプライトの拡大率を指定
 	m_spriteScale = Vector3(SPRITE_SCALE, SPRITE_SCALE, SPRITE_SCALE);
 
-	// 座標、拡大率を設定
+	// 指定した座標、拡大率を設定
 	m_spriteRender1.SetPosition(m_spritePos1);
 	m_spriteRender1.SetScale(m_spriteScale);
 	m_spriteRender2.SetPosition(m_spritePos2);
 	m_spriteRender2.SetScale(m_spriteScale);
 
-
+	// タイトルオブジェクトを検索
 	m_title = FindGO<Title>("title");
 
 	return true;
@@ -32,17 +35,18 @@ bool TitleSprite::Start()
 
 void TitleSprite::Update()
 {
-	m_titleState = m_title->GetTitleState();
-
+	// 各スプライトを更新
 	m_spriteRender1.Update();
 	m_spriteRender2.Update();
 }
 
 void TitleSprite::Render(RenderContext& rc)
 {
-	if (m_titleState == 0) {
+	// ステートが待機中ならば
+	if (m_title->IsIdleStateNow() == true) {
 		m_spriteRender1.Draw(rc);
 	}
+	// ステートが待機中以外ならば
 	else {
 		m_spriteRender2.Draw(rc);
 	}

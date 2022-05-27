@@ -26,9 +26,7 @@
     <ClCompile Include="TitleText.cpp" />
     <ClCompile Include="Toy.cpp" />
     <ClCompile Include="UI.cpp" />
-    <ClCompile Include="TitleGramophone.cpp" />
     <ClCompile Include="TitleSprite.cpp" />
-    <ClCompile Include="TitlePiano.cpp" />
     <ClCompile Include="Enemy2.cpp" />
     <ClCompile Include="EnemyPath.cpp" />
     <ClCompile Include="WhiteBoard.cpp" />
@@ -59,9 +57,7 @@
     <ClInclude Include="TitleText.h" />
     <ClInclude Include="Toy.h" />
     <ClInclude Include="UI.h" />
-    <ClInclude Include="TitleGramophone.h" />
     <ClInclude Include="TitleSprite.h" />
-    <ClInclude Include="TitlePiano.h" />
     <ClInclude Include="Enemy2.h" />
     <ClInclude Include="EnemyPath.h" />
     <ClInclude Include="WhiteBoard.h" />
