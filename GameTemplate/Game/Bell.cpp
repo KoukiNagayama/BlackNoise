@@ -10,9 +10,9 @@ namespace
 	const float POSITION = 60.0f;
 	const float TIMER = 3.0f;
 	const float VOLUME = 1.0f;
-	const float SOUND_RANGE = 2000.0f;
+	const float SOUND_RANGE = 700.0f;
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
-	const float EDGE_FADE_OUT_DELTA_VALUE = 0.00f;	// エッジがフェードアウトするときの変位量
+	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
 	const float MODEL_MULTIPLIER = 35.0f;			//カメラの前方向、右方向に乗算する値。
@@ -35,12 +35,6 @@ Bell::~Bell()
 
 bool Bell::Start()
 {
-	//アニメーションの初期化。
-	//animationClips[enAnimationClip_Idle].Load("Assets/animData/item/idle.tka");
-	//animationClips[enAnimationClip_Idle].SetLoopFlag(true);
-	//animationClips[enAnimationClip_Ring].Load("Assets/animData/item/ring.tka");
-	//animationClips[enAnimationClip_Ring].SetLoopFlag(true);
-
 	m_player = FindGO<Player>("player");
 	m_gameCam = FindGO<GameCamera>("gamecamera");
 	//サウンドを登録。
@@ -59,8 +53,6 @@ void Bell::Update()
 	Position();
 	//ステート管理
 	ManageState();
-	//アニメーション再生。
-	//PlayAnimation();
 	// デバッグ用の文字表示
 	Font();
 	//影響率
@@ -200,6 +192,6 @@ void Bell::Font()
 void Bell::Render(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);
-	m_font.Draw(rc);
-	m_font1.Draw(rc);
+	//m_font.Draw(rc);
+	//m_font1.Draw(rc);
 }

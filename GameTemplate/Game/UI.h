@@ -5,11 +5,8 @@ class Record;
 class Gramophone;
 class Crowbar;
 class GameCamera;
-<<<<<<< HEAD
 class Item;
-=======
 class FloorGimmick;
->>>>>>> a188c8f14d60cd4fe21394d449913ec772daa121
 
 class UI:public IGameObject
 {
@@ -95,12 +92,7 @@ private:
 	bool				m_isHammerDescript = false;			// ハンマーの説明を表示するか
 	bool				m_isRecordDescript = false;			// レコードの説明を表示するか
 	bool				m_isGramophoneDescript = false;		// 蓄音機の説明を表示するか
-<<<<<<< HEAD
-	float				m_timeToDisplay = 0.0f;				// 
-
-=======
 	bool				m_isFloorGimmickDescript = false;	// フロア封鎖用ギミックの説明を表示するか
 	float				m_timeToDisplay = 0.0f;				// テキストを表示する時間
->>>>>>> a188c8f14d60cd4fe21394d449913ec772daa121
 };
 
