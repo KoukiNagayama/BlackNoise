@@ -15,6 +15,7 @@ namespace
 	const float ADD_DEG = 4.0f;						//1フレームで加算する角度
 	const float VECTOR_CONSISTENCY = -0.2f;			// ベクトルが一致しているか比較する値
 	const float TIMER = 2.0f;						//エネミーがドアを開けるまでの時間
+	const float DEG = 330.0f;
 }
 
 Door::Door()
@@ -262,21 +263,59 @@ void Door::CreatePhysicsObject()
 
 void Door::OpenState()
 {
-	//100度回転させる
-	if (m_deg <= 200.0f)
+	if (m_doorNumber == 12)
 	{
-		m_rotation.AddRotationDegY(ADD_DEG);
-		m_modelRender.SetRotation(m_rotation);
-		m_deg += ADD_DEG;
+		if (m_deg <= (DEG-180.0f))
+		{
+			m_rotation.AddRotationDegY(ADD_DEG);
+			m_modelRender.SetRotation(m_rotation);
+			m_deg += ADD_DEG;
+		}
+		else
+		{
+			//コリジョンを開放する。
+			ReleasePhysicsObject();
+			//クローズ終わりステートに遷移する。
+			m_doorState = enDoorState_OpenIdle;
+			//コリジョンを作る。
+			CreatePhysicsObject();
+		}
 	}
-	else
+	else if (m_doorNumber == 13)
 	{
-		//コリジョンを開放する。
-		ReleasePhysicsObject();
-		//クローズ終わりステートに遷移する。
-		m_doorState = enDoorState_OpenIdle;
-		//コリジョンを作る。
-		CreatePhysicsObject();
+		if (m_deg <= (DEG-100.0f))
+		{
+			m_rotation.AddRotationDegY(ADD_DEG);
+			m_modelRender.SetRotation(m_rotation);
+			m_deg += ADD_DEG;
+		}
+		else
+		{
+			//コリジョンを開放する。
+			ReleasePhysicsObject();
+			//クローズ終わりステートに遷移する。
+			m_doorState = enDoorState_OpenIdle;
+			//コリジョンを作る。
+			CreatePhysicsObject();
+		}
+	}
+	else {
+		//100度回転させる
+		if (m_deg <= DEG)
+		{
+			m_rotation.AddRotationDegY(ADD_DEG);
+			m_modelRender.SetRotation(m_rotation);
+			m_deg += ADD_DEG;
+		}
+		else
+		{
+			//コリジョンを開放する。
+			ReleasePhysicsObject();
+			//クローズ終わりステートに遷移する。
+			m_doorState = enDoorState_OpenIdle;
+			//コリジョンを作る。
+			CreatePhysicsObject();
+		}
 	}
 }
 void Door::OpenIdleState()

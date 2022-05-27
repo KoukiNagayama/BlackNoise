@@ -5,8 +5,13 @@ class Record;
 class Gramophone;
 class Crowbar;
 class GameCamera;
+<<<<<<< HEAD
+class Item;
+class FloorGimmick;
+=======
 class FloorGimmick;
 class Item;
+>>>>>>> b86fa71a70d73fdbfa0029f2dae1823d616d5e36
 
 class UI:public IGameObject
 {

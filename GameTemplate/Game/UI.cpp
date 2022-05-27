@@ -6,22 +6,43 @@
 #include "Gramophone.h"
 #include "Hammer.h"
 #include "Record.h"
+<<<<<<< HEAD
+#include "Item.h"
+#include "FloorGimmick.h"
+=======
 #include "FloorGimmick.h"
 #include "Item.h"
 
+>>>>>>> b86fa71a70d73fdbfa0029f2dae1823d616d5e36
 
 namespace
 {
 	const Vector3	ITEM_NAME_POSITION = Vector3(200.0f, -80.0f, 0.0f);		// アイテム名を表示する座標
 	const Vector3	SUPPLEMENT_POSITION = Vector3(200.0f, -120.0f, 0.0f);	// 補足を表示する座標
+<<<<<<< HEAD
+	const float		DISTANCE_TO_ITEM = 400.0f;								// アイテムとの距離
+	const float		VECTOR_CONSISTENCY = 0.8f;								// ベクトルが一致しているか比較する値
+	const float		DISTANCE_TO_FLOORGIMMICK = 350.0f;						// フロアを封鎖するギミックとの距離
+	const float		TIME_TO_DISPLAY = 3.0f;									// アイテムに対する反応のテキストを表示させる時間
+	const float		TIMER = 2.0f;
+}
+
+UI::~UI()
+{
+	DeleteGO(m_se);
+	
+=======
 	const float		DISTANCE_TO_ITEM = 150.0f;								// アイテムとの距離
 	const float		DISTANCE_TO_FLOORGIMMICK = 350.0f;						// フロアを封鎖するギミックとの距離
 	const float		VECTOR_CONSISTENCY = 0.7f;								// ベクトルが一致しているか比較する値		
 	const float		TIME_TO_DISPLAY = 3.0f;									// アイテムに対する反応のテキストを表示させる時間
+>>>>>>> b86fa71a70d73fdbfa0029f2dae1823d616d5e36
 }
 
 bool UI::Start()
 {
+	//取得音の読み込み
+	g_soundEngine->ResistWaveFileBank(10, "Assets/sound/se/item_get.wav");
 
 	m_gameCamera = FindGO<GameCamera>("gamecamera");
 
@@ -238,7 +259,11 @@ void UI::SpecifyStringToDisplay(std::string item)
 
 void UI::MakeGetSound()
 {
+<<<<<<< HEAD
+	m_se = NewGO<SoundSource>(0);
+=======
 	/*m_se = NewGO<SoundSource>(10);
+>>>>>>> b86fa71a70d73fdbfa0029f2dae1823d616d5e36
 	m_se->Init(10);
 	m_se->SetVolume(1.0f);
 	m_se->Play(false);*/
