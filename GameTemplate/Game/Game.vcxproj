@@ -261,6 +261,7 @@
     <ClCompile Include="TitleText.cpp" />
     <ClCompile Include="Toy.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="WhiteBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
@@ -293,6 +294,7 @@
     <ClInclude Include="TitleText.h" />
     <ClInclude Include="Toy.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="WhiteBoard.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

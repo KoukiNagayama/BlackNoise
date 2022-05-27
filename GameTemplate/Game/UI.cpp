@@ -6,13 +6,20 @@
 #include "Gramophone.h"
 #include "Hammer.h"
 #include "Record.h"
+<<<<<<< HEAD
 #include "Item.h"
 #include "FloorGimmick.h"
+=======
+#include "FloorGimmick.h"
+#include "Item.h"
+
+>>>>>>> b86fa71a70d73fdbfa0029f2dae1823d616d5e36
 
 namespace
 {
 	const Vector3	ITEM_NAME_POSITION = Vector3(200.0f, -80.0f, 0.0f);		// アイテム名を表示する座標
 	const Vector3	SUPPLEMENT_POSITION = Vector3(200.0f, -120.0f, 0.0f);	// 補足を表示する座標
+<<<<<<< HEAD
 	const float		DISTANCE_TO_ITEM = 400.0f;								// アイテムとの距離
 	const float		VECTOR_CONSISTENCY = 0.8f;								// ベクトルが一致しているか比較する値
 	const float		DISTANCE_TO_FLOORGIMMICK = 350.0f;						// フロアを封鎖するギミックとの距離
@@ -24,6 +31,12 @@ UI::~UI()
 {
 	DeleteGO(m_se);
 	
+=======
+	const float		DISTANCE_TO_ITEM = 150.0f;								// アイテムとの距離
+	const float		DISTANCE_TO_FLOORGIMMICK = 350.0f;						// フロアを封鎖するギミックとの距離
+	const float		VECTOR_CONSISTENCY = 0.7f;								// ベクトルが一致しているか比較する値		
+	const float		TIME_TO_DISPLAY = 3.0f;									// アイテムに対する反応のテキストを表示させる時間
+>>>>>>> b86fa71a70d73fdbfa0029f2dae1823d616d5e36
 }
 
 bool UI::Start()
@@ -48,22 +61,34 @@ void UI::Update()
 	// プレイヤーの前方向を取得
 	m_playerForward = g_camera3D->GetForward();
 
-	FindLocateOfCrowbar();
+	m_item = FindGO<Item>("item");
 
-	FindLocateOfRecord();
+	// バールを見つけているか
+	bool isFindCrowbar = FindLocateOfCrowbar();
+	// レコードを見つけているか
+	bool isFindRecord = FindLocateOfRecord();
+	// フロアの封鎖用ギミックを見つけているか
+	bool isFindFloorGimmick = FindLocateOfFloorGimmick();
 
-	FindLocateOfFloorGimmick();
+	// 全てを見つけていないならば
+	if (isFindCrowbar == false
+		&& isFindRecord == false
+		&& isFindFloorGimmick == false)
+	{
+		// テキストを描画しない
+		m_isDraw = false;
+	}
 	
 	// 文字列の表示時間を減らす
-	if (m_timeToDisplay >= 0.0f) {
+	/*if (m_timeToDisplay >= 0.0f) {
 		m_timeToDisplay -= g_gameTime->GetFrameDeltaTime();
-	}
+	}*/
 }
 
-void UI::FindLocateOfCrowbar()
+bool UI::FindLocateOfCrowbar()
 {
 	if (m_crowbar == nullptr) {
-		return;
+		return false;
 	}
 	// バールの座標
 	Vector3 crowbarPos = m_crowbar->GetPosition();
@@ -72,18 +97,20 @@ void UI::FindLocateOfCrowbar()
 	Vector3 diffToItem = crowbarPos - m_playerPos;
 
 	// プレイヤーとバールが一定距離以下ならば
-	if (diffToItem.Length() <= DISTANCE_TO_ITEM) {
+	if (m_item->GetHaveCrowbar() == false 
+		&& diffToItem.Length() <= DISTANCE_TO_ITEM
+	) {
 		// プレイヤーが見ている方向にアイテムがあるか調べる
 		if (CheckPlayerOrientation(diffToItem)) {
 			// 表示する文字列を指定
 			SpecifyStringToDisplay("crowbar");
-			return;
+			return true;
 		}
 	}
-
+	return false;
 }
 
-void UI::FindLocateOfRecord()
+bool UI::FindLocateOfRecord()
 {
 	// レコードを検索して配列とする
 	const auto& records = FindGOs<Record>("record");
@@ -92,7 +119,7 @@ void UI::FindLocateOfRecord()
 	for (int i = 0; i < recordSize; i++) {
 		m_record = records[i];
 		if (m_record == nullptr) {
-			return;
+			return false;
 		}
 		// レコードの座標
 		Vector3 recordPos = m_record->GetPosition();
@@ -101,17 +128,22 @@ void UI::FindLocateOfRecord()
 		Vector3 diffToItem = recordPos - m_playerPos;
 
 		// プレイヤーとレコードが一定距離以下ならば
-		if (diffToItem.Length() <= DISTANCE_TO_ITEM) {
+		if (m_item->GetHaveRecord() == 0
+			&& diffToItem.Length() <= DISTANCE_TO_ITEM) 
+		{
 			// プレイヤーが見ている方向にアイテムがあるか調べる
 			if (CheckPlayerOrientation(diffToItem)) {
 				// 表示する文字列を指定
 				SpecifyStringToDisplay("record");
+				return true;
 			}
 		}
+
 	}
+	return false;
 }
 
-void UI::FindLocateOfFloorGimmick()
+bool UI::FindLocateOfFloorGimmick()
 {
 	// レコードを検索して配列とする
 	const auto& gimmicks = FindGOs<FloorGimmick>("floorgimmick");
@@ -120,7 +152,7 @@ void UI::FindLocateOfFloorGimmick()
 	for (int i = 0; i < gimmickSize; i++) {
 		m_floorGimmick = gimmicks[i];
 		if (m_floorGimmick == nullptr) {
-			return;
+			return false;
 		}
 
 		// レコードの座標
@@ -130,14 +162,17 @@ void UI::FindLocateOfFloorGimmick()
 		Vector3 diffToItem = gimmickPos - m_playerPos;
 
 		// プレイヤーとレコードが一定距離以下ならば
-		if (diffToItem.Length() <= DISTANCE_TO_FLOORGIMMICK) {
+		if (m_floorGimmick->GetAttackCount() != 0 
+			&& diffToItem.Length() <= DISTANCE_TO_FLOORGIMMICK) {
 			// プレイヤーが見ている方向にアイテムがあるか調べる
 			if (CheckPlayerOrientation(diffToItem)) {
 				// 表示する文字列を指定
 				SpecifyStringToDisplay("floorGimmick");
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 bool UI::CheckPlayerOrientation(Vector3 diffToItem)
@@ -148,10 +183,12 @@ bool UI::CheckPlayerOrientation(Vector3 diffToItem)
 	float dot = m_playerForward.Dot(diffToItem);
 	// プレイヤーがアイテムに近い方向を向いていたら
 	if (dot >= VECTOR_CONSISTENCY) {
+		// テキストを描画する
 		m_isDraw = true;
 		return true;
 	}
 	else {
+		// テキストを描画しない
 		m_isDraw = false;
 		return false;
 	}
@@ -174,10 +211,10 @@ void UI::SpecifyStringToDisplay(std::string item)
 		m_supplementFont.SetPosition(SUPPLEMENT_POSITION);
 
 		// 文字列を表示するように設定する
-		if (m_isCrowbarDescript == false) {
+		/*if (m_isCrowbarDescript == false) {
 			m_isCrowbarDescript = true;
 			m_timeToDisplay = TIME_TO_DISPLAY;
-		}
+		}*/
 		return;
 	}
 	// レコードの場合
@@ -222,19 +259,21 @@ void UI::SpecifyStringToDisplay(std::string item)
 
 void UI::MakeGetSound()
 {
+<<<<<<< HEAD
 	m_se = NewGO<SoundSource>(0);
+=======
+	/*m_se = NewGO<SoundSource>(10);
+>>>>>>> b86fa71a70d73fdbfa0029f2dae1823d616d5e36
 	m_se->Init(10);
 	m_se->SetVolume(1.0f);
-	m_se->Play(false);
+	m_se->Play(false);*/
 }
 
 void  UI::Render(RenderContext& rc)
 {
 	if (m_isDraw) {
-		if(m_timeToDisplay >= 0.0f){
-			// 描画
-			m_itemNameFont.Draw(rc);
-			m_supplementFont.Draw(rc);
-		}
+		// 描画
+		m_itemNameFont.Draw(rc);
+		m_supplementFont.Draw(rc);
 	}
 }

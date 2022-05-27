@@ -31,6 +31,7 @@
     <ClCompile Include="TitlePiano.cpp" />
     <ClCompile Include="Enemy2.cpp" />
     <ClCompile Include="EnemyPath.cpp" />
+    <ClCompile Include="WhiteBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
@@ -63,6 +64,7 @@
     <ClInclude Include="TitlePiano.h" />
     <ClInclude Include="Enemy2.h" />
     <ClInclude Include="EnemyPath.h" />
+    <ClInclude Include="WhiteBoard.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

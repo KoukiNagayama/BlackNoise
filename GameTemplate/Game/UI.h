@@ -5,14 +5,19 @@ class Record;
 class Gramophone;
 class Crowbar;
 class GameCamera;
+<<<<<<< HEAD
 class Item;
 class FloorGimmick;
+=======
+class FloorGimmick;
+class Item;
+>>>>>>> b86fa71a70d73fdbfa0029f2dae1823d616d5e36
 
 class UI:public IGameObject
 {
 public:
 	UI() {};
-	~UI();
+	~UI() {};
 	/// <summary>
 	/// 初期化処理
 	/// </summary>
@@ -54,15 +59,15 @@ private:
 	/// <summary>
 	/// バールの位置を検索
 	/// </summary>
-	void FindLocateOfCrowbar();
+	bool FindLocateOfCrowbar();
 	/// <summary>
 	/// レコードの位置を検索
 	/// </summary>
-	void FindLocateOfRecord();
+	bool FindLocateOfRecord();
 	/// <summary>
 	/// 封鎖する木の板の位置を検索
 	/// </summary>
-	void FindLocateOfFloorGimmick();
+	bool FindLocateOfFloorGimmick();
 	/// <summary>
 	/// プレイヤーがアイテムを向いているか調べる
 	/// </summary>
@@ -85,6 +90,7 @@ private:
 	Crowbar*			m_crowbar = nullptr;				// バール
 	GameCamera*			m_gameCamera = nullptr;				// ゲームカメラ
 	FloorGimmick*		m_floorGimmick = nullptr;			// フロア封鎖用ギミック
+	Item*				m_item = nullptr;					// アイテムクラス
 	Vector3				m_playerForward;					// プレイヤーの正面
 	Vector3				m_playerPos;						// プレイヤーの座標
 	Vector3				m_diffToItem;						// アイテムとの座標の差

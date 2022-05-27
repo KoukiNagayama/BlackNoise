@@ -34,7 +34,12 @@ GameStart::~GameStart()
 	DeleteGO(m_gamecam);
 	DeleteGO(m_bell);
 	DeleteGO(m_toy);
-	DeleteGO(m_enemy); 
+	const auto& enemys = FindGOs<Enemy2>("enemy");
+	const int size = enemys.size();
+	for (int i = 0; i < size; i++) {
+		m_enemy = enemys[i];
+		DeleteGO(m_enemy);
+	}
 	for (auto door : m_door)
 	{
 		DeleteGO(door);

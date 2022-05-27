@@ -51,7 +51,7 @@ float4 PSSamplingLuminance(PSInput In) : SV_Target0
         color.xyz = 0.0f;
     }*/
     //サンプリングしたカラーの明るさを計算。
-    float t = dot(color.xyz, float3(0.2125f, 0.7154f, 0.0721f));
+    float t = dot(color.xyz, float3(0.9272f, 0.3764f, 0.0f));
     //float t = dot(color.xyz, float3(1.0f, 1.0f, 1.0f));
     //clip関数は引数の値がマイナスになると、以降の処理をスキップする。
     //なので、マイナスになるとピクセルカラーは出力されない。

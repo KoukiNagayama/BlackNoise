@@ -10,7 +10,11 @@ namespace
 	const float POSITION = 60.0f;
 	const float TIMER = 3.0f;
 	const float VOLUME = 1.0f;
+<<<<<<< HEAD
 	const float SOUND_RANGE = 700.0f;
+=======
+	const float SOUND_RANGE = 800.0f;
+>>>>>>> b86fa71a70d73fdbfa0029f2dae1823d616d5e36
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
