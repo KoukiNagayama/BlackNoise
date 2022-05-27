@@ -15,6 +15,5 @@ private:
 	Vector3					m_spritePos2;
 	Vector3					m_spriteScale;
 	Title*					m_title;
-	int						m_titleState;
 };
 

@@ -104,14 +104,14 @@ float4 PSMain(SPSIn psIn) : SV_Target0
     // 近傍8テクセルへのUVオフセット
     float2 uvOffset[8] =
     {
-        float2(0.0f, 1.0f / 900.0f), //上
-        float2(0.0f, -1.0f / 900.0f), //下
-        float2(1.0f / 1600.0f, 0.0f), //右
-        float2(-1.0f / 1600.0f, 0.0f), //左
-        float2(1.0f / 1600.0f, 1.0f / 900.0f), //右上
-        float2(-1.0f / 1600.0f, 1.0f / 900.0f), //左上
-        float2(1.0f / 1600.0f, -1.0f / 900.0f), //右下
-        float2(-1.0f / 1600.0f, -1.0f / 900.0f) //左下
+        float2(0.0f, 1.0f / 720.0f), //上
+        float2(0.0f, -1.0f / 720.0f), //下
+        float2(1.0f / 1280.0f, 0.0f), //右
+        float2(-1.0f / 1280.0f, 0.0f), //左
+        float2(1.0f / 1280.0f, 1.0f / 720.0f), //右上
+        float2(-1.0f / 1280.0f, 1.0f / 720.0f), //左上
+        float2(1.0f / 1280.0f, -1.0f / 720.0f), //右下
+        float2(-1.0f / 1280.0f, -1.0f / 720.0f) //左下
     };
     
     // 輪郭線を描画するか
@@ -189,7 +189,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
                 }
             }
             // ピクセルを輪郭線として塗りつぶす
-            return float4(maxColor, 0.0f, 0.0f, 1.0f);
+            return float4(maxColor * 1.4f, maxColor * 1.4f, maxColor * 1.4f, 1.0f);
         }
 
     }
