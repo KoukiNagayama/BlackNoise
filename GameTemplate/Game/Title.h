@@ -92,7 +92,7 @@ private:
 	TitleCamera*			m_titleCamera = nullptr;				// タイトルカメラ
 	TitleText*				m_titleText = nullptr;					// タイトルの文字
 	BackGround*				m_backGround = nullptr;					// 背景
-	TitleSprite*			m_titleSprite;							// タイトルの画像
+	TitleSprite*			m_titleSprite = nullptr;				// タイトルの画像
 	FontRender				m_fontRender;							// フォントレンダー
 	LevelRender				m_levelRender1;							// レベルレンダー
 	enTitleState			m_titleState = enTitleState_Idle;		// タイトルのステート

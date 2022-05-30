@@ -38,7 +38,7 @@ namespace nsK2EngineLow {
 
 	void InfoForEdge::Clear()
 	{
-		for (int i = 0; i < m_cbSoundSource.s_numSoundSource; i++) {
+		for (int i = 0; i < 100; i++) {
 			m_cbSoundSource.s_soundSourceData[i].s_position = Vector3::Zero;
 			m_cbSoundSource.s_soundSourceData[i].s_range = 0.0f;
 			m_cbSoundSource.s_soundSourceData[i].s_isSound = 0;

@@ -114,6 +114,7 @@ void Bell::ManageState()
 		//‰¹‚ğ–Â‚ç‚·B
 	case enBellState_Ring:
 		Ring();
+		break;
 	default:
 		break;
 	}

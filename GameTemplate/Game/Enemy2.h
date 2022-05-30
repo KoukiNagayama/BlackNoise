@@ -7,6 +7,7 @@
 class Player;
 class Bell;
 class GameCamera;
+class Toy;
 /// <summary>
 /// エネミークラス
 /// </summary>
@@ -216,5 +217,6 @@ private:
 	float				m_animationSpeed = 1.0f;					// アニメーションのスピード
 	float				m_pathFindingTimer = 0.0f;					// 目的地までのパスを検索する間の時間
 	bool				m_isPathFindingWhileReturning = false;		// パス移動への帰還時にパス検索をしたか
+	Toy*				m_toy = nullptr;
 };
 

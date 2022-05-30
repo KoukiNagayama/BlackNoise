@@ -76,7 +76,7 @@ private:
 
 private:
 	SpriteRender		m_spriteRender;						// Aボタンの画像
-	SoundSource*		m_se;								// アイテム収拾音
+	SoundSource*		m_se = nullptr;								// アイテム収拾音
 	FontRender			m_itemNameFont;						// アイテム名用フォント
 	FontRender			m_supplementFont;					// 補足用フォント
 	bool				m_isDraw = false;					// AボタンのUIを表示するか

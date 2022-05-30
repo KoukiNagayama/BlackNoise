@@ -4,12 +4,14 @@
 #include "Player.h"
 #include "Bell.h"
 #include "GameCamera.h"
+#include "Toy.h"
 
 namespace
 {
 	const float WALK_SPEED = 6.5f * 0.7f;							// 歩く速さ
 	const float RUN_SPEED = 9.5f * 0.7f;							// 走る速さ
 	const float SEARCH_RANGE_TO_BELL = 1000.0f;						// ベルの音が聞こえる範囲
+	const float SEARCH_RANGE_TO_TOY = 1300.0f;				
 	const float SEARCH_RANGE_TO_FOOTSTEP = 200.0f;					// 足音が聞こえる範囲
 	const float SCREAM_VOLUME = 1.0f;								// 咆哮の音量
 	const float MAXIMUM_VOLUME = 0.9f;								// 足音最大音量
@@ -32,6 +34,7 @@ namespace
 	const float TIME_TO_FORCE_STATE_TRANSITION = 6.0f;				// 強制的にステート遷移する時間
 	const float ANIMATION_SPEED = 0.7f;								// アニメーションのスピードの倍率
 	const float PATH_FINDING_TIMER = 0.7f;							// ナビメッシュによるパスを検索する時間の間隔
+
 }
 
 Enemy2::~Enemy2()
@@ -117,6 +120,8 @@ bool Enemy2::Start()
 	m_animationSpeed = ANIMATION_SPEED;
 	// アニメーションのスピードを指定
 	m_modelRender.SetAnimationSpeed(m_animationSpeed);
+	// おもちゃの検索
+	m_toy = FindGO<Toy>("toy");
 	return true;
 }
 
@@ -151,6 +156,9 @@ void Enemy2::SearchSoundOfPlayer()
 	if (m_bell->IsRing()) {
 		// 索敵範囲をベル用に設定
 		searchRange = SEARCH_RANGE_TO_BELL;
+	}
+	else if (m_toy->IsSound()) {
+		searchRange = SEARCH_RANGE_TO_TOY;
 	}
 	// 足音が鳴っているならば
 	else if (m_gameCamera->IsSound()) {

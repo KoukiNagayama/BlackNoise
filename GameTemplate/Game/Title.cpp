@@ -23,7 +23,6 @@ Title::~Title()
 	DeleteGO(m_titleSprite);
 	DeleteGO(m_titleText);
 	DeleteGO(m_backGround);
-	g_infoForEdge.Clear();
 }
 
 bool Title::Start()

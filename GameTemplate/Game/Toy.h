@@ -33,6 +33,10 @@ public:
 	/// XVˆ—
 	/// </summary>
 	void Update();
+	bool IsSound() const
+	{
+		return m_isSound;
+	}
 private:
 	/// <summary>
 	/// ‰¹‚ğ–Â‚ç‚·
@@ -50,6 +54,7 @@ private:
 	enToyState			m_toyState = enToyState_usual;
 	float				m_rateByTime;
 	SoundSource*		m_sound = nullptr;
+	bool				m_isSound = false;
 
 };
 

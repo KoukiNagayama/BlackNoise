@@ -27,6 +27,6 @@ public:
 private:
 	Vector3				m_cameraPos;			// 座標(視点)	
 	Vector3				m_toCameraPos;			// 注視点から視点に向かうベクトル
-	TitleText*			m_tText;
+	TitleText*			m_tText = nullptr;
 };
 

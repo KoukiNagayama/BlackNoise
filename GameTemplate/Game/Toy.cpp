@@ -74,6 +74,7 @@ void Toy::CheckRate()
 			check1 = 1;
 			if (m_rateByTime < RATE_BY_TIME_MAX_VALUE) {
 				m_rateByTime += EDGE_FADE_IN_DELTA_VALUE;
+				m_isSound = true;
 			}
 		}
 		else {
@@ -83,8 +84,10 @@ void Toy::CheckRate()
 				if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
 					m_rateByTime = RATE_BY_TIME_MIN_VALUE;
 					m_sound = nullptr;
+					
 				}
 			}
+			m_isSound = false;
 		}
 		g_infoForEdge.SetIsSound(1, check1);
 		g_infoForEdge.SetRate(1, m_rateByTime);
