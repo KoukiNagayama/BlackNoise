@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "GameCamera.h"
 #include "Bell.h"
-#include "Enemy.h"
+#include "Enemy2.h"
 #include "Enemy.h"
 #include "Door.h"
 #include "Piece.h"
@@ -24,7 +24,7 @@ GroundFloor::~GroundFloor()
 bool GroundFloor::Start()
 {
 	//各クラスを生成。
-	m_levelRender.Init("Assets/level3D/stage1.tkl", [&](LevelObjectData& objData) {
+	m_levelRender.Init("Assets/level3D/stage1_2.tkl", [&](LevelObjectData& objData) {
 		//ステージ
 		if (objData.EqualObjectName(L"floor1") == true) {
 
@@ -45,6 +45,14 @@ bool GroundFloor::Start()
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
 		}
+		// エネミー
+		if (objData.ForwardMatchName(L"enemy") == true)
+		{
+			m_enemy = NewGO<Enemy2>(0, "enemy");
+			m_enemy->SetPosition(objData.position);
+			m_enemy->SetNumber(objData.number);
+			return true;
+		}
 		/*if(objData.ForwardMatchName(L"door") == true)
 		{
 			auto door = NewGO<Door>(0, "door");
@@ -53,7 +61,7 @@ bool GroundFloor::Start()
 				door->SetRotation(objData.rotation);
 				return true;
 		}*/
-		if (objData.EqualObjectName(L"piece") == true) {
+		/*if (objData.EqualObjectName(L"piece") == true) {
 			auto piece = NewGO<Piece>(0, "piece");
 			//配置座標、スケール、回転を取得する。
 			piece->SetPosition(objData.position);
@@ -70,11 +78,12 @@ bool GroundFloor::Start()
 			m_key->SetScale(objData.scale);
 			//trueにすると、レベルの方でモデルが読み込まれない。
 			return true;
-		}
+		}*/
 		if (objData.EqualObjectName(L"gameclear") == true) {
 			m_clearPos = objData.position;
 			return true;
 		}
+
 	});
 	
 	m_player = NewGO<Player>(0, "player");

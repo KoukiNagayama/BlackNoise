@@ -34,8 +34,6 @@ void Record::Update()
 	Vector3	distToPlayer = m_position - m_gameCameraPos;
 	// 一定距離近づいたら
 	if (distToPlayer.Length() <= DISTANCE && g_pad[0]->IsTrigger(enButtonA)) {
-		//取得音
-		m_ui->MakeGetSound();
 		// レコードを取得したとして保留アイテムに設定する
 		m_item->SetRecordToPendingItem(m_number);
 

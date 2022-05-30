@@ -43,7 +43,7 @@ namespace nsK2EngineLow {
 			m_cbSoundSource.s_soundSourceData[i].s_range = 0.0f;
 			m_cbSoundSource.s_soundSourceData[i].s_isSound = 0;
 			m_cbSoundSource.s_soundSourceData[i].s_rate = 0.0f;
-			m_cbSoundSource.s_soundSourceData[i].s_color = 0.0f;
+			m_cbSoundSource.s_soundSourceData[i].s_color = 0;
 		}
 		m_cbSoundSource.s_numSoundSource = 0;
 	}

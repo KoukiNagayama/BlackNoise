@@ -11,7 +11,7 @@
 
 namespace {
 	const float RANGE = 800.0f;						// ベルの音による輪郭線が描画される範囲
-	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;	// エッジがフェードインするときの変位量
+	const float EDGE_FADE_IN_DELTA_VALUE = 0.01f;	// エッジがフェードインするときの変位量
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.005f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
@@ -19,7 +19,11 @@ namespace {
 
 Title::~Title()
 {
-
+	DeleteGO(m_titleCamera);
+	DeleteGO(m_titleSprite);
+	DeleteGO(m_titleText);
+	DeleteGO(m_backGround);
+	g_infoForEdge.Clear();
 }
 
 bool Title::Start()
@@ -28,31 +32,34 @@ bool Title::Start()
 	g_soundEngine->ResistWaveFileBank(10, "Assets/sound/item/bell_low.wav");
 	
 
-	// 各インスタンスを生成
+	// 各オブジェクトを生成
 	m_levelRender1.Init("Assets/level3D/title.tkl", [&](LevelObjectData& objData)
 	{
+		// タイトルモデル
 		if (objData.EqualObjectName(L"titleText") == true) {
 			m_titleText = NewGO<TitleText>(0, "titleText");
 			m_titleText->SetPosition(objData.position);
 			return true;
 		}
+		// タイトル用カメラ
 		if (objData.EqualObjectName(L"titleCamera") == true) {
 			m_titleCamera = NewGO<TitleCamera>(0, "titleCamera");
 			m_titleCamera->SetPosition(objData.position);
 			return true;
 		}
+		// 背景
 		if (objData.EqualObjectName(L"stage2") == true) {
 			m_backGround = NewGO<BackGround>(0, "backGround");
 			m_backGround->SetPosition(objData.position);
 			return true;
 		}
 	});
-
+	// タイトル用画像
 	m_titleSprite = NewGO<TitleSprite>(0, "titleSprite");
 
-
-
+	// タイトル用カメラを検索
 	m_titleCamera = FindGO<TitleCamera>("titleCamera");
+	// タイトル用カメラの座標を取得
 	m_position = m_titleCamera->GetPosition();
 
 	// 音源データを初期化
@@ -99,6 +106,9 @@ void Title::ProcessIdleStateTransition()
 
 void Title::ProcessRingBellStateTransition()
 {
+	if (m_isEndFadeIn == false) {
+		return;
+	}
 	// Aボタンが押されたならば
 	if (g_pad[0]->IsTrigger(enButtonA)) {
 		m_titleState = enTitleState_FadeOut;
@@ -115,7 +125,6 @@ void Title::ProcessFromFadeOutStateToStartingGame()
 		// 削除
 		DeleteGO(this);
 	}
-
 }
 
 void Title::MakeSound()
@@ -147,6 +156,9 @@ void Title::IncreaseRate()
 			if (m_rateByTime < RATE_BY_TIME_MAX_VALUE) {
 				m_rateByTime += EDGE_FADE_IN_DELTA_VALUE;
 
+			}
+			if (m_rateByTime >= RATE_BY_TIME_MAX_VALUE) {
+				m_isEndFadeIn = true;
 			}
 		}
 	}

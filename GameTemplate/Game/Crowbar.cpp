@@ -39,7 +39,6 @@ void Crowbar::Update()
 		if (g_pad[0]->IsTrigger(enButtonA))
 		{
 			m_item->SetCrowbarToPendingItem();
-			m_ui->MakeGetSound();
 			DeleteGO(this);
 		}
 	}

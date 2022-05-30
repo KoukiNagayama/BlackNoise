@@ -37,9 +37,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	g_creatingMaps.Init();
 
-	auto game = NewGO<GameStart>(0,"gamestart");
+	//auto game = NewGO<GameStart>(0,"gamestart");
 
-	//auto title = NewGO<Title>(0, "title");
+	auto title = NewGO<Title>(0, "title");
 
 	// レンダリングコンテキスト
 	auto& renderContext = g_graphicsEngine->GetRenderContext();

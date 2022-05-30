@@ -22,7 +22,7 @@ namespace
 	const float SOUND_RANGE = 180.0f;				//‰e‹¿”ÍˆÍ
 	const float VOLUME = 0.7f;						//ƒ{ƒŠƒ…[ƒ€
 	const float FRICTION = 0.5f;					//–€C
-	const float VIEWPOINT_UP = 350.0f;				//“G‚ÌŠç‚Ì‚‚³
+	const float VIEWPOINT_UP = 280.0f;				//“G‚ÌŠç‚Ì‚‚³
 }
 
 GameCamera::GameCamera()
@@ -91,11 +91,11 @@ void GameCamera::Update()
 
 void GameCamera::Move()
 {
-	/*if (m_player->IsEnableMove() == false)
+	if (m_player->IsEnableMove() == false)
 	{
 		return;
 	}
-	}*/
+	
 	////x,z‚ÌˆÚ“®‘¬“x‚ğ0‚É‚·‚éB
 	//m_moveSpeed.x = 0.0f;
 	//m_moveSpeed.z = 0.0f;
@@ -181,10 +181,10 @@ void GameCamera::ViewPoint()
 	m_target = m_position + m_toCameraPos;
 
 	//ƒvƒŒƒCƒ„[‚ªUŒ‚‚ğó‚¯‚½‚ç
-	/*if (m_player->IsEnableMove() == false) {
+	if (m_player->IsEnableMove() == false) {
 		m_target = m_enemy->GetPosition();
 		m_target.y += VIEWPOINT_UP;
-	}*/
+	}
 	//ƒƒCƒ“ƒJƒƒ‰‚É’‹“_‚Æ‹“_‚ğİ’è‚·‚éB
 	g_camera3D->SetTarget(m_target);
 }

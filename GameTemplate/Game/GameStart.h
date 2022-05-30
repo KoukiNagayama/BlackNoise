@@ -19,6 +19,7 @@ class FloorGimmick;
 class Crowbar;
 class Enemy2;
 class UI;
+class BellSprite;
 
 class GameStart : public IGameObject
 {
@@ -32,6 +33,7 @@ public:
 	/// àÍäKÇ∆êÿÇËë÷Ç¶
 	/// </summary>
 	void SwitchFirstFloor();
+
 private:
 	LevelRender m_levelRender;
 	LevelRender m_levelRender2;
@@ -51,7 +53,9 @@ private:
 	FloorGimmick* m_floorgimmick = nullptr;
 	Crowbar* m_crowbar = nullptr;
 	UI* m_ui = nullptr;
+	BellSprite* m_bellSprite = nullptr;
 
 	Vector3 m_switchPos;
+
 };
 

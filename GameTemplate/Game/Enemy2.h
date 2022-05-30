@@ -69,6 +69,10 @@ public:
 	{
 		return m_position;
 	}
+	bool IsGameOver() const
+	{
+		return m_isGameOver;
+	}
 private:
 	/// <summary>
 	/// 回転
@@ -110,6 +114,10 @@ private:
 	/// パス移動への帰還
 	/// </summary>
 	void ReturnToPath();
+	/// <summary>
+	/// 攻撃
+	/// </summary>
+	void Attack();
 	/// <summary>
 	/// 歩き時のステート遷移
 	/// </summary>

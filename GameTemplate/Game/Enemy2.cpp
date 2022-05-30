@@ -15,7 +15,7 @@ namespace
 	const float MAXIMUM_VOLUME = 0.9f;								// 足音最大音量
 	const float MINIMUM_VOLUME = 0.00f;								// 足音最小音量
 	const float SCREAM_RANGE = 1300.0f;								// 咆哮時に輪郭線が適用される範囲
-	const float STEP_RANGE = 150.0f;								// 歩行時に輪郭線が適用される範囲
+	const float STEP_RANGE = 450.0f;								// 歩行時に輪郭線が適用される範囲
 	const float STEP_SOUNDRANGE = 1350.0f;							// 歩行時にプレイヤーに聞こえる範囲
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.07f;					// エッジがフェードインするときの変位量
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.01f;					// エッジがフェードアウトするときの変位量
@@ -268,7 +268,7 @@ void Enemy2::ProcessByState()
 		break;
 	// 攻撃状態
 	case enEnemyState_Attack:
-
+		Attack();
 		break;
 	}
 }
@@ -429,6 +429,17 @@ void Enemy2::ReturnToPath()
 	m_moveVector = distance;
 }
 
+void Enemy2::Attack()
+{
+	// ターゲットとなるプレイヤーの座標を取得
+	Vector3	playerPos = m_player->GetPosition();
+	
+	Vector3 distance = playerPos - m_position;
+	distance.Normalize();
+
+	m_moveVector = distance;
+}
+
 void Enemy2::ProcessWalkStateTransition()
 {
 	// 敵を発見していないならば
@@ -459,7 +470,7 @@ void Enemy2::ProcessChaseStateTransition()
 {
 	// プレイヤーを攻撃可能な距離ならば
 	if (m_isAttackable == true) {
-		//m_enemyState = enEnemyState_Attack;
+		m_enemyState = enEnemyState_Attack;
 	}
 	// 敵を追跡する状態が維持されているならば
 	if (m_chaseTime > 0.0f || m_isFound == true) {
@@ -637,15 +648,18 @@ void Enemy2::OutlineByStep()
 		// 音源が再生されていない時
 		else {
 			check = 0;
-			// 影響率を減らす
-			if (m_stepRateByTime > RATE_BY_TIME_MIN_VALUE && check == 0) {
-				m_stepRateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
-				// 影響率を最低数値以下にならないように固定
-				if (m_stepRateByTime <= RATE_BY_TIME_MIN_VALUE) {
-					m_stepRateByTime = RATE_BY_TIME_MIN_VALUE;
-					m_stepSound = nullptr;
+			if (m_isGameOver == false) {
+				// 影響率を減らす
+				if (m_stepRateByTime > RATE_BY_TIME_MIN_VALUE && check == 0) {
+					m_stepRateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
+					// 影響率を最低数値以下にならないように固定
+					if (m_stepRateByTime <= RATE_BY_TIME_MIN_VALUE) {
+						m_stepRateByTime = RATE_BY_TIME_MIN_VALUE;
+						m_stepSound = nullptr;
+					}
 				}
 			}
+
 		}
 		g_infoForEdge.SetPosition(8, m_position);
 		g_infoForEdge.SetIsSound(8, check);

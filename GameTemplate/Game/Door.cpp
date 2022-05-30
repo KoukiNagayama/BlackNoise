@@ -6,7 +6,7 @@
 
 namespace
 {
-	const float DISTANCE = 130.0f;					//プレイヤーの距離
+	const float DISTANCE = 180.0f;					//プレイヤーの距離
 	const float EDGE_FADE_IN_DELTA_VALUE = 0.1f;	// エッジがフェードインするときの変位量
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.02f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値

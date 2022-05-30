@@ -39,6 +39,22 @@ public:
 	{
 		return m_titleState == enTitleState_Idle;
 	}
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	bool IsRingBellStateNow() const
+	{
+		return m_titleState == enTitleState_RingBell;
+	}
+	/// <summary>
+	/// 現在のステートがフェードアウト中か
+	/// </summary>
+	/// <returns>待機中ならばtrue そうでなければfalse</returns>
+	bool IsFadeOutStateNow() const
+	{
+		return m_titleState == enTitleState_FadeOut;
+	}
 private:
 	/// <summary>
 	/// ステート管理
@@ -86,6 +102,7 @@ private:
 	int						m_isRateChange = 0;						// 影響率の変化
 	bool					m_isEndStanging = false;				// タイトルの演出が終わったか
 	GameStart*				m_gameStart = nullptr;					// ゲームクラス
+	bool					m_isEndFadeIn = false;					// 演出のフェードインが終わったか
 
 
 

@@ -57,10 +57,16 @@ public:
 	/// <summary>
 	/// ‰¹‚ª–Â‚Á‚Ä‚¢‚é‚©Žæ“¾
 	/// </summary>
-	/// <returns></returns>
 	bool IsRing() const
 	{
 		return m_isRing;
+	}
+	/// <summary>
+	/// ˆê“x‚à–Â‚ç‚µ‚Ä‚¢‚È‚¢‚©Žæ“¾
+	/// </summary>
+	bool IsNeverRung() const
+	{
+		return m_isNeverRung;
 	}
 
 private:
@@ -95,5 +101,6 @@ private:
 	float m_timer = 0.0f;
 	float m_rateByTime = 0.0f;
 	bool m_isRing = false;
+	bool m_isNeverRung = true;
 };
 

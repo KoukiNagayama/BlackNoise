@@ -30,6 +30,7 @@
     <ClCompile Include="Enemy2.cpp" />
     <ClCompile Include="EnemyPath.cpp" />
     <ClCompile Include="WhiteBoard.cpp" />
+    <ClCompile Include="BellSprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
@@ -61,6 +62,7 @@
     <ClInclude Include="Enemy2.h" />
     <ClInclude Include="EnemyPath.h" />
     <ClInclude Include="WhiteBoard.h" />
+    <ClInclude Include="BellSprite.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

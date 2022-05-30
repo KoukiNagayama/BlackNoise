@@ -1,6 +1,7 @@
 #pragma once
 
 class GameCamera;
+class Enemy2;
 
 class Player : public IGameObject
 {
@@ -124,5 +125,6 @@ private:
 	ModelRender m_modelRender;								//モデルレンダー
 	AnimationClip animationClips[enAnimationClip_Num];		//アニメーションクリップ
 	GameCamera* m_gamecam = nullptr;						//ゲームカメラのポインタ
+	Enemy2* m_enemy = nullptr;
 };
 

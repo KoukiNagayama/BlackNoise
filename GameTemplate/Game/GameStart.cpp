@@ -19,6 +19,7 @@
 #include "FloorGimmick.h"
 #include "UI.h"
 #include "Enemy2.h"
+#include "BellSprite.h"
 namespace
 {
 	const float DISTANCE = 100.0f;
@@ -56,13 +57,16 @@ GameStart::~GameStart()
 	DeleteGO(m_item);
 	DeleteGO(m_crowbar);
 	DeleteGO(m_ui);
+	DeleteGO(m_gamecam);
+	DeleteGO(m_player);
 }
 
 bool GameStart::Start()
 {
+	g_infoForEdge.Clear();
 	Vector3 position = Vector3::Zero;
 	//各クラスを生成。
-
+	
 	m_levelRender.Init("Assets/level3D/stage2_2.tkl", [&](LevelObjectData& objData) {
 		//ステージ
 		if (objData.EqualObjectName(L"floor2") == true) {
@@ -173,12 +177,15 @@ bool GameStart::Start()
 	m_bell = NewGO<Bell>(0, "bell");
 	m_item = NewGO<Item>(0, "item");
 	m_ui = NewGO<UI>(0, "ui");
+	m_bellSprite = NewGO<BellSprite>(0, "bellSprite");
+
 	return true;
 }
 
 void GameStart::Update()
 {
 	SwitchFirstFloor();
+
 }
 
 void GameStart::SwitchFirstFloor()
@@ -196,4 +203,5 @@ void GameStart::SwitchFirstFloor()
 		m_groundfloor = NewGO<GroundFloor>(0, "groundfloor");
 	}
 }
+
 

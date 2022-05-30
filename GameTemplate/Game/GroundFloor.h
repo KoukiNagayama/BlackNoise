@@ -5,7 +5,7 @@ class Player;
 class GameCamera;
 class Bell;
 class Door;
-class Enemy;
+class Enemy2;
 class Piece;
 class Key;
 
@@ -33,7 +33,7 @@ private:
 	Player* m_player;
 	GameCamera* m_gamecam;
 	Bell* m_bell;
-	Enemy* m_enemy;
+	Enemy2* m_enemy;
 	std::vector<Door*>	m_door;
 	std::vector<Piece*> m_piece;
 	Key* m_key;
