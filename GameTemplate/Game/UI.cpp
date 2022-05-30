@@ -241,7 +241,6 @@ void UI::SpecifyStringToDisplay(std::string item)
 	}
 }
 
-void UI::MakeGetSound()
 void  UI::Render(RenderContext& rc)
 {
 	if (m_isDraw) {

@@ -13,7 +13,7 @@ class UI:public IGameObject
 {
 public:
 	UI() {};
-	~UI();
+	~UI() {};
 	/// <summary>
 	/// ‰Šú‰»ˆ—
 	/// </summary>
