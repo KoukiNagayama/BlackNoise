@@ -52,7 +52,7 @@ namespace nsK2EngineLow {
 		m_isAvailable = true;
 	}
 
-	void SoundSource::Play(bool isLoop)
+	void SoundSource::Play(bool isLoop, float lifeTime)
 	{
 		if (m_isAvailable == false) {
 			return;
@@ -68,6 +68,8 @@ namespace nsK2EngineLow {
 			m_isPlaying = true;
 		}
 		m_isLoop = isLoop;
+		m_lifeTime = lifeTime;
+		m_timer = 0.0f;
 	}
 
 	void SoundSource::Release()
@@ -126,6 +128,13 @@ namespace nsK2EngineLow {
 	{
 		if (m_isAvailable == false) {
 			return;
+		}
+		m_timer += g_gameTime->GetFrameDeltaTime();
+		if (m_lifeTime > 0.0f
+			&& m_timer > m_lifeTime
+		) {
+			// 強制死亡。
+			DeleteGO(this);
 		}
 		//オンメモリ再生中の更新処理。
 		UpdateOnMemory();

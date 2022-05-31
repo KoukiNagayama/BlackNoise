@@ -4,10 +4,13 @@
 #include "AI/PathFinding/NaviMesh.h"
 #include "AI/PathFinding/Path.h"
 
+
 class Player;
 class Bell;
 class GameCamera;
 class Toy;
+class GameOver;
+class GroundFloor;
 /// <summary>
 /// エネミークラス
 /// </summary>
@@ -218,5 +221,9 @@ private:
 	float				m_pathFindingTimer = 0.0f;					// 目的地までのパスを検索する間の時間
 	bool				m_isPathFindingWhileReturning = false;		// パス移動への帰還時にパス検索をしたか
 	Toy*				m_toy = nullptr;
+	GameOver*			m_gameOver = nullptr;
+	float				m_attackingTimer = 1.5f;
+	bool				m_isCaughtPlayer = false;
+	GroundFloor*		m_groundFloor = nullptr;
 };
 

@@ -2,6 +2,7 @@
 
 class GameCamera;
 class Enemy2;
+class GroundFloor;
 
 class Player : public IGameObject
 {
@@ -126,5 +127,6 @@ private:
 	AnimationClip animationClips[enAnimationClip_Num];		//アニメーションクリップ
 	GameCamera* m_gamecam = nullptr;						//ゲームカメラのポインタ
 	Enemy2* m_enemy = nullptr;
+	GroundFloor* m_groundFloor = nullptr;
 };
 

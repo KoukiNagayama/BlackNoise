@@ -141,7 +141,7 @@ void Bell::MakeSound()
 	m_bellSound = NewGO<SoundSource>(0);
 	m_bellSound->Init(0);
 	m_bellSound->SetVolume(1.0f);
-	m_bellSound->Play(false);
+	m_bellSound->Play(false, 2.0f);
 }
 
 void Bell::CheckRate()

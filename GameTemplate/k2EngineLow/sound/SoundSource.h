@@ -42,7 +42,10 @@ namespace nsK2EngineLow {
 		/// インスタンスを保持する必要があります。
 		/// </summary>
 		/// <param name="isLoop">ループフラグ。</param>
-		void Play(bool isLoop);
+		/// <param name="lifeTiem">
+		/// 強制的に死亡させるライフタイム(秒)。
+		/// 負数だと再生終了の時に死亡する。</param>
+		void Play(bool isLoop, float lifeTime = -1.0f);
 		/// <summary>
 		/// 停止。
 		/// </summary>
@@ -189,5 +192,7 @@ namespace nsK2EngineLow {
 		X3DAUDIO_DSP_SETTINGS			m_dspSettings;
 		bool							m_isSetPositionFirst = true;	//一番最初のsetPosition?
 		bool							m_isAvailable = false;			//インスタンスが利用可能？
+		float							m_lifeTime = -1.0f;
+		float							m_timer = 0.0f;
 	};
 }

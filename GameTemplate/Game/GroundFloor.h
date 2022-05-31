@@ -8,6 +8,9 @@ class Door;
 class Enemy2;
 class Piece;
 class Key;
+class WhiteBoard;
+class EntranceDoor;
+class GameClear;
 
 class GroundFloor : public IGameObject
 {
@@ -24,11 +27,15 @@ public:
 	{
 		m_pickKey = true;
 	}
+	bool IsGameClear() const
+	{
+		return m_isGameClear;
+	}
 private:
 	/// <summary>
 	/// 鍵を持ってゴールに到着した。
 	/// </summary>
-	void GameClear();
+	void ReachGameClear();
 	LevelRender m_levelRender;
 	Player* m_player;
 	GameCamera* m_gamecam;
@@ -42,8 +49,11 @@ private:
 	PhysicsStaticObject m_physicsStaticObject;
 	Vector3 m_bgPos;
 	Vector3 m_clearPos;
+	WhiteBoard* m_whiteBoard = nullptr;
+	EntranceDoor* m_entranceDoor = nullptr;
+	GameClear* m_gameClear = nullptr;
 
 	bool m_pickKey = false; //鍵を拾った？
-	bool m_clear = false; //クリアした？
+	bool m_isGameClear = false; //クリアした？
 };
 

@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "InfoForEdge.h"
 #include "Enemy2.h"
+#include "GroundFloor.h"
+#include "GameClear.h"
 
 namespace
 {
@@ -68,25 +70,31 @@ bool GameCamera::Start()
 }
 void GameCamera::Update()
 {
-	//移動処理
-	Move();
-	//注視点の処理
-	ViewPoint();
-	//ステート遷移処理
-	ManageState();
-	//影響率を調べる
-	CheckRate();
+	if (m_gameClear == nullptr) {
+		m_gameClear = FindGO<GameClear>("gameClear");
+	}
+	if (m_moveState != enMoveState_Stop) {
+		//移動処理
+		Move();
+		//注視点の処理
+		ViewPoint();
+		//ステート遷移処理
+		ManageState();
+		//影響率を調べる
+		CheckRate();
 
-	Vector3 position;
-	position = m_position;
-	position.y = 0.0f;
-	m_modelRender.SetPosition(position);
-	m_modelRender.Update();
+		Vector3 position;
+		position = m_position;
+		position.y = 0.0f;
+		m_modelRender.SetPosition(position);
+		m_modelRender.Update();
 
-	g_soundEngine->SetListenerPosition(m_position);
-	g_soundEngine->SetListenerFront(g_camera3D->GetForward());
-	//カメラの更新。
-	g_camera3D->Update();
+		g_soundEngine->SetListenerPosition(m_position);
+		g_soundEngine->SetListenerFront(g_camera3D->GetForward());
+		//カメラの更新。
+		g_camera3D->Update();
+
+	}
 }
 
 void GameCamera::Move()
@@ -201,6 +209,8 @@ void GameCamera::ManageState()
 	case enMoveState_Walk:
 		WalkState();
 		break;
+	case enMoveState_Stop:
+		break;
 	default:
 		break;
 	}
@@ -222,6 +232,12 @@ void GameCamera::WalkState()
 
 void GameCamera::TransitionState()
 {
+	if (m_gameClear != nullptr) {
+		if (m_gameClear->IsGameClear() == true) {
+			m_moveState = enMoveState_Stop;
+			return;
+		}
+	}
 
 	//xかzの移動速度があったら(スティックの入力があったら)。
 	if (fabsf(m_moveSpeed.x) >= 0.01f && fabsf(m_moveSpeed.z) >= 0.01f)
@@ -240,13 +256,13 @@ void GameCamera::CheckRate()
 		if (m_moveState == enMoveState_Walk)
 		{
 			check1 = 1;
-			if (m_rateByTime < RATE_BY_TIME_MAX_VALUE) {
+			if (m_rateByTime <= RATE_BY_TIME_MAX_VALUE) {
 				m_rateByTime += EDGE_FADE_IN_DELTA_VALUE;
 			}
 		}
 		else {
 			check1 = 0;
-			if (m_rateByTime > RATE_BY_TIME_MIN_VALUE && check1 == 0) {
+			if (m_rateByTime >= RATE_BY_TIME_MIN_VALUE && check1 == 0) {
 				m_rateByTime -= EDGE_FADE_OUT_DELTA_VALUE;
 				if (m_rateByTime <= RATE_BY_TIME_MIN_VALUE) {
 					m_rateByTime = RATE_BY_TIME_MIN_VALUE;

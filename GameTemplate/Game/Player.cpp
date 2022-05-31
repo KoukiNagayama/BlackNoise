@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "GameCamera.h"
 #include "Enemy2.h"
+#include "GroundFloor.h"
 
 //定数
 namespace
@@ -22,6 +23,8 @@ bool Player::Start()
 
 	
 	m_enemy = FindGO<Enemy2>("enemy");
+
+	m_groundFloor = FindGO<GroundFloor>("gruondfloor");
 	Vector3 position;
 	position = m_position;
 	position.y = 0.0f;
@@ -36,6 +39,10 @@ Player::~Player()
 //更新処理
 void Player::Update()
 {
+	if (m_groundFloor == nullptr) {
+		m_groundFloor = FindGO<GroundFloor>("groundfloor");
+	}
+
 	//移動処理
 	Move();
 	//回転処理。
@@ -76,11 +83,17 @@ void Player::Rotation()
 
 void Player::TransitionState()
 {
-	if (m_enemy->IsGameOver() == false) {
+	if (m_enemy->IsGameOver() == true) {
+		//ダウン状態にする。
+		m_playerState = enPlayerState_Stop;
+	}
+	if (m_groundFloor == nullptr) {
 		return;
 	}
-	//ダウン状態にする。
-	m_playerState = enPlayerState_Stop;
+	if (m_groundFloor->IsGameClear() == true) {
+		m_playerState = enPlayerState_Nomal;
+	}
+
 }
 //ステート管理
 void Player::ManageState()

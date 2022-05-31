@@ -41,18 +41,16 @@ namespace nsK2EngineLow {
 			// シャドウマップ描画用モデルの初期化
 			InitModelOnShadowMap(filePath);
 		}*/
+		
+		// 輪郭線の種類
 		m_outlineType = outlineType;
-		//if (m_outlineType == 0) {
-			// モデルの初期化
+
+		// モデルの初期化
 			//InitModel(filePath, enModelUpAxis, isShadowReceiver);
-			InitModelWithContours(filePath, enModelUpAxis);
-		//}
-		//else if (m_outlineType != 0) {
-			//InitForwardRenderingModel(filePath, m_outlineType, enModelUpAxis);
-		//}
+		InitModelWithContours(filePath, enModelUpAxis);
+
 		// 深度値マップ描画用モデルの初期化
 		InitModelOnDepthValueMap(filePath);
-
 
 		// 影をキャストするか
 		m_isShadowCaster = isShadowCaster;
@@ -176,6 +174,9 @@ namespace nsK2EngineLow {
 		}
 		else if (m_outlineType == 3) {
 			modelInitData.m_fxFilePath = "Assets/shader/edgeTitleText.fx";
+		}
+		else if (m_outlineType == 4) {
+			modelInitData.m_fxFilePath = "Assets/shader/whiteBoard.fx";
 		}
 		// エントリーポイントを指定する。
 		if (m_animationClips != nullptr) {

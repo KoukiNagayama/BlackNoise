@@ -5,6 +5,8 @@
 #include "Bell.h"
 #include "GameCamera.h"
 #include "Toy.h"
+#include "GameOver.h"
+#include "GroundFloor.h"
 
 namespace
 {
@@ -113,8 +115,14 @@ bool Enemy2::Start()
 	// 輪郭線情報の初期化
 	g_infoForEdge.InitForSound(8, m_position, STEP_RANGE, 0, m_screamRateByTime);
 
-	// ナビゲーションメッシュの初期化
-	m_nvmMesh.Init("Assets/modelData/enemy/stage2_mesh.tkn");
+	if (m_enemyNumber == 1) {
+		// ナビゲーションメッシュの初期化
+		m_nvmMesh.Init("Assets/modelData/enemy/stage2_mesh.tkn");
+	}
+	else if (m_enemyNumber == 2) {
+		m_nvmMesh.Init("Assets/modelData/enemy/stage1_mesh.tkn");
+	}
+
 
 	// アニメーションスピードを代入
 	m_animationSpeed = ANIMATION_SPEED;
@@ -127,6 +135,7 @@ bool Enemy2::Start()
 
 void Enemy2::Update()
 {
+
 	// 回転
 	Rotation();
 	// ステートによる処理
@@ -141,6 +150,14 @@ void Enemy2::Update()
 	m_modelRender.SetPosition(m_position);
 	// モデルの更新
 	m_modelRender.Update();
+
+	if (m_groundFloor == nullptr) {
+		m_groundFloor = FindGO<GroundFloor>("groundfloor");
+		return;
+	}
+	if (m_groundFloor->IsGameClear() == true) {
+		m_enemyState = enEnemyState_Survey;
+	}
 }
 
 void Enemy2::SearchSoundOfPlayer()
@@ -152,13 +169,16 @@ void Enemy2::SearchSoundOfPlayer()
 	// プレイヤーとの距離
 	Vector3 distance = m_position - playerPos;
 
+	// エネミーの番号が1ならば
+	if (m_enemyNumber == 1) {
+		if (m_toy->IsSound()) {
+			searchRange = SEARCH_RANGE_TO_TOY;
+		}
+	}
 	// ベルが鳴っているならば
 	if (m_bell->IsRing()) {
 		// 索敵範囲をベル用に設定
 		searchRange = SEARCH_RANGE_TO_BELL;
-	}
-	else if (m_toy->IsSound()) {
-		searchRange = SEARCH_RANGE_TO_TOY;
 	}
 	// 足音が鳴っているならば
 	else if (m_gameCamera->IsSound()) {
@@ -549,6 +569,11 @@ void Enemy2::ProcessAttackStateTransition()
 {
 	// ゲームオーバー
 	m_isGameOver = true;
+	m_attackingTimer -= 1.0f * g_gameTime->GetFrameDeltaTime();
+	if (m_attackingTimer <= 0.0f && m_isCaughtPlayer == false) {
+		m_isCaughtPlayer = true;
+		m_gameOver = NewGO<GameOver>(0, "gameOver");
+	}
 }
 
 void Enemy2::PlayAnimation()
@@ -583,28 +608,28 @@ void Enemy2::PlayAnimation()
 
 void Enemy2::OnStepAnimationEvent(const wchar_t* clipName, const wchar_t* eventName)
 {
-	//キーの名前が「attack_start」の時。
+	//キーの名前が「walk1」の時。
 	if (wcscmp(eventName, L"walk1") == 0) {
 		m_stepSound = NewGO<SoundSource>(0);
 		m_stepSound->Init(14);
 		m_stepSound->Play(false);
 		StepVolumeControl();
 	}
-	//キーの名前が「attack_end」の時。
+	//キーの名前が「walk2」の時。
 	else if (wcscmp(eventName, L"walk2") == 0) {
 		m_stepSound = NewGO<SoundSource>(0);
 		m_stepSound->Init(15);
 		m_stepSound->Play(false);
 		StepVolumeControl();
 	}
-	//キーの名前が「magic_attack」の時。
+	//キーの名前が「run1」の時。
 	else if (wcscmp(eventName, L"run1") == 0) {
 		m_stepSound = NewGO<SoundSource>(0);
 		m_stepSound->Init(16);
 		m_stepSound->Play(false);
 		StepVolumeControl();
 	}
-	//キーの名前が「magic_attack」の時。
+	//キーの名前が「run2」の時。
 	else if (wcscmp(eventName, L"run2") == 0) {
 		m_stepSound = NewGO<SoundSource>(0);
 		m_stepSound->Init(17);
@@ -618,7 +643,7 @@ float Enemy2::SoundLevelByDistance(float range)
 	Vector3 gameCameraPos = m_gameCamera->GetPosition();
 	gameCameraPos.y = m_position.y;
 
-	//プレイヤーと蓄音機の距離
+	//プレイヤーとエネミーの距離
 	Vector3 diff = m_position - gameCameraPos;
 
 	// 音の大きさ

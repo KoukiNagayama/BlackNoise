@@ -120,7 +120,7 @@ void Title::ProcessFromFadeOutStateToStartingGame()
 		// 輪郭線の登録情報をクリアする
 		g_infoForEdge.Clear();
 		// ゲームクラスのオブジェクトを生成する
-		m_gameStart = NewGO<GameStart>(0, "gamestart");
+		m_gameStart = NewGO<GameStart>(0, "gameStart");
 		// 削除
 		DeleteGO(this);
 	}

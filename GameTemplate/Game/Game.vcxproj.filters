@@ -31,6 +31,8 @@
     <ClCompile Include="EnemyPath.cpp" />
     <ClCompile Include="WhiteBoard.cpp" />
     <ClCompile Include="BellSprite.cpp" />
+    <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="EntranceDoor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
@@ -63,6 +65,8 @@
     <ClInclude Include="EnemyPath.h" />
     <ClInclude Include="WhiteBoard.h" />
     <ClInclude Include="BellSprite.h" />
+    <ClInclude Include="GameOver.h" />
+    <ClInclude Include="EntranceDoor.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

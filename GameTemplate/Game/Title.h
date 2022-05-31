@@ -96,7 +96,7 @@ private:
 	FontRender				m_fontRender;							// フォントレンダー
 	LevelRender				m_levelRender1;							// レベルレンダー
 	enTitleState			m_titleState = enTitleState_Idle;		// タイトルのステート
-	Vector3					m_position;								// ベルの座標
+	Vector3					m_position = Vector3::Zero;				// ベルの座標
 	SoundSource*			m_bellSound = nullptr;					// 音源クラス
 	float					m_rateByTime = 0.0f;					// 時間による影響率
 	int						m_isRateChange = 0;						// 影響率の変化

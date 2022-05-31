@@ -234,8 +234,10 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enemy2.cpp" />
     <ClCompile Include="EnemyPath.cpp" />
+    <ClCompile Include="EntranceDoor.cpp" />
     <ClCompile Include="FloorGimmick.cpp" />
     <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GroundFloor.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
@@ -270,8 +272,10 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Enemy2.h" />
     <ClInclude Include="EnemyPath.h" />
+    <ClInclude Include="EntranceDoor.h" />
     <ClInclude Include="FloorGimmick.h" />
     <ClInclude Include="GameClear.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="GroundFloor.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />

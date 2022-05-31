@@ -3,6 +3,8 @@
 
 class Player;
 class Enemy2;
+class GroundFloor;
+class GameClear;
 //ゲーム中のカメラを制御する。
 class GameCamera : public IGameObject
 {
@@ -11,6 +13,7 @@ public:
 	{
 		enMoveState_Idle,
 		enMoveState_Walk,
+		enMoveState_Stop
 	};
 
 public:
@@ -169,4 +172,5 @@ private:
 	float m_rateByTime = 0.0f;										//影響率
 	Enemy2* m_enemy = nullptr;										//エネミー
 	bool m_isSound = false;											//足音が鳴っているか
+	GameClear* m_gameClear = nullptr;							
 };

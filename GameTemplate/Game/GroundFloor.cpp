@@ -8,10 +8,13 @@
 #include "Door.h"
 #include "Piece.h"
 #include "Key.h"
+#include "WhiteBoard.h"
+#include "EntranceDoor.h"
+#include "GameClear.h"
 
 namespace
 {
-	const float DISTANCE = 100.0f; //プレイヤーとの距離
+	const float DISTANCE = 400.0f; //プレイヤーとの距離
 }
 
 GroundFloor::~GroundFloor()
@@ -19,12 +22,15 @@ GroundFloor::~GroundFloor()
 	DeleteGO(m_gamecam);
 	DeleteGO(m_player);
 	DeleteGO(m_bell);
+	DeleteGO(m_enemy);
+	DeleteGO(m_whiteBoard);
+	DeleteGO(m_entranceDoor);
 }
 
 bool GroundFloor::Start()
 {
 	//各クラスを生成。
-	m_levelRender.Init("Assets/level3D/stage1_2.tkl", [&](LevelObjectData& objData) {
+	m_levelRender.Init("Assets/level3D/stage1_4.tkl", [&](LevelObjectData& objData) {
 		//ステージ
 		if (objData.EqualObjectName(L"floor1") == true) {
 
@@ -83,6 +89,20 @@ bool GroundFloor::Start()
 			m_clearPos = objData.position;
 			return true;
 		}
+		if (objData.EqualObjectName(L"whiteBoard") == true) {
+			m_whiteBoard = NewGO<WhiteBoard>(0, "whiteBoard");
+			m_whiteBoard->SetPosition(objData.position);
+			m_whiteBoard->SetScale(objData.scale);
+			m_whiteBoard->SetRotation(objData.rotation);
+			return true;
+		}
+		if (objData.EqualObjectName(L"EntranceDoor") == true) {
+			m_entranceDoor = NewGO<EntranceDoor>(0, "entranceDoor");
+			m_entranceDoor->SetPosition(objData.position);
+			m_entranceDoor->SetRotation(objData.rotation);
+			m_entranceDoor->SetScale(objData.scale);
+			return true;
+		}
 
 	});
 	
@@ -100,26 +120,27 @@ bool GroundFloor::Start()
 
 void GroundFloor::Update()
 {
-	GameClear();
+	ReachGameClear();
 	m_bgRender.Update();
 }
 
-void GroundFloor::GameClear()
+void GroundFloor::ReachGameClear()
 {
 	Vector3 cameraPos = m_gamecam->GetPosition();
 	cameraPos.y = m_clearPos.y;
 	Vector3 disToPlayer = cameraPos - m_clearPos;
-	if (m_pickKey != false && disToPlayer.Length() <= DISTANCE)
+	if (disToPlayer.Length() <= DISTANCE)
 	{
-		m_clear = true;
+		if (m_isGameClear == false) {
+			m_isGameClear = true;
+			m_gameClear = NewGO<GameClear>(0, "gameClear");
+			
+		}
 	}
 }
 
 void GroundFloor::Render(RenderContext& rc)
 {
 	m_bgRender.Draw(rc);
-	if (m_clear != false)
-	{
-		m_spriteRender.Draw(rc);
-	}
+
 }
