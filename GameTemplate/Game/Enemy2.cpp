@@ -117,6 +117,7 @@ bool Enemy2::Start()
 	// 輪郭線情報の初期化
 	g_infoForEdge.InitForSound(8, m_position, STEP_RANGE, 0, m_screamRateByTime);
 
+	// エネミーによってナビゲーションメッシュを変更
 	if (m_enemyNumber == 1) {
 		// ナビゲーションメッシュの初期化
 		m_nvmMesh.Init("Assets/modelData/enemy/stage2_mesh.tkn");
