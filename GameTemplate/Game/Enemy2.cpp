@@ -77,7 +77,9 @@ bool Enemy2::Start()
 	// モデルの初期化
 	m_modelRender.Init("Assets/modelData/enemy/enemy.tkm", m_animationClips, enAnimationClip_Num, false, enModelUpAxisZ, false, 0, 2);
 
+	// アニメーションイベントを追加
 	m_modelRender.AddAnimationEvent([&](const wchar_t* clipName, const wchar_t* eventName) {
+		// 足音
 		OnStepAnimationEvent(clipName, eventName);
 	});
 
