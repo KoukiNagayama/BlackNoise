@@ -25,6 +25,12 @@ namespace
 	const float VOLUME = 0.7f;						//ボリューム
 	const float FRICTION = 0.5f;					//摩擦
 	const float VIEWPOINT_UP = 280.0f;				//敵の顔の高さ
+	const float COLLIDER_RADIUS = 50.0f;			//コライダーの半径
+	const float COLLIDER_HEIGHT = 170.0f;			//コライダーの高さ
+	const float NEAR_CLIP = 3.0f;					//ニアークリップ
+	const float FAR_CLIP = 10000.0f;				//ファークリップ
+	const float CAMERA_SPEED_MULTIPLIER = 1.5f;		//カメラの速度の倍率
+	const float CAMERA_ANGLE_MULTIPLIER = 1.3f;		//カメラの角度の倍率
 }
 
 GameCamera::GameCamera()
@@ -51,11 +57,11 @@ bool GameCamera::Start()
 	m_modelRender.SetPosition(m_position);
 
 	//カメラのニアクリップとファークリップを設定する。
-	g_camera3D->SetNear(3.0f);
-	g_camera3D->SetFar(10000.0f);
+	g_camera3D->SetNear(NEAR_CLIP);
+	g_camera3D->SetFar(FAR_CLIP);
 
 	//キャラコンを初期化する。
-	m_charaCon.Init(50.0f, 170.0f, m_position);
+	m_charaCon.Init(COLLIDER_RADIUS, COLLIDER_HEIGHT, m_position);
 
 	//サウンドを登録。
 	g_soundEngine->ResistWaveFileBank(11, "Assets/sound/human/walk.wav");
@@ -64,7 +70,7 @@ bool GameCamera::Start()
 	m_sound->Init(11);
 	m_sound->SetVolume(VOLUME);
 
-	g_infoForEdge.InitForSound(6, m_position, 200.0f, 0, m_rateByTime);
+	g_infoForEdge.InitForSound(6, m_position, SOUND_RANGE, 0, m_rateByTime);
 
 	return true;
 }
@@ -154,21 +160,21 @@ void GameCamera::ViewPoint()
 
 	Vector3 toCameraPosOld = m_toCameraPos;
 	//パッドの入力を使ってカメラを回す。
-	float x = g_pad[0]->GetRStickXF() * 1.5f;
-	float y = g_pad[0]->GetRStickYF() * 1.5f;
+	float x = g_pad[0]->GetRStickXF() * CAMERA_SPEED_MULTIPLIER;
+	float y = g_pad[0]->GetRStickYF() * CAMERA_SPEED_MULTIPLIER;
 
 
 
 	//Y軸周りの回転
 	Quaternion qRot;
-	qRot.SetRotationDeg(Vector3::AxisY, 1.3f * x);
+	qRot.SetRotationDeg(Vector3::AxisY, CAMERA_ANGLE_MULTIPLIER * x);
 	qRot.Apply(m_toCameraPos);
 
 	//X軸周りの回転。
 	Vector3 axisX;
 	axisX.Cross(Vector3::AxisY, m_toCameraPos);
 	axisX.Normalize();
-	qRot.SetRotationDeg(axisX, 1.3f * -y);
+	qRot.SetRotationDeg(axisX, CAMERA_ANGLE_MULTIPLIER * -y);
 	qRot.Apply(m_toCameraPos);
 	m_rotation = qRot;
 

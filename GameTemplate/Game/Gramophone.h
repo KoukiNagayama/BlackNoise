@@ -112,8 +112,8 @@ private:
 	SoundSource*			m_soundSource3 = nullptr;					// 音源3
 	GameCamera*				m_gameCamera;								// ゲームカメラ
 	int						m_number;									// オブジェクトの番号
-	Item*					m_item;
-	int						m_recordNum;
-	bool					m_isPlay = false;							//再生中か否か。
-	bool					m_isPlayed = false;							//再生済みか
+	Item*					m_item;										// アイテム
+	int						m_recordNum;								// レコードの番号
+	bool					m_isPlay = false;							// 再生中か否か。
+	bool					m_isPlayed = false;							// 再生済みか
 };

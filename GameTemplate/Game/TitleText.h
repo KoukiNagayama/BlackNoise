@@ -4,8 +4,18 @@ class TitleText : public IGameObject
 public:
 	TitleText() {};
 	~TitleText() {};
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
 	bool Start();
+	/// <summary>
+	/// 更新処理
+	/// </summary>
 	void Update();
+	/// <summary>
+	/// 描画処理
+	/// </summary>
+	/// <param name="rc">レンダリングコンテキスト</param>
 	void Render(RenderContext& rc);
 	/// <summary>
 	/// 座標を設定

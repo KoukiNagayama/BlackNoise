@@ -8,7 +8,8 @@ namespace {
 	const float EDGE_FADE_OUT_DELTA_VALUE = 0.02f;	// エッジがフェードアウトするときの変位量
 	const float RATE_BY_TIME_MAX_VALUE = 1.00f;		// 時間による影響率の最大値
 	const float RATE_BY_TIME_MIN_VALUE = 0.00f;		// 時間による影響率の最小値
-	const float SOUND_RANGE = 400.0f;
+	const float SOUND_RANGE = 400.0f;				// 音源が影響を与える範囲
+	const float VOLUME = 1.0f;						// 音源の音量
 }
 
 Toy::~Toy()
@@ -61,7 +62,7 @@ void Toy::MakeSound()
 {
 	m_sound = NewGO<SoundSource>(8);
 	m_sound->Init(8);
-	m_sound->SetVolume(1.0f);
+	m_sound->SetVolume(VOLUME);
 	m_sound->Play(false);
 }
 

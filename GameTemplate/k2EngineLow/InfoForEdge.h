@@ -8,11 +8,11 @@ namespace nsK2EngineLow {
 	/// </summary>
 	struct SoundSourceData
 	{
-		Vector3		s_position = Vector3::Zero;
-		int			s_isSound = 0;
-		float		s_range = 0.0f;
-		float		s_rate = 0.0f;
-		int			s_color = 0;
+		Vector3		s_position = Vector3::Zero;					// 座標
+		int			s_isSound = 0;								// 鳴っているか
+		float		s_range = 0.0f;								// 影響範囲
+		float		s_rate = 0.0f;								// 影響率
+		int			s_color = 0;								// 色
 		float		pad;
 	};
 	/// <summary>
@@ -22,7 +22,7 @@ namespace nsK2EngineLow {
 	{
 		SoundSourceData s_soundSourceData[SOUND_MAX_SIZE];		// 音源データ配列
 		int				s_numSoundSource = 0;					// 音源の個数
-		float			s_colorRatio = 0.0f;
+		float			s_colorRatio = 0.0f;					// 色の倍率
 	};
 
 
@@ -96,11 +96,6 @@ namespace nsK2EngineLow {
 		{
 			m_cbSoundSource.s_soundSourceData[number].s_rate = rate;
 		}
-
-		/*void SetCurrentRate(int number, float currentRate)
-		{
-			m_cbSoundSource.s_soundSourceData[number].s_currentRate = currentRate;
-		}*/
 		/// <summary>
 		/// 更新
 		/// </summary>

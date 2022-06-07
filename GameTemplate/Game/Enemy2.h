@@ -220,10 +220,10 @@ private:
 	float				m_animationSpeed = 1.0f;					// アニメーションのスピード
 	float				m_pathFindingTimer = 0.0f;					// 目的地までのパスを検索する間の時間
 	bool				m_isPathFindingWhileReturning = false;		// パス移動への帰還時にパス検索をしたか
-	Toy*				m_toy = nullptr;
-	GameOver*			m_gameOver = nullptr;
-	float				m_attackingTimer = 1.5f;
-	bool				m_isCaughtPlayer = false;
-	GroundFloor*		m_groundFloor = nullptr;
+	Toy*				m_toy = nullptr;							// おもちゃ
+	GameOver*			m_gameOver = nullptr;						// ゲームオーバー
+	float				m_attackingTimer = 1.5f;					// 攻撃の演出までの時間
+	bool				m_isCaughtPlayer = false;					// プレイヤーを捕まえているか
+	GroundFloor*		m_groundFloor = nullptr;					// 1階
 };
 

@@ -51,10 +51,6 @@ public:
 	/// </summary>
 	void Ring();
 	/// <summary>
-	/// デバッグ用文字表示
-	/// </summary>
-	void Font();
-	/// <summary>
 	/// 音が鳴っているか取得
 	/// </summary>
 	bool IsRing() const
@@ -91,16 +87,14 @@ private:
 	Vector3 m_position = Vector3::Zero;						//座標
 	Vector3 m_soundPos = Vector3::Zero;						//実際に音が鳴る座標
 	EnBellState m_bellState = enBellState_Idle;				//ステート
-	//AnimationClip animationClips[enAnimationClip_Num];		//アニメーションクリップ。
+	//AnimationClip animationClips[enAnimationClip_Num];	//アニメーションクリップ。
 	SoundSource* m_bellSound = nullptr;						//ベルの音
 	Player* m_player = nullptr;								//プレイヤー
-	GameCamera* m_gameCam = nullptr;
-	FontRender m_font;
-	FontRender m_font1;
+	GameCamera* m_gameCam = nullptr;						//ゲームカメラ
 
-	float m_timer = 0.0f;
-	float m_rateByTime = 0.0f;
-	bool m_isRing = false;
-	bool m_isNeverRung = true;
+	float m_timer = 0.0f;									//タイマー
+	float m_rateByTime = 0.0f;								//時間による影響率
+	bool m_isRing = false;									//ベルが鳴っているか
+	bool m_isNeverRung = true;								//ベルを一度も鳴らしていないか
 };
 

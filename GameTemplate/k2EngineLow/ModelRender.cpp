@@ -31,7 +31,7 @@ namespace nsK2EngineLow {
 		int outlineType
 	)
 	{
-		// アニメーションを代入(アニメーションの有無判定のため)
+		//// アニメーションを代入(アニメーションの有無判定のため)
 		m_animationClips = animationClips;
 		// スケルトンの初期化
 		InitSkeleton(filePath);

@@ -18,7 +18,7 @@ namespace
 	const float MODEL_MULTIPLIER = 35.0f;			//カメラの前方向、右方向に乗算する値。
 	const float MODEL_UP = 25.0f;					//カメラの上方向に乗算する値
 	const float SOUND_MULTIPLIER = 15.0f;			//ベルの前方向に乗算する値
-
+	const float LIFE_TIME = 2.0f;					//強制的に音源を死亡させるライフタイム
 }
 
 Bell::Bell()
@@ -140,8 +140,8 @@ void Bell::MakeSound()
 {
 	m_bellSound = NewGO<SoundSource>(0);
 	m_bellSound->Init(0);
-	m_bellSound->SetVolume(1.0f);
-	m_bellSound->Play(false, 2.0f);
+	m_bellSound->SetVolume(VOLUME);
+	m_bellSound->Play(false, LIFE_TIME);
 }
 
 void Bell::CheckRate()
@@ -169,33 +169,7 @@ void Bell::CheckRate()
 	}
 }
 
-void Bell::Font()
-{
-	int i = 0;
-	if (m_bellSound != nullptr)
-	{
-		i = 1;
-	}
-	wchar_t wcsbuf[256];
-	swprintf_s(wcsbuf, 256, L"timer:%d", i);
-	//表示するテキストを設定。
-	m_font.SetText(wcsbuf);
-	//フォントの位置を設定。
-	m_font.SetPosition(Vector3(-760.0f, 400.0f, 0.0f));
-	//フォントの大きさを設定。
-	m_font.SetScale(1.0f);
-	swprintf_s(wcsbuf, 256, L"rate:%.3f", m_rateByTime);
-	//表示するテキストを設定。
-	m_font1.SetText(wcsbuf);
-	//フォントの位置を設定。
-	m_font1.SetPosition(Vector3(-760.0f, 300.0f, 0.0f));
-	//フォントの大きさを設定。
-	m_font1.SetScale(1.0f);
-}
-
 void Bell::Render(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);
-	//m_font.Draw(rc);
-	//m_font1.Draw(rc);
 }

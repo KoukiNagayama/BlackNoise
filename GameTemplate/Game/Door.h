@@ -16,8 +16,18 @@ public:
 public:
 	Door();
 	~Door();
+	/// <summary>
+	/// 初期化処理
+	/// </summary>
 	bool Start();
+	/// <summary>
+	/// 更新処理
+	/// </summary>
 	void Update();
+	/// <summary>
+	/// 描画処理
+	/// </summary>
+	/// <param name="rc">レンダリングコンテキスト</param>
 	void Render(RenderContext& rc);
 	/// <summary>
 	/// ステート遷移処理。
@@ -129,7 +139,7 @@ private:
 	GameCamera*					m_gamecam = nullptr;					//ゲームカメラ。
 	float						m_deg = 0.0f;							//ドアの角度
 	SoundSource*				m_sound = nullptr;						//開きサウンド
-	float						m_rateByTime = 0.0f;
+	float						m_rateByTime = 0.0f;					//時間による影響率
 	Enemy2*						m_enemy = nullptr;						//エネミー
 	bool						m_close = true;							//閉じているか
 	float						m_timer = 2.0f;							//エネミーがドアを開けるまでのタイマー

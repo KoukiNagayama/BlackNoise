@@ -11,9 +11,9 @@ class GameCamera : public IGameObject
 public:
 	enum EnMoveState
 	{
-		enMoveState_Idle,
-		enMoveState_Walk,
-		enMoveState_Stop
+		enMoveState_Idle,		// 待機
+		enMoveState_Walk,		// 歩き
+		enMoveState_Stop		// 停止
 	};
 
 public:
@@ -172,5 +172,5 @@ private:
 	float m_rateByTime = 0.0f;										//影響率
 	Enemy2* m_enemy = nullptr;										//エネミー
 	bool m_isSound = false;											//足音が鳴っているか
-	GameClear* m_gameClear = nullptr;							
+	GameClear* m_gameClear = nullptr;								//ゲームクリア					
 };

@@ -6,12 +6,14 @@ namespace
 {
 	const Vector3 BELL_POSITION = Vector3::Zero;					// ベルの座標
 	const Vector3 BELL_SCALE = Vector3(0.3f, 0.3f, 0.3f);			// ベルの拡大率
+	const float SPRITE_WIDTH = 500.0f;								// スプライトの横幅
+	const float SPRITE_HEIGHT = 862.0f;								// スプライトの縦幅
 }
 
 bool BellSprite::Start()
 {
 	// スプライトの初期化
-	m_bellSprite.Init("Assets/sprite/Bell.DDS", 500, 862);
+	m_bellSprite.Init("Assets/sprite/Bell.DDS", SPRITE_WIDTH, SPRITE_HEIGHT);
 
 	// スプライトの座標
 	m_bellSpritePos = BELL_POSITION;

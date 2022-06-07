@@ -66,6 +66,6 @@ private:
 
 	Item* m_item = nullptr;					//アイテム
 	GameCamera* m_gamecam = nullptr;		//ゲームカメラ
-	UI* m_ui = nullptr;
+	UI* m_ui = nullptr;						//UI
 };
 

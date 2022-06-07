@@ -47,16 +47,16 @@ private:
 private:
 	// アニメーションクリップ
 	enum EnAnimationClip {	
-		enAnimationClip_Idle,
+		enAnimationClip_Idle,			// 待機
 		enAnimationClip_Open,			// 開く
 		enAnimationClip_Num				// 個数
 	};
-	ModelRender				m_modelRender;						// モデルレンダー
-	Vector3					m_position;							// 座標
-	Vector3					m_scale;							// 拡大率
-	Quaternion				m_rotation;							// 回転
-	GroundFloor*			m_groundFloor;
-	AnimationClip			m_animationClips[enAnimationClip_Num];
-	bool					m_isOpened = false;
+	ModelRender				m_modelRender;								// モデルレンダー
+	Vector3					m_position;									// 座標
+	Vector3					m_scale;									// 拡大率
+	Quaternion				m_rotation;									// 回転
+	GroundFloor*			m_groundFloor;								// 1階
+	AnimationClip			m_animationClips[enAnimationClip_Num];		// アニメーションクリップ
+	bool					m_isOpened = false;							// 開いているか
 };
 
